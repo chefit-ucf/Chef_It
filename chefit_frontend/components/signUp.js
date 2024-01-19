@@ -172,13 +172,13 @@ export default function SignUpScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F9B89D',
+      backgroundColor: '#F8FAF8',
       alignItems: 'center',
       justifyContent: 'center',
     },
     titleText: {
       fontSize: 50,
-      color: "white",
+      color: "#F7B49B",
       fontWeight: 'bold',
       padding: 15
     },
@@ -212,17 +212,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30
     },
     input: {
-      backgroundColor: 'white',
-      paddingHorizontal: 15,
-      paddingVertical: 15,
-      borderRadius: 30,
-      marginTop: 10,
-      shadowColor: "#494949",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-      shadowOpacity: 0.2
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: "#E8E8E8",
+        paddingHorizontal: 15,
+        paddingVertical: 15,
+        borderRadius: 30,
+        marginVertical: 7,
+        shadowColor: "#494949",
+            shadowOffset: {
+                width: 0,
+                height: 3,
+            },
+        shadowOpacity: 0.3
     },
     buttonContainer: {
       marginTop: 20,
