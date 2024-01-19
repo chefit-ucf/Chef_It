@@ -1,14 +1,24 @@
 import React from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { Text } from '@rneui/themed'
+import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator()
 
 export default function WelcomeScreen({navigation}) {
+    let [fontsLoaded] = useFonts({
+        Montserrat_300Light,
+        Montserrat_400Regular,
+        Montserrat_500Medium,
+        Montserrat_600SemiBold
+    })
+    if (!fontsLoaded) {
+        return <Text>Loading...</Text>
+    }
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/logo1.png')} style={{width: 350, height: 350, marginBottom: 18}} />
+            <Image source={require('../assets/logo1.png')} style={{width: 350, height: 350}} />
             <Text style={styles.titleText}>Begin Your Cooking Journey</Text>
             <Text style={styles.introText}>Explore new recipes and unlock CookSona characters: Your culinary adventure awaits!</Text>
             <View style={{flexDirection: "row"}}>
@@ -25,12 +35,14 @@ export default function WelcomeScreen({navigation}) {
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 10,
         flex: 1,
-        backgroundColor: '#F9B89D',
+        backgroundColor: '#FFCCBA',
         alignItems: 'center',
         justifyContent: 'center'
     },
     titleText: {
+        fontFamily: "Montserrat_600SemiBold",
         fontSize: 35,
         textAlign: 'center',
         color: "white",
@@ -39,15 +51,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     introText: {
+        fontFamily: "Montserrat_500Medium",
         fontSize: 18,
         padding: 10,
         textAlign: 'center',
-        color: "black",
+        color: "#42A797",
         paddingHorizontal: 30,
         marginBottom: 30
     },
     button: {
-        backgroundColor: '#42A797',
+        backgroundColor: '#F7D47C',
         padding: 12,
         paddingHorizontal: 50,
         borderRadius: 50,

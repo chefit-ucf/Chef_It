@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { StyleSheet, View, Button, TextInput, TouchableOpacity } from 'react-native';
 import { Text } from '@rneui/themed'
 import { NavigationContainer } from '@react-navigation/native';
+import {ArrowLeftIcon} from 'react-native-heroicons/solid'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator()
 
@@ -118,6 +119,13 @@ export default function SignUpScreen({navigation}) {
 
     return (
     <View style={styles.container}>
+      <View style={styles.backContainer}>
+            <TouchableOpacity style={styles.backButton}
+                onPress={()=> navigation.goBack()}>
+                <ArrowLeftIcon size="20" color="black" />
+            </TouchableOpacity>
+      </View>
+      <View style={styles.contentContainer}>
       <Text style={styles.titleText}>Sign Up Now</Text>
       <Text style={styles.introText}>Please Fill Out Entire Form to Continue</Text>
       <View style={styles.loginContainer}>
@@ -165,22 +173,45 @@ export default function SignUpScreen({navigation}) {
       <TouchableOpacity style={styles.button} onPress={() => checkRegistration()}>
         <Text style={styles.buttonText}>SIGN UP</Text>
       </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#F8FAF8',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
+  container: {
+    backgroundColor: '#F8FAF8',
+    minHeight: "100%"
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  backContainer: {
+    flexDirection: 'row',
+    alignItem: "left",
+    justifyContent: "left",
+    backgroundColor: "#F8FAF8",
+    padding: 10
+  },
+  backButton: {
+    backgroundColor: "#F7D47C",
+    borderTopRightRadius: "1rem",
+    borderBottomLeftRadius: "1rem",
+    marginLeft: "1rem",
+    padding: 10,
+    shadowColor: "#494949",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+    shadowOpacity: 0.3
+  },
     titleText: {
       fontSize: 50,
       color: "#F7B49B",
       fontWeight: 'bold',
-      padding: 15
+      padding: 15,
     },
     introText: {
       fontSize: 18,

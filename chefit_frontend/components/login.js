@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
-import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native'
 import { Text } from '@rneui/themed'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {ArrowLeftIcon} from 'react-native-heroicons/solid'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 const Stack = createNativeStackNavigator()
 
 const loginData = ([
@@ -28,6 +29,13 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.container}>
+      <View style={styles.backContainer}>
+            <TouchableOpacity style={styles.backButton}
+                onPress={()=> navigation.goBack()}>
+                <ArrowLeftIcon size="20" color="black" />
+            </TouchableOpacity>
+      </View>
+      <View style={styles.contentContainer}>
       <Text style={styles.titleText}>Login</Text>
       <Text style={styles.introText}>Welcome back you've been missed!</Text>
       <br></br>
@@ -48,16 +56,40 @@ export default function LoginScreen({navigation}) {
       <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate("SignUp")}>
                 <Text style={styles.buttonText}>REGISTER</Text>
       </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#F8FAF8',
+    minHeight: "100%",
+  },
+  contentContainer: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    top: 0,
+  },
+  backContainer: {
+    flexDirection: 'row',
+    alignItem: "left",
+    justifyContent: "left",
+    backgroundColor: "#F8FAF8",
+    padding: 10
+  },
+  backButton: {
+    backgroundColor: "#F7D47C",
+    borderTopRightRadius: "1rem",
+    borderBottomLeftRadius: "1rem",
+    marginLeft: "1rem",
+    padding: 10,
+    shadowColor: "#494949",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+    shadowOpacity: 0.3
   },
   titleText: {
     fontSize: 50,
@@ -79,7 +111,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 50,
     margin: 10,
-    marginBottom: 75,
+    marginBottom: 65,
     shadowColor: "#494949",
         shadowOffset: {
             width: 0,
