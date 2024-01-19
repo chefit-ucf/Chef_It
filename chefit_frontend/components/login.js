@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
 import { Text } from '@rneui/themed'
 import {ArrowLeftIcon} from 'react-native-heroicons/solid'
 import { NavigationContainer } from '@react-navigation/native'
@@ -38,14 +38,12 @@ export default function LoginScreen({navigation}) {
       <View style={styles.contentContainer}>
       <Text style={styles.titleText}>Login</Text>
       <Text style={styles.introText}>Welcome back you've been missed!</Text>
-      <br></br>
       <View style={styles.loginContainer}>
           <TextInput style={styles.input} placeholder='Username/Email' value={username} onChangeText={text=>setUsername(text)}/>
       </View>
       <View style={styles.loginContainer}>
           <TextInput style={styles.input} placeholder='Password' value={password} secureTextEntry onChangeText={text=>setPassword(text)}/>
       </View>
-      <br></br>
       {loginMsg? (
         <Text style={styles.errorText}>Invalid Username or Password. Try Again</Text> ) : ( <Text></Text>)
       }
@@ -54,7 +52,7 @@ export default function LoginScreen({navigation}) {
       </TouchableOpacity>
       <Text style={styles.accountText}>Don't have an account?</Text>
       <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate("SignUp")}>
-                <Text style={styles.buttonText}>REGISTER</Text>
+                <Text style={styles.buttonText}>SIGN UP</Text>
       </TouchableOpacity>
       </View>
     </View>
@@ -80,9 +78,9 @@ const styles = StyleSheet.create({
   },
   backButton: {
     backgroundColor: "#F7D47C",
-    borderTopRightRadius: "1rem",
-    borderBottomLeftRadius: "1rem",
-    marginLeft: "1rem",
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    margin: 10,
     padding: 10,
     shadowColor: "#494949",
         shadowOffset: {

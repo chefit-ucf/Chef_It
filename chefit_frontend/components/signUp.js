@@ -116,7 +116,6 @@ export default function SignUpScreen({navigation}) {
         } 
     }
 
-
     return (
     <View style={styles.container}>
       <View style={styles.backContainer}>
@@ -130,27 +129,22 @@ export default function SignUpScreen({navigation}) {
       <Text style={styles.introText}>Please Fill Out Entire Form to Continue</Text>
       <View style={styles.loginContainer}>
           <TextInput style={styles.input} testID="firstname" placeholder='First Name' value={firstname} onChangeText={text=>handleFName(text)}/>
-      </View>
       {checkFName? (
         <Text style={styles.errorText}>Error: Can only include letters & symbols, no numbers</Text> ) : ( <Text></Text>)
       }
-      <View style={styles.loginContainer}>
           <TextInput style={styles.input} testID="lastname" placeholder='Last Name' value={lastname} onChangeText={text=>handleLName(text)}/>
-      </View>
       {checkLName? (
         <Text style={styles.errorText}>Error: Can only include letters & symbols, no numbers</Text> ) : ( <Text></Text>)
       }
-      <View style={styles.loginContainer}>
           <TextInput style={styles.input} testID="email" placeholder='Email' value={email} onChangeText={text=>handleEmail(text)}/>
-      </View>
       {checkEmail? (
         <Text style={styles.errorText}>Error: Email must contain @ and '.'</Text> ) : ( <Text></Text>)
       }
-      <View style={styles.loginContainer}>
           <TextInput style={styles.input} testID="username" placeholder='Username' value={username} onChangeText={text=>setUsername(text)}/>
-      </View>
-      <View style={styles.loginContainer}>
+      <Text></Text>
           <TextInput style={styles.input} testID="password" placeholder='Password' value={password} secureTextEntry onChangeText={text=>handlePassword(text)}/>
+      <Text></Text>
+          <TextInput style={styles.input} testID="confirmpassword" placeholder='Confirm Password' secureTextEntry value={confirmpassword} onChangeText={text=>handleConfirmPass(text)}/>
       </View>
       {checkUpper? (
         <Text style={styles.errorText}>Password must have at least one Uppercase Character</Text> ) : ( <Text></Text>)
@@ -164,9 +158,6 @@ export default function SignUpScreen({navigation}) {
       {checkNonAlphaNum? (
         <Text style={styles.errorText}>Password must contain at least one Non-Alpha Numeric Character</Text> ) : ( <Text></Text>)
       }
-      <View style={styles.loginContainer}>
-          <TextInput style={styles.input} testID="confirmpassword" placeholder='Confirm Password' secureTextEntry value={confirmpassword} onChangeText={text=>handleConfirmPass(text)}/>
-      </View>
       {checkConfirmPass? (
         <Text style={styles.errorText}>Does not match password entered</Text> ) : ( <Text></Text>)
       }
@@ -196,9 +187,9 @@ const styles = StyleSheet.create({
   },
   backButton: {
     backgroundColor: "#F7D47C",
-    borderTopRightRadius: "1rem",
-    borderBottomLeftRadius: "1rem",
-    marginLeft: "1rem",
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    margin: 10,
     padding: 10,
     shadowColor: "#494949",
         shadowOffset: {
@@ -217,7 +208,7 @@ const styles = StyleSheet.create({
       fontSize: 18,
       paddingTop: 10,
       color: "#42A797",
-      marginBottom: 15
+      marginBottom: 25
     },
     button: {
         backgroundColor: "#42A797",
@@ -225,7 +216,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 50,
         borderRadius: 50,
         margin: 15,
-        marginTop: 40,
+        marginTop: 20,
         shadowColor: "#494949",
         shadowOffset: {
             width: 0,
@@ -248,8 +239,8 @@ const styles = StyleSheet.create({
         borderColor: "#E8E8E8",
         paddingHorizontal: 15,
         paddingVertical: 15,
+        marginVertical: 3,
         borderRadius: 30,
-        marginVertical: 7,
         shadowColor: "#494949",
             shadowOffset: {
                 width: 0,
@@ -257,12 +248,10 @@ const styles = StyleSheet.create({
             },
         shadowOpacity: 0.3
     },
-    buttonContainer: {
-      marginTop: 20,
-      marginBottom: 20
-    },
     errorText: {
+      marginTop: 5,
       color: "#fc0330",
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      textAlign: "center"
     }
 });

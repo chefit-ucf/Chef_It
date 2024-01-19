@@ -19,7 +19,7 @@ export default function WelcomeScreen({navigation}) {
     return (
         <View style={styles.container}>
             <Image source={require('../assets/logo1.png')} style={{width: 350, height: 350}} />
-            <Text style={styles.titleText}>Begin Your Cooking Journey</Text>
+            <Text style={styles.titleText}>BEGIN YOUR COOKING JOURNEY</Text>
             <Text style={styles.introText}>Explore new recipes and unlock CookSona characters: Your culinary adventure awaits!</Text>
             <View style={{flexDirection: "row"}}>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")}>
