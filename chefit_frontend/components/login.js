@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
   },
   introText: {
     fontSize: 18,
-    fontWeight: 'bold',
     paddingTop: 10,
     color: "#42A797", 
     marginBottom:20,
