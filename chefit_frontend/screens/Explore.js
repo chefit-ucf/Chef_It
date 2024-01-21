@@ -6,8 +6,8 @@ import { SafeAreaView} from 'react-native-safe-area-context';
 
 
 export const assets = [
-  require("../assets/fries.png"),
-  require("../assets/burger.png"),
+  require("../assets/food/burger.png"),
+  require("../assets/food/burger2.png"),
 ];
 
 const { width, height } = Dimensions.get("window");
@@ -46,18 +46,19 @@ export default function Explore() {
 const Swiper = () => {
 
   return <View>
-    <ScrollView snapToInterval={width} decelerationRate={"fast"} horizontal>
+    <ScrollView 
+      showsHorizontalScrollIndicator={false}
+      snapToInterval={width} 
+      decelerationRate={"fast"} horizontal
+    >
       {assets.map((source)=>(
         <View key={source} style={styles.picture} className='p-2'>
-          <View className='w-full h-fit bg-gray-100 border-2 border-gray-300 rounded-md  mb-8'>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <View className= 'w-full'>
+          <View className='w-full  bg-gray-100 border-2 border-gray-300 rounded-md  mb-8 '>
+              <Image className='w-full   bg-gray-100 border-2 border-gray-300 rounded-md  ' {...{source}}/>
+            <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Burger</Text>
+            <Text className={`text-lg  font-bold border-gray-300 border-b-2 p-2`}>The carmelized flavor of bourbon and the tang of sour cream add balance to the rich, spiced filling of this cheese</Text>
+          </View> 
       </View>
-    </View> 
-        </View>
       ))}
     </ScrollView>
   </View>
@@ -82,12 +83,9 @@ const styles = StyleSheet.create({
   },
   picture: {
     width,
-    height,
-    overflow: "hidden",
+    // overflow: "hidden",
   },
   image: {
-    ...StyleSheet.absoluteFillObject,
-    width: undefined,
-    height: undefined,
+
   },
 });
