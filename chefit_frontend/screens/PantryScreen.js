@@ -5,16 +5,14 @@ import { Button, View, Text } from 'react-native';
 
 
 
-function Explore({navigation}) {
+export default function PantryScreen({navigation}) {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>
-        this is the explore screen
+        this is the pantry screen
       </Text>
-      
-       
+     
+    
     </View>
     );
 }
-
-export default Explore;

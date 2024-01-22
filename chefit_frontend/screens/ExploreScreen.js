@@ -5,16 +5,14 @@ import { Button, View, Text } from 'react-native';
 
 
 
-function Explore({navigation}) {
+export default function ExploreScreen({navigation}) {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>
-        this is the add recipe screen
+        this is the explore screen
       </Text>
       
        
     </View>
     );
 }
-
-export default Explore;

@@ -5,11 +5,11 @@ import { Button, View, Text } from 'react-native';
 
 
 
-function Profile({navigation}) {
+export default function ProfileScreen({navigation}) {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>
-        this is the meal prep screen
+        this is the profile screen
       </Text>
      
     
@@ -17,4 +17,3 @@ function Profile({navigation}) {
     );
 }
 
-export default Profile;
