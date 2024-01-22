@@ -8,7 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 const Stack = createNativeStackNavigator()
 
 const loginData = ([
-    {username: "test", password: "Test1@"},
+    {username: "Test", password: "Test1@"},
 ])
 
 export default function LoginScreen({navigation}) {
@@ -74,13 +74,14 @@ const styles = StyleSheet.create({
     alignItem: "left",
     justifyContent: "left",
     backgroundColor: "#F8FAF8",
-    padding: 10
+    padding: 10,
+    marginTop: 30
   },
   backButton: {
     backgroundColor: "#F7D47C",
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
-    margin: 10,
+    margin: 15,
     padding: 10,
     shadowColor: "#494949",
         shadowOffset: {
@@ -93,7 +94,8 @@ const styles = StyleSheet.create({
     fontSize: 50,
     color: "#F7B49B",
     fontWeight: 'bold',
-    padding: 15
+    padding: 15,
+    marginTop: 30
   },
   introText: {
     fontSize: 18,
