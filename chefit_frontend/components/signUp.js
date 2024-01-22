@@ -183,7 +183,8 @@ const styles = StyleSheet.create({
     alignItem: "left",
     justifyContent: "left",
     backgroundColor: "#F8FAF8",
-    padding: 10
+    padding: 10,
+    marginTop: 30
   },
   backButton: {
     backgroundColor: "#F7D47C",
@@ -203,6 +204,7 @@ const styles = StyleSheet.create({
       color: "#F7B49B",
       fontWeight: 'bold',
       padding: 15,
+      maeginTop: 30
     },
     introText: {
       fontSize: 18,
