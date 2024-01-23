@@ -10,8 +10,8 @@ const Tab = createBottomTabNavigator();
  
 // Screens of App
 import WelcomeScreen from "../screens/WelcomeScreen.js"
-import LoginScreen from '../screens/login.js'
-import SignUpScreen from "../screens/signUp.js"
+import LoginScreen from '../screens/LoginScreen.js'
+import SignUpScreen from "../screens/SignUpScreen.js"
 import ExploreScreen from '../screens/ExploreScreen.js';
 import PantryScreen from '../screens/PantryScreen.js';
 import AddRecipeScreen from '../screens/AddRecipeScreen.js';

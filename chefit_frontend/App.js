@@ -1,5 +1,5 @@
 import React from 'react'
-import Auth from "./routes/Auth.js"
+import Auth from "./navigation/Auth.js"
 
 export default function App() {
   return (
