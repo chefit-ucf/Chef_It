@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { Text } from '@rneui/themed'
 import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator()
 
@@ -18,7 +17,7 @@ export default function WelcomeScreen({navigation}) {
     }
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/logo1.png')} style={{width: 400, height: 400}} />
+            <Image source={require('../assets/logos/logo1.png')} style={{width: 400, height: 400}} />
             <Text style={styles.titleText}>BEGIN YOUR COOKING JOURNEY</Text>
             <Text style={styles.introText}>Explore new recipes and unlock CookSona characters: Your culinary adventure awaits!</Text>
             <View style={{flexDirection: "row"}}>

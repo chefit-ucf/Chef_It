@@ -2,10 +2,9 @@ import React from 'react'
 import { useState } from 'react'
 import { StyleSheet, View, Button, TextInput, TouchableOpacity } from 'react-native';
 import { Text } from '@rneui/themed'
-import { NavigationContainer } from '@react-navigation/native';
 import {ArrowLeftIcon} from 'react-native-heroicons/solid'
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-const Stack = createNativeStackNavigator()
 
 export default function SignUpScreen({navigation}) {
     const [firstname, setFirstname] = useState('')

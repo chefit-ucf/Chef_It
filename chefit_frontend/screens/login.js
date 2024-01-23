@@ -1,11 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
-import { StyleSheet, View, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
+import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native'
 import { Text } from '@rneui/themed'
 import {ArrowLeftIcon} from 'react-native-heroicons/solid'
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-const Stack = createNativeStackNavigator()
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const loginData = ([
     {username: "Test", password: "Test1@"},
