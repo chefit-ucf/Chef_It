@@ -6,6 +6,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-web';
 
+import IngredientsScreen from '../subScreens/ingredients';
+import SavedRecipesScreen from '../subScreens/savedRecipes';
+import RecipeIdeasScreen from '../subScreens/recipeIdeas';
+
 export default function PantryScreen({navigation}) {
     const [index, setIndex] = React.useState(0);
 
@@ -25,15 +29,15 @@ export default function PantryScreen({navigation}) {
                 <Tab.Item title="Recipe Ideas" titleStyle={(active) => ({height: 35, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}  
                                                buttonStyle={(active) => ({borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5})} />
             </Tab>
-            <TabView value={index} onChange={setIndex} animationType="timing">
+            <TabView value={index} onChange={setIndex} animationType="timing" disableSwipe={true}>
                 <TabView.Item style={{width: "100%"}}>
-                    <Text style={styles.pText}>Ingredients Screen</Text>
+                    <IngredientsScreen></IngredientsScreen>
                 </TabView.Item>
                 <TabView.Item style={{width: "100%"}}>
-                    <Text style={styles.pText}>Saved Recipes Screen</Text>
+                    <SavedRecipesScreen></SavedRecipesScreen>
                 </TabView.Item>
                 <TabView.Item style={{width: "100%"}}>
-                    <Text style={styles.pText}>Recipe Ideas Screen</Text>
+                    <RecipeIdeasScreen></RecipeIdeasScreen>
                 </TabView.Item>
             </TabView>
          </View>
@@ -43,7 +47,7 @@ export default function PantryScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F8FAF8"
+        backgroundColor: "white"
     },
     titleText: {
         paddingTop: 70,
