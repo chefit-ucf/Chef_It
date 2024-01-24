@@ -48,12 +48,12 @@ const styles = StyleSheet.create({
   },
   pictures: {
     // width: width * slider1.length,
-    height,
+    // height,
     flexDirection: "row",
     padding: 2
   },
   picture: {
-    width,
+    // width,
     // overflow: "hidden",
   },
   image: {
