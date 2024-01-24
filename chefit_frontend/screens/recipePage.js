@@ -116,14 +116,11 @@ const timerIntervalRef = useRef(null);
     if (timer) {
       const currentTimestamp = Date.now();
       setCurrentTime(currentTimestamp);
-  
-      // Use the callback function to ensure that startTime is set to the latest state
       setStartTime((prevStartTime) => prevStartTime || currentTimestamp);
-  
-      console.log(startTime);
-      console.log(currentTime);
       setIsCongratulationModalVisible(true);
     }
+  
+    setCompletedSteps([]);
   
     setTimer(null);
     setIsTimerVisible(true);
