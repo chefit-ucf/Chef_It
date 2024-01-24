@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const categories = [
     {
@@ -16,6 +15,10 @@ export const categories = [
     {
         name: 'Pasta & Grains',
         src: require('../assets/pantryIcons/pastaGrains.png'),
+    },
+    {
+        name: 'Bread',
+        src: require('../assets/pantryIcons/bread.png'),
     },
     {
         name: 'Condiments',
