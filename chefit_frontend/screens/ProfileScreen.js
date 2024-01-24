@@ -1,38 +1,47 @@
 import React from 'react';
-import { Button, View, Text, Image, Pressable } from 'react-native';
+import { Button, View, Text, Image, Pressable, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MyRecipesAndAchievementsTab from '../subScreens/MyRecipesAndAchievementsTab';
 // Import the BackButton component
 import BackButton from '../components/BackButton';
 
 // For navigation
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 // useState for user avatar
 const [userAvatar, setUserAvatar] = "";
 
 function Profile({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center'}}>
-      <View style={{width: 200, height: 200, backgroundColor: '#F9B59E'}}>
-      
-      
-      <Pressable onPress={() => navigation.navigate('DisplayCooksona')}>
-        <Image
-        source={require('../assets/actionIcons/editCooksonaIcon.png')}
-        style={{width: 22, height: 22}}/> 
-      </Pressable>
-      
-      </View>
+   
+
+
+<SafeAreaView style={{flex: 1, alignItems: "center"}}>
+      <ScrollView >
+        
+        <View style={{ justifyContent: "flex-end", alignItems: "flex-end", width: 200, height: 200, backgroundColor: '#F9B59E'}}>
+
+        <Pressable onPress={() => navigation.navigate('DisplayCooksona')}>
+          <Image
+          source={require('../assets/actionIcons/editCooksonaIcon.png')}
+          style={{width: 22, height: 22}}/> 
+        </Pressable>
+        </View>
+
       <Text>
         Username
       </Text>
+      <View style={{width: 1000}}>
+        <MyRecipesAndAchievementsTab />
+      </View>
       
       <Button
         title='Settings'
         onPress={() => navigation.navigate('Settings')} />
-        
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -65,6 +74,14 @@ function DisplayCooksona({ navigation }) {
 }
 
 // Remove unnecessary CheckIt function
+
+function userAchievements({navigation}){
+  return <View />
+}
+
+function userRecipes({navigation}){
+  return <View />
+}
 
 
 export default function ProfileScreen() {
