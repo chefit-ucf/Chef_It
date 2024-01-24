@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput, Modal, } from 'react-native';
+import { View, Image, Text, ScrollView, Pressable, StyleSheet, } from 'react-native';
 import recipeDetails from '../BackendElements/recipes.js';
 import AchievementsModal from '../SubScreens/achievementModal.js';
 import ServingModal from '../SubScreens/servingModal.js';
@@ -165,7 +165,7 @@ const toggleModal = (visible) => {
       <View style={styles.container}>
         <Text style={styles.title}>{recipe.title}</Text>
         <Text>By {recipe.username}</Text>
-        <Text>{recipe.rating}<TouchableOpacity><Text>  Rate</Text></TouchableOpacity></Text>
+        <Text>{recipe.rating}<Pressable><Text>  Rate</Text></Pressable></Text>
         {isTimerVisible && (
           <View style={styles.timerContainerTop}>
             <Text style={styles.timerText}>
@@ -175,9 +175,9 @@ const toggleModal = (visible) => {
         )}
   <View>
           <View style={styles.servingSizeContainer}>
-          <TouchableOpacity onPress={() => toggleModal(true)}>
+          <Pressable onPress={() => toggleModal(true)}>
   <Text>Serves: {newServingSize}</Text>
-</TouchableOpacity>
+</Pressable>
             <Text>Mins: {recipe.servingSize.minutes}</Text>
           </View>
           <View style={styles.nutritionContainer}>
@@ -192,37 +192,37 @@ const toggleModal = (visible) => {
       {areTimerButtonsVisible && (
         <View>
   <View style={styles.buttonContainer}>
-    <TouchableOpacity style={styles.controlButton} onPress={handlePauseButtonPress}>
+    <Pressable style={styles.controlButton} onPress={handlePauseButtonPress}>
       <Text>Pause</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.controlButton} onPress={handleResetButtonPress}>
+    </Pressable>
+    <Pressable style={styles.controlButton} onPress={handleResetButtonPress}>
       <Text>Reset</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.controlButton} onPress={handleStopButtonPress}>
+    </Pressable>
+    <Pressable style={styles.controlButton} onPress={handleStopButtonPress}>
       <Text>Stop</Text>
-    </TouchableOpacity>
+    </Pressable>
   </View> 
   <View>
-        <TouchableOpacity style={styles.controlButton} onPress={handleStartButtonPress}>
+        <Pressable style={styles.controlButton} onPress={handleStartButtonPress}>
         <Image source = {startImage} style={styles.startButton}></Image>
-      </TouchableOpacity>
+      </Pressable>
       </View>
       </View>
   )}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
+          <Pressable
             style={[styles.button, selectedButton === 'recipe' && styles.selectedButton]}
             onPress={() => handleButtonPress('recipe')}
           >
             <Text>Recipe</Text>
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             style={[styles.button, selectedButton === 'directions' && styles.selectedButton]}
             onPress={() => handleButtonPress('directions')}
           >
             <Text>Directions</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <View style={styles.content}>
   {selectedButton === 'directions' ? (
@@ -247,13 +247,13 @@ const toggleModal = (visible) => {
 </View>
       </View>
 <Text>Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Text>
-<TouchableOpacity style={styles.controlButton} onPress={() => {
+<Pressable style={styles.controlButton} onPress={() => {
      setTimer(null);
      setIsTimerVisible(true);
   setAreTimerButtonsVisible(true);
 }}>
   <Text><Image source={cookAlongImage} style={styles.cookAlong}></Image></Text>
-</TouchableOpacity>
+</Pressable>
 <ServingModal
     isModalVisible={isModalVisible}
     setIsModalVisible={setIsModalVisible}
