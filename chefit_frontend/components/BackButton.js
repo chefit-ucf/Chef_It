@@ -4,21 +4,13 @@ import { View, Pressable, Image, StyleSheet } from 'react-native';
 export default function BackButton({ navigation }) {
   return (
     <View>
-      <Pressable
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? 'rgba(0, 0, 0, 0.5)' : 'black', // Black background when pressed
-            width: 36,
-            height: 36,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          styles.pressable, // Additional styles if needed
-        ]}
-        onPress={() => navigation.goBack()}
-      >
+      
+        <Image
+            source={require('../assets/actionIcons/backButton.png')}
+            style={{ width: 32, height: 32, resizeMode: 'cover'}}
+          />
         
-      </Pressable>
+     
     </View>
   );
 }
