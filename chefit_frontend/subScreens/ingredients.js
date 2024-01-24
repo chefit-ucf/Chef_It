@@ -6,64 +6,44 @@ import { categories } from '../components/ingredientsBar.js'
 import { testuserInfo } from '../API/data.js';
 
 const RenderIngredients = ( {index} ) => {
+    let listOfIngredients;
+
     if (index === 0) {
-        return (
-            <Text>This is fruits</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["fruits"];
     }
     else if (index === 1) {
-        return (
-            <Text>This is veggies</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["vegetables"];
     }
     else if (index === 2) {
-        return (
-            <Text>This is dairy & eggs</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["dairyEggs"];
     }
     else if (index === 3) {
-        return (
-            <Text>This is pasta & grains</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["pastaGrains"];
     }
     else if (index === 4) {
-        return (
-            <Text>This is bread</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["bread"];
     }
     else if (index === 5) {
-        return (
-            <Text>This is condiments</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["condiments"];
     }
     else if (index === 6) {
-        return (
-            <Text>This is baking</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["baking"];
     }
     else if (index === 7) {
-        return (
-            <Text>This is oils</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["oilsDressing"];
     }
     else if (index === 8) {
-        return (
-            <Text>This is spices & seasoning</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["spicesSeasonings"];
     }
     else if (index === 9) {
-        return (
-            <Text>This is meats & proteins</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["meatsProteins"];
     }
     else if (index === 10) {
-        return (
-            <Text>This is alcohol & bevs</Text>
-        );
+        listOfIngredients = testuserInfo.userIngredients["alcoholBevs"];
     }
     return (
         <View>
-            <Text></Text>
+            <Text>{listOfIngredients[0].title}</Text>
         </View>
     );
 };
