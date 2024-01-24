@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Image, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput, Modal, } from 'react-native';
 import recipeDetails from '../BackendElements/recipes.js';
-import AchievementsModal from '../components/achievementModal.js';
-import ServingModal from '../components/servingModal.js';
+import AchievementsModal from '../SubScreens/achievementModal.js';
+import ServingModal from '../SubScreens/servingModal.js';
 
 const RecipePage = () => {
   const [showDirections, setShowDirections] = useState(false);
