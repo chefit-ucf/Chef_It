@@ -8,7 +8,7 @@ export const testuserInfo = {
         "fruits": [
             {
                 "itemId": "in001F",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/apple.png'),
                 "title": "Apple",
                 "nutrition": {
                     "calories": 95,
@@ -19,7 +19,7 @@ export const testuserInfo = {
             },
             {
                 "itemId": "in002F",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/orange.png'),
                 "title": "Orange",
                 "nutrition": {
                     "calories": 95,
@@ -32,7 +32,7 @@ export const testuserInfo = {
         "vegetables": [
             {
                 "itemID": "in001V",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/lettuce.png'),
                 "title": "Lettuce",
                 "nutrition": {
                     "calories": 10,
@@ -46,7 +46,7 @@ export const testuserInfo = {
         "dairyEggs" : [
             {
                 "itemID": "in001DE",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/milk.png'),
                 "title": "Whole Milk",
                 "nutrition": {
                     "calories": 149,
@@ -59,7 +59,7 @@ export const testuserInfo = {
         "pastaGrains" : [
             {
                 "itemID": "in00PG",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/whiteRice.png'),
                 "title": "White Rice",
                 "nutrition": {
                     "calories": 206,
@@ -72,7 +72,7 @@ export const testuserInfo = {
         "bread" : [
             {
                 "itemID": "in001BR",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/wholeWheat.png'),
                 "title": "Whole Wheat Bread",
                 "nutrition": {
                     "calories": 10,
@@ -85,7 +85,7 @@ export const testuserInfo = {
         "condiments" : [
             {
                 "itemID": "in001C",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/soySauce.png'),
                 "title": "Soy Sauce",
                 "nutrition": {
                     "calories": 8.5,
@@ -98,7 +98,7 @@ export const testuserInfo = {
         "baking" : [
             {
                 "itemID": "in001BA",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/sugar.png'),
                 "title": "Sugar",
                 "nutrition": {
                     "calories": 49,
@@ -111,7 +111,7 @@ export const testuserInfo = {
         "oilsDressing" : [
             {
                 "itemID": "in001OD",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/ranch.png'),
                 "title": "Ranch",
                 "nutrition": {
                     "calories": 120,
@@ -124,7 +124,7 @@ export const testuserInfo = {
         "spicesSeasonings" : [
             {
                 "itemID": "in001S",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/salt.png'),
                 "title": "Salt",
                 "nutrition": {
                     "calories": 0,
@@ -137,7 +137,7 @@ export const testuserInfo = {
         "meatsProteins" : [
             {
                 "itemID": "in001M",
-                "image": "../assets/ingredients",
+                "src" : require('../assets/ingredients/chicken.png'),
                 "title": "Chicken",
                 "nutrition": {
                     "calories": 165,
@@ -150,13 +150,13 @@ export const testuserInfo = {
         "alcoholBevs" : [
             {
                 "itemID": "in001AB",
-                "image": "../assets/ingredients",
-                "title": "Water",
+                "src" : require('../assets/ingredients/lemonade.png'),
+                "title": "Lemonade",
                 "nutrition": {
-                    "calories": 0,
-                    "fats": 0,
-                    "carbs": 0,
-                    "protein": 0
+                    "calories": 120,
+                    "fats": 0.5,
+                    "carbs": 30,
+                    "protein": 0.15
                 }
             }
         ],

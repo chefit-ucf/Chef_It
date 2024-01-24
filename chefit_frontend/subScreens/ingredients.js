@@ -43,7 +43,15 @@ const RenderIngredients = ( {index} ) => {
     }
     return (
         <View>
-            <Text>{listOfIngredients[0].title}</Text>
+            <ScrollView>
+                {listOfIngredients.map((item, i) => (
+                    <View style={{backgroundColor: "pink"}}>
+                        <Image source={item.src} resizeMode='contain'
+                        style={{width: 50, height: 50}} />
+                        <Text>{item.title}</Text>
+                    </View>
+                ))}
+            </ScrollView>
         </View>
     );
 };
