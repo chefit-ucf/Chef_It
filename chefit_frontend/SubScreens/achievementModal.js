@@ -33,7 +33,7 @@ const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationMo
           </TouchableOpacity>
           <Image source={congratulationsImage} style={styles.backButton}></Image>
           <Text>Congratulations!</Text>
-          <Text>Elapsed Time: {startTime && currentTime ? calculateElapsedTime(startTime, currentTime) : 'N/A'}</Text>
+          <Text>Current Time: {startTime && currentTime ? calculateElapsedTime(startTime, currentTime) : 'N/A'}</Text>
           <Text>You've unlocked a new Cooksona!</Text>
           <TouchableOpacity style={styles.modalButton} onPress={handleVisitAchievements}>
             <Image source={viewAchievementsImage} style={styles.viewAchievements}></Image>
