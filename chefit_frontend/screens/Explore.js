@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from 'react-native-heroicons/outline'
 import { StyleSheet, TextInput, View, ScrollView, Text, Dimensions, Image } from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import { SafeAreaView} from 'react-native-safe-area-context';
-import { slider1 } from '../data/fakeData.js'
+import { slider1, slider2git } from '../data/fakeData.js'
 
 
 const { width, height } = Dimensions.get("window");
@@ -28,24 +28,6 @@ export default function Explore() {
           </View>
         </View>
       </View>
-
-
-
-      <Swiper
-        items={slider1}
-      />
-      <Swiper
-        items={slider1}
-      />
-
-      {/* <View className='w-full h-fit bg-gray-100 border-2 border-gray-300 rounded-md   mb-8'>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <Text className={`text-lg underline-offset-[3px] font-bold border-gray-300 border-b-2 p-2`}>Current Schedule</Text>
-      <View className= 'w-full'>
-      </View>
-    </View> */}
     </ScrollView>
   </SafeAreaView>
 }
