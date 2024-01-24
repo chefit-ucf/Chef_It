@@ -22,9 +22,9 @@ export const testuserInfo = {
                 "src" : require('../assets/ingredients/orange.png'),
                 "title": "Orange",
                 "nutrition": {
-                    "calories": 95,
+                    "calories": 85,
                     "fats": 0,
-                    "carbs": 25,
+                    "carbs": 30,
                     "protein": 1
                 }
             }
@@ -156,7 +156,7 @@ export const testuserInfo = {
                     "calories": 120,
                     "fats": 0.5,
                     "carbs": 30,
-                    "protein": 0.15
+                    "protein": 0.5
                 }
             }
         ],

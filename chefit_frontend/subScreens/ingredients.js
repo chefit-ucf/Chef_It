@@ -45,10 +45,14 @@ const RenderIngredients = ( {index} ) => {
         <View>
             <ScrollView>
                 {listOfIngredients.map((item, i) => (
-                    <View style={{backgroundColor: "pink"}}>
-                        <Image source={item.src} resizeMode='contain'
-                        style={{width: 50, height: 50}} />
-                        <Text>{item.title}</Text>
+                    <View style={styles.ingredientsContainer}>
+                        <Text style={styles.ingredientTitle}>{item.title}</Text>
+                        <View style={styles.nutritionContainer}>
+                            <Image source={item.src} resizeMode='cover'
+                            style={{width: 100, height: 100}} />
+                            <Text style={styles.ingredientInfo}>Calories:{"\n"}Fats:{"\n"}Carbs:{"\n"}Protein:</Text>
+                            <Text style={styles.ingredientInfo}>{item.nutrition.calories}{"\n"}{item.nutrition.fats}{"\n"}{item.nutrition.carbs}{"\n"}{item.nutrition.protein}</Text>
+                        </View>
                     </View>
                 ))}
             </ScrollView>
@@ -121,4 +125,31 @@ const styles = StyleSheet.create({
         borderBottomColor: "#F7B49B",
         borderBottomWidth: 3,
     },
+    ingredientsContainer: {
+        backgroundColor: "#FFE3DA",
+        padding: 10,
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#E6A289",
+    },
+    nutritionContainer: {
+        flexDirection: 'row',
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingRight: 50,
+        width: "100%",
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 50
+    },
+    ingredientTitle: {
+        fontSize: 20,
+        color: "#BD7B63",
+        fontWeight: "bold",
+        paddingHorizontal: 20,
+        marginBottom: 5
+    },
+    ingredientInfo: {
+        fontSize: 14,
+        color: "#595959",
+    }
 });
