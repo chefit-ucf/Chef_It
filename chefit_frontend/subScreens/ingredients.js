@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.4,
         shadowRadius: 3,
-        elevation: 10,
     },
     ingredientTitle: {
         fontSize: 20,
