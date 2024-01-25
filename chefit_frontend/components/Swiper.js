@@ -1,9 +1,33 @@
 import React, {useEffect} from 'react'
 import Svg, { Path } from "react-native-svg"
 
-import { StyleSheet,  View, ScrollView, Text, Image } from 'react-native';
+import { StyleSheet,  View, ScrollView, Text, Image, Dimensions } from 'react-native';
 
-export default function Swiper({items, width}) {
+
+export default function Swiper({items, width, height}) {
+
+  const styles = StyleSheet.create({
+    container: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: "black",
+    },
+    pictures: {
+      width: width * items.length,
+      height,
+      flexDirection: "row",
+      padding: '20px'
+    },
+    picture: {
+      width,
+      overflow: "hidden",
+      padding: 16
+
+    },
+    image: {
+  
+    },
+  });
+
   return <View>
     <ScrollView
       showsHorizontalScrollIndicator={false}
@@ -17,7 +41,7 @@ export default function Swiper({items, width}) {
             <View>
               <Image style={{ width: '100%' }} source={source.image} />
             </View>
-            <View style={{ borderLeftWidth: 2, borderRightWidth: 2, borderBottomWidth: 2, borderRadius: 8, borderColor: '#C4C4C4' }}>
+            <View style={{ borderTopWidth: 0, borderWidth: 2, borderRadius: 8, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderColor: '#ECECEC' }}>
               <View style={{ padding: 8 }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{source.title}</Text>
               </View>
@@ -41,22 +65,3 @@ export default function Swiper({items, width}) {
   </View>
 }
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "black",
-  },
-  pictures: {
-    // width: width * slider1.length,
-    // height,
-    flexDirection: "row",
-    padding: 2
-  },
-  picture: {
-    // width,
-    // overflow: "hidden",
-  },
-  image: {
-
-  },
-});
