@@ -49,7 +49,7 @@ const RenderIngredients = ( {index} ) => {
                         <Text style={styles.ingredientTitle}>{item.title}</Text>
                         <View style={styles.nutritionContainer}>
                             <Image source={item.src} resizeMode='cover'
-                            style={{width: 100, height: 100}} />
+                            style={{width: 100, height: 100, ...styles.shadow}} />
                             <Text style={styles.ingredientInfo}>Calories:{"\n"}Fats:{"\n"}Carbs:{"\n"}Protein:</Text>
                             <Text style={styles.ingredientInfo}>{item.nutrition.calories}{"\n"}{item.nutrition.fats}{"\n"}{item.nutrition.carbs}{"\n"}{item.nutrition.protein}</Text>
                         </View>
@@ -66,7 +66,6 @@ const IngredientsHeader = () => {
         setActiveIndex(index);
     }; 
     
-
     return (
         <View style={styles.container}>
             <View style={styles.scrollBox}>
@@ -142,6 +141,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 50
+    },
+    shadow: {
+        shadowColor: 'black',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        elevation: 10,
     },
     ingredientTitle: {
         fontSize: 20,
