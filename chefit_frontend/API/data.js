@@ -395,32 +395,11 @@ export const testuserInfo = {
         ],
     },
     "usermadeRecipes": [
-      {
-        "recipeID": "re002",
-        "typeID": "lh001",
-        "userID": "../assets/recipeImages/",
-        "title": "Dummy Recipe",
-        "image": "dummy_image_url",
-        "recipeDirections": ["Step 1", "Step 2", "Step 3"],
-        "recipeIngredients": ["Ingredient 1", "Ingredient 2"],
-        "nutrition": {
-          "calories": 200,
-          "fats": 8,
-          "carbs": 30,
-          "protein": 10
-        },
-        "recipeDescription": {
-          "time": "30 minutes",
-          "servingSize": "4 servings",
-          "description": "This is a dummy recipe."
-        }
-      }
+        "re003"
     ],
-    "savedUserRecipes": [
-      {
-        "recipeID": "re001",
-        "userID": "user002"
-      }
+    "savedUserRecipes": [ 
+        "re001",
+        "re002"
     ],
     "userAchievements": [
       {
