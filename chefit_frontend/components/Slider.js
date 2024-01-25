@@ -6,7 +6,7 @@ export default function Slider({ title, items, width, height }) {
   const styles = StyleSheet.create({
     
     container: {
-      paddingHorizontal: 12,
+      paddingLeft: 12,
       marginBottom: 32
 
     },
@@ -61,6 +61,7 @@ export default function Slider({ title, items, width, height }) {
         showsHorizontalScrollIndicator={false}
         decelerationRate={"fast"}
         horizontal
+        style={{overflow:"visible"}}
       >
         <View style={{ width: '100%'}}>
           <View style={{ padding: 8, flexDirection: 'row',  gap: 12}}>
@@ -84,7 +85,8 @@ export  function DetailedSlider({title, items, width, height}) {
 
   const styles = StyleSheet.create({
     container: {
-      paddingHorizontal: 12,
+      paddingLeft: 12,
+      overflow:"visible",
       marginBottom: 32
     },
     pictures: {
@@ -100,7 +102,7 @@ export  function DetailedSlider({title, items, width, height}) {
     },
     flex: {
       flexDirection: 'row',
-      gap: 12 
+      gap: 12 , 
     },
     box: {
       padding: 12,
@@ -112,7 +114,7 @@ export  function DetailedSlider({title, items, width, height}) {
       borderBottomWidth: 2,
       borderColor: '#ECECEC',
       paddingBottom: 8,
-      marginBottom: 8
+      marginBottom: 16
     },
 
     title:{
@@ -124,13 +126,14 @@ export  function DetailedSlider({title, items, width, height}) {
   });
 
   return  <View style={styles.container}>
-          <View style={styles.border}>
+      <View style={styles.border}>
         <Text style={styles.title} >{title}</Text>
       </View>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         decelerationRate={"fast"}
         horizontal
+        style={{overflow:"visible"}}
       >
         <View style={styles.flex}>
           {items.map((source) => (
