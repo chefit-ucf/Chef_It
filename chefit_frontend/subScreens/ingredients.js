@@ -42,8 +42,8 @@ const RenderIngredients = ( {index} ) => {
         listOfIngredients = testuserInfo.userIngredients["alcoholBevs"];
     }
     return (
-        <View>
-            <ScrollView>
+        <View style={{flex: 1, paddingBottom: 120, backgroundColor: "#FFE3DA"}}>
+            <ScrollView vertical>
                 {listOfIngredients.map((item, i) => (
                     <View style={styles.ingredientsContainer}>
                         <Text style={styles.ingredientTitle}>{item.title}</Text>
@@ -109,7 +109,9 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.2,
         shadowRadius: 10,
-        elevation: 10
+        elevation: 10,
+        position: 'relative',
+        zIndex: 10 
     },
     categoryBtn: {
         flex: 1,
@@ -128,8 +130,8 @@ const styles = StyleSheet.create({
     ingredientsContainer: {
         backgroundColor: "#FFE3DA",
         padding: 10,
-        borderBottomWidth: 0.5,
-        borderBottomColor: "#E6A289",
+        borderBottomWidth: 1.5,
+        borderBottomColor: "white",
     },
     nutritionContainer: {
         flexDirection: 'row',
