@@ -2,8 +2,9 @@ import React from 'react';
 import { SafeAreaView, ScrollView, View, Text, TextInput , Dimensions, StyleSheet} from 'react-native';
 import Svg, { Path } from "react-native-svg"
 import Swiper from "../components/Swiper.js"
+import Slider, { DetailedSlider } from "../components/Slider.js"
 
-import { slider1, slider2 } from "../assets/data/fakeData.js"
+import { swiper, slider1, slider2, slider3 } from "../assets/data/fakeData.js"
 const { width, height } =  Dimensions.get("window")
 
 export default function ExploreScreen({navigation}) {
@@ -20,13 +21,31 @@ export default function ExploreScreen({navigation}) {
             <TextInput style={{ flex: 1 }} />
           </View>
         </View>
-
       </View>
       <Swiper 
+        items={swiper}
+        width={width}
+        height={height}
+      />
+      <Slider 
+        title={"Trending Recipes"}
         items={slider1}
         width={width}
         height={height}
       />
+      <DetailedSlider
+        title={"For You Recipes"}
+        items={slider2}
+        width={width}
+        height={height}
+      />
+      <Slider 
+        title={"Seasonal Recipes"}
+        items={slider3}
+        width={width}
+        height={height}
+      />
+      
     </ScrollView>
 </SafeAreaView>
   
@@ -36,16 +55,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     display: "flex"
   },
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "black",
-  },
-
-  picture: {
-    // width,
-    // overflow: "hidden",
-  },
-  image: {
-
-  },
+  
 });
