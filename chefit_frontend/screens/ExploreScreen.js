@@ -11,7 +11,7 @@ export default function ExploreScreen({navigation}) {
 
 
   return <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1 }}>
-    <ScrollView>
+    <ScrollView style={{marginBottom: 62}}>
       <View style={styles.base}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center',  }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 2, backgroundColor: '#FEF3CD',  borderColor: '#FEF3CD', borderRadius: 8, padding: 2 }}>
@@ -36,7 +36,7 @@ export default function ExploreScreen({navigation}) {
       <DetailedSlider
         title={"For You Recipes"}
         items={slider2}
-        width={width}
+        width={width /1.1}
         height={height}
       />
       <Slider 
@@ -53,7 +53,7 @@ export default function ExploreScreen({navigation}) {
 const styles = StyleSheet.create({
   base:{
     paddingHorizontal: 16,
-    display: "flex"
+    display: "flex",
   },
   
 });
