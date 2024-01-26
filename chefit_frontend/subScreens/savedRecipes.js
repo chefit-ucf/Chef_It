@@ -28,10 +28,13 @@ export default function SavedRecipesScreen() {
                 <View key={i} style={styles.recipeContainer}>
                     <TouchableOpacity>
                         <Image source={recipeData.recipeId[userSavedRecipes[i]].src} resizeMode='contain' 
-                            style={{width: 180, height: 153, borderTopLeftRadius: 10, borderTopRightRadius: 10, padding: 20}}/>
+                            style={{width: 180, height: 127.5, borderTopLeftRadius: 10, borderTopRightRadius: 10}}/>
                         <Text style={styles.titleText}>{recipeData.recipeId[userSavedRecipes[i]].title}</Text>
                         <Text style={styles.userText}>By: {recipeData.recipeId[userSavedRecipes[i]].username}</Text>
-                        <Text style={styles.timeText}>{recipeData.recipeId[userSavedRecipes[i]].timer.duration} {recipeData.recipeId[userSavedRecipes[i]].timer.unit}</Text>
+                        <View style={styles.timeContainer}>
+                            <Text style={styles.timeText}>{recipeData.recipeId[userSavedRecipes[i]].timer.duration} {recipeData.recipeId[userSavedRecipes[i]].timer.unit}</Text>
+                            <Image source={require('../assets/icons/timer.png')} style={{width: 18, height: 18, marginTop: 5, marginLeft: 7}} />
+                        </View>
                         <View style={styles.bottomContainer}>
                             <Text style={styles.rating}>{recipeData.recipeId[userSavedRecipes[i]].rating}</Text>
                             <TouchableOpacity onPress={() => handleSavePress(i)} style={styles.saveButton}>
@@ -61,15 +64,15 @@ const styles = StyleSheet.create({
     recipeContainer: {
         backgroundColor: "white",
         width: 180,
-        height: 275,
+        height: 260,
         borderRadius: 10,
         shadowColor: 'black',
         shadowOffset: {
             width: 0,
             height: 4,
         },
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
     },
     titleText: {
         fontSize: 13.5,
@@ -93,6 +96,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 18,
         color: '#F7D47C'
+    },
+    timeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     bottomContainer: {
         flexDirection: 'row',
