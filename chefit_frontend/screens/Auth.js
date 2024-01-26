@@ -22,7 +22,7 @@ const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity
     onPress={onPress}
     style={{
-      top: -30,
+      top: -20,
       justifyContent: 'center',
       alignItems: 'center',
     }}>
@@ -47,7 +47,7 @@ function HomeScreen() {
               bottom: 30,
               left: 20,
               right: 20,
-              height: 90,
+              height: 70,
               borderRadius: 20,
               ...styles.shadow
             }
@@ -56,7 +56,7 @@ function HomeScreen() {
         >
             <Tab.Screen name="Explore" component={ExploreScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 25}}>
                   <Image source={require('../assets/navIcons/search.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -66,7 +66,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Pantry" component={PantryScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 25}}>
                   <Image source={require('../assets/navIcons/pantry.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -86,7 +86,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="MealPrep" component={MealPrepScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 25}}>
                   <Image source={require('../assets/navIcons/calendar.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -96,7 +96,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Profile" component={ProfileScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 25}}>
                   <Image source={require('../assets/navIcons/profile.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>

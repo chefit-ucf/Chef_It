@@ -42,7 +42,7 @@ const RenderIngredients = ( {index} ) => {
         listOfIngredients = testuserInfo.userIngredients["alcoholBevs"];
     }
     return (
-        <View style={{flex: 1, paddingBottom: 120, backgroundColor: "#FFE3DA"}}>
+        <View style={{flex: 1, paddingBottom: 100, backgroundColor: "#FFE3DA"}}>
             <ScrollView vertical>
                 {listOfIngredients.map((item, i) => (
                     <View style={styles.ingredientsContainer}>
@@ -75,7 +75,7 @@ const IngredientsHeader = () => {
                     <TouchableOpacity key={index} onPress={() => (selectCategory(index))}
                     style={activeIndex === index ? styles.categoryBtnActive : styles.categoryBtn} >
                         <Image source={item.src} resizeMode='contain'
-                        style={{width: 50, height: 50, tintColor: "black"}} />
+                        style={{width: 40, height: 40, tintColor: "black"}} />
                         <Text style={{textAlign: 'center', paddingBottom: 5}}>{item.name}</Text>
                     </TouchableOpacity>
                 ))}

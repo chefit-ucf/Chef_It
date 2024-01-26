@@ -28,7 +28,7 @@ export default function SavedRecipesScreen() {
                 <View key={i} style={styles.recipeContainer}>
                     <TouchableOpacity>
                         <Image source={recipeData.recipeId[userSavedRecipes[i]].src} resizeMode='contain' 
-                            style={{width: 180, height: 127.5, borderTopLeftRadius: 10, borderTopRightRadius: 10}}/>
+                            style={{width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10}}/>
                         <Text style={styles.titleText}>{recipeData.recipeId[userSavedRecipes[i]].title}</Text>
                         <Text style={styles.userText}>By: {recipeData.recipeId[userSavedRecipes[i]].username}</Text>
                         <View style={styles.timeContainer}>
@@ -53,18 +53,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 2,
         backgroundColor: "#F8FAF8",
-        padding: 20,
         paddingBottom: 150,
-        paddingHorizontal: 20,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 20,
+        gap: (windowWidth / 20),
+        padding: (windowWidth / 25),
         justifyContent: 'left', 
     },
     recipeContainer: {
         backgroundColor: "white",
-        width: 180,
-        height: 260,
+        width: (windowWidth / 2.3),
+        height: (windowWidth / 1.7),
         borderRadius: 10,
         shadowColor: 'black',
         shadowOffset: {
@@ -75,17 +74,17 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
     },
     titleText: {
-        fontSize: 13.5,
+        fontSize: windowWidth / 31.5,
         fontWeight: 'bold',
         margin: 10
     },
     userText: {
-        fontSize: 11,
+        fontSize: windowWidth / 35,
         color: "grey",
         marginLeft: 10
     },
     timeText: {
-        fontSize: 13,
+        fontSize: windowWidth / 32,
         fontWeight: 'bold',
         color: '#42A797',
         marginLeft: 10,
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     rating: {
         marginLeft: 8,
         marginTop: 10,
-        fontSize: 18,
+        fontSize: windowWidth / 25,
         color: '#F7D47C'
     },
     timeContainer: {
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
         right: 10
     },
     savedIcon: {
-        width: 20,
-        height: 20
+        width: windowWidth / 20,
+        height: windowWidth / 20
     }
 });

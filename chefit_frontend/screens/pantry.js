@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import React from 'react'
 import { useState } from 'react'
 import { Tab, TabView} from '@rneui/themed'
@@ -9,6 +9,8 @@ import { SafeAreaView } from 'react-native-web';
 import IngredientsScreen from '../subScreens/ingredients';
 import SavedRecipesScreen from '../subScreens/savedRecipes';
 import RecipeIdeasScreen from '../subScreens/recipeIdeas';
+
+const windowWidth = Dimensions.get('window').width;
 
 export default function PantryScreen({navigation}) {
     const [index, setIndex] = React.useState(0);
@@ -50,10 +52,11 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     titleText: {
-        paddingTop: 70,
+        paddingTop: 45,
         fontSize: 24,
         fontWeight: "bold",
-        textAlign: 'center'
+        textAlign: 'left',
+        marginLeft: 20
     },
     pText: {
         padding: 20,
