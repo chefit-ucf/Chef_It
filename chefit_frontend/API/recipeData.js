@@ -85,5 +85,47 @@ export const recipeData = {
                 }
             }
         },
+        "re003" : {
+            title: 'BBQ Onion Burgers',
+            username: 'Test',
+            rating: '★ ★ ★ ★',
+            src: require('../assets/recipes/bbqBurgers.jpg'),
+            ingredients: [
+                { quantity: 2, unit: 'cloves', name: 'garlic' },
+                { quantity: 1, unit: 'whole', name: 'yellow onion' },
+                { quantity: 12, unit: 'oz', name: 'carrots' },
+                { quantity: 8, unit: 'oz', name: 'ground beef' },
+                { quantity: 1, unit: 'cup', name: 'shredded pepper jack' },
+                { quantity: 3, unit: 'tbsp', name: 'bbq sauce' },
+                { quantity: 1/2, unit: 'tsp', name: 'dried thyme' },
+                { quantity: 2, unit: 'units', name: 'potato buns' },
+                { quantity: 2, unit: 'tbsp', name: 'sugar' }
+            ],
+            directions: [
+                { text: 'Preheat oven to 425 degrees', checkpoint: 0 },
+                { text: 'Halve, peel, and thinly slice onion. Finely chop garlic until you have 1 tsp. Trim, peel, and cut carrots into long thin sticks.', checkpoint: 60 },
+                { text: 'Toss carrots on baking sheet with large drizzle of olive oil, salt, and pepper. Roast until browned and crispy.', checkpoint: 300},
+                { text: 'Heat a drizzle of oil in large pan and add onion, seasoned with salt and pepper. Cook until lightly browned and softened, and add 1 tsp of sugar and 2 TBSP of water. Cook until onion is carmelized and jammy. Stir in BBQ sauce and set aside.', checkpoint: 420 },
+                { text: 'Form ground beef into two 1/2 inch thick patties. Divide cheese between the centers of each patty. Season all over with salt and pepper', checkpoint: 540 },
+                { text: 'Heat a drizzle of oil in the same pan. Add patties and cook until browned and cooked through, 4-5 minutes per side.', checkpoint: 660 },
+                { text: 'While patties cool, heat up garlic and 1 TBSP butter in the microwave. Halve the buns, brush the inside with garlic butter. Place on baking sheet and toast in oven until golden, 3-5 mins.', checkpoint: 780 },
+                { text: 'Fill toasted buns with patties and BBQ onion. Divide carrot fries between plates.', checkpoint: 900 },
+                 { text: 'Let cool & enjoy!', checkpoint: 1080 }
+            ],
+            timer: {
+                duration: 35,
+                unit: 'minutes',
+            },
+            servingSize: {
+                servings: 2,
+                ingredients: 9,
+                nutrition: {
+                    calories: 820, 
+                    carbs: 78, 
+                    protein: 36, 
+                    fat: 50, 
+                }
+            }
+        },
     }     
 };

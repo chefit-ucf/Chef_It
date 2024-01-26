@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react'
 import { useState } from 'react'
 
@@ -6,27 +6,28 @@ import { testuserInfo } from '../API/data.js';
 import { recipeData } from '../API/recipeData.js';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 export default function SavedRecipesScreen() {
     let userSavedRecipes = testuserInfo.savedUserRecipes;
     let arrLength = userSavedRecipes.length;
 
     return (
-        <View style={styles.container}>
+        <ScrollView vertical>
+            <View style={styles.container}>
             {Array.from({ length: arrLength }, (_, i) => (
                 <View key={i} style={styles.recipeContainer}>
                     <TouchableOpacity>
                         <Image source={recipeData.recipeId[userSavedRecipes[i]].src} resizeMode='contain' 
-                            style={{width: (windowWidth / 2) - 30, height: (windowWidth / 2) - 58, borderTopLeftRadius: 10, borderTopRightRadius: 10}}/>
+                            style={{width: 180, height: 153, borderTopLeftRadius: 10, borderTopRightRadius: 10, padding: 20}}/>
                         <Text style={styles.titleText}>{recipeData.recipeId[userSavedRecipes[i]].title}</Text>
-                        <Text style={styles.userText}>By {recipeData.recipeId[userSavedRecipes[i]].username}</Text>
+                        <Text style={styles.userText}>By: {recipeData.recipeId[userSavedRecipes[i]].username}</Text>
                         <Text style={styles.timeText}>{recipeData.recipeId[userSavedRecipes[i]].timer.duration} {recipeData.recipeId[userSavedRecipes[i]].timer.unit}</Text>
                         <Text style={styles.rating}>{recipeData.recipeId[userSavedRecipes[i]].rating}</Text>
                     </TouchableOpacity>
                 </View>
             ))} 
-        </View>
+            </View>
+        </ScrollView>
     );
 }
 
@@ -35,14 +36,16 @@ const styles = StyleSheet.create({
         flex: 2,
         backgroundColor: "#F8FAF8",
         padding: 20,
-        display: 'grid',
+        paddingBottom: 150,
+        paddingHorizontal: 20,
         flexDirection: 'row',
-        gap: 30,
-        justifyContent: 'center', 
+        flexWrap: 'wrap',
+        gap: 20,
+        justifyContent: 'left', 
     },
     recipeContainer: {
         backgroundColor: "white",
-        width: (windowWidth / 2) - 30,
+        width: 180,
         height: 275,
         borderRadius: 10,
         shadowColor: 'black',
@@ -54,7 +57,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
     },
     titleText: {
-        fontSize: 14,
+        fontSize: 13.5,
         fontWeight: 'bold',
         margin: 10
     },

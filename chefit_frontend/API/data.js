@@ -399,7 +399,8 @@ export const testuserInfo = {
     ],
     "savedUserRecipes": [ 
         "re001",
-        "re002"
+        "re002",
+        "re003"
     ],
     "userAchievements": [
       {
