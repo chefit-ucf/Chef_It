@@ -31,6 +31,7 @@ const RecipePage = () => {
 
 
 
+
 //Timer
 const timerIntervalRef = useRef(null);
 
@@ -40,6 +41,7 @@ const timerIntervalRef = useRef(null);
 
     if (timer !== null && !isPaused) {
       timerInterval = setInterval(() => {
+        // ... (previous code)
       }, 1000);
 
       timerIntervalRef.current = timerInterval; 
@@ -284,8 +286,7 @@ if (!fontsLoaded) {
           ? checkboxImageCheckedSource
           : checkboxImageSource
       }
-      style={{ width: 25, height: 25 }}
-    />
+      style={[{width: 25, height: 25}, {display: isContainerVisible ? 'none' : 'flex'}]}/>
   </View>
 ))}
    </View>
@@ -298,7 +299,8 @@ if (!fontsLoaded) {
   )}
 </View>
       </View>
-<Text style={styles.cookAlongText}>Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Text>
+      <Text style={[styles.cookAlongText, { display: isContainerVisible ? 'flex' : 'none' }]}>
+Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Text>
 <View style={styles.centeredButtonContainer}>
   <Pressable
     style={styles.timerButton}
@@ -350,7 +352,8 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontStyle: 'normal',
     letterSpacing: -1.12,
-    textAlign: 'center'
+    textAlign: 'center',
+    marginTop: 5
   },
   username: {
     color: '#000',
@@ -371,8 +374,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 16,
-    marginBottom: 16,
+    marginTop: 10,
+    marginBottom: 10,
   },
 
   button: {
@@ -380,12 +383,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     margin: 0,
     borderBottomWidth: 2,
-    borderColor: '#000'
+    borderColor: '#000',
+    width: 205, // Adjust the width as needed
   },
 
   buttonText: {
     fontFamily: 'Coiny',
     fontSize: 24,
+    textAlign: 'center'
+  },
+
+  buttonWithBorder: {
+    borderBottomWidth: 2,
+    borderColor: '#000',
+    width: 205, // Adjust the width as needed
   },
 
   selectedButton: {
@@ -395,10 +406,12 @@ const styles = StyleSheet.create({
   selectedButtonText: {
     color: '#47A695',
   },
+
   content: {
     marginTop: 8,
   },
   timerText: {
+    marginTop: 5,
     fontSize: 32,
     fontFamily: "Montserrat_500Medium",
     textAlign: 'center'
@@ -426,8 +439,8 @@ centeredButtonContainer: {
   marginBottom: 32,
 },
   startButton: {
-    width: 96,
-    height: 36,
+    width: 101,
+    height: 41,
     marginTop: 5,
     alignSelf: 'center',
   },
@@ -523,9 +536,10 @@ centeredButtonContainer: {
   directions: {
     flexDirection: 'row', 
     alignItems: 'center',
-    paddingVertical: 5,
+    paddingVertical: 13,
+    paddingLeft: 5,
     color: '#000',
-    fontFamily: "Montserrat",
+    fontFamily:"Montserrat_500Medium",
     fontSize: 20,
     fontStyle: 'normal',
     letterSpacing: -0.7,
@@ -534,13 +548,14 @@ centeredButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingRight: 16, 
+    paddingRight: 20, 
     marginTop: 8,
   },
   recipe:{
-    paddingVertical: 5,
+    paddingVertical: 13,
+    paddingHorizontal: 5,
     color: '#000',
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat_500Medium",
     fontSize: 20,
     fontStyle: 'normal',
     letterSpacing: -0.7,
