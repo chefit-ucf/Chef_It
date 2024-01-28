@@ -1,4 +1,7 @@
-import { View, Image, Text, TouchableOpacity, StyleSheet, Modal, } from 'react-native';
+import { View, Image, Text, Pressable, StyleSheet, Modal, } from 'react-native';
+import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+
 
 //Toggle Serving Modal
 const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationModalVisible, currentTime, startTime}) => {
@@ -23,63 +26,91 @@ const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationMo
   const congratulationsImage = require('../assets/avatar1.png')
   const xImage = require('../assets/x.png')
   const viewAchievementsImage = require('../assets/viewAchievements.png')
-
+  let [fontsLoaded] = useFonts({
+    Montserrat_300Light,
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold
+  })
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>
+  }
   return (
     <Modal visible={isCongratulationModalVisible} transparent>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <TouchableOpacity onPress={() => setIsCongratulationModalVisible(false)}>
-            <Image source ={xImage} style={styles.backButton}></Image>
-          </TouchableOpacity>
-          <Image source={congratulationsImage} style={styles.backButton}></Image>
-          <Text>Congratulations!</Text>
-          <Text>Current Time: {startTime && currentTime ? calculateElapsedTime(startTime, currentTime) : 'N/A'}</Text>
-          <Text>You've unlocked a new Cooksona!</Text>
-          <TouchableOpacity style={styles.modalButton} onPress={handleVisitAchievements}>
-            <Image source={viewAchievementsImage} style={styles.viewAchievements}></Image>
-          </TouchableOpacity>
+          <Pressable onPress={() => setIsCongratulationModalVisible(false)} style={styles.closeButton}>
+            <Image source={xImage} style={styles.backButton} />
+          </Pressable>
+          <Image source={congratulationsImage} style={styles.congratulationsImage} />
+          <Text style={styles.congratText}>Congratulations!</Text>
+          <Text style={styles.timerText}>
+            Current Time: {startTime && currentTime ? calculateElapsedTime(startTime, currentTime) : 'N/A'}
+          </Text>
+          <Text style={styles.cooksonaText}>You've unlocked a new Cooksona!</Text>
+          <Pressable style={styles.modalButton} onPress={handleVisitAchievements}>
+            <Image source={viewAchievementsImage} style={styles.viewAchievements} />
+          </Pressable>
         </View>
       </View>
     </Modal>
   );
-}
+};
+
 const styles = StyleSheet.create({
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-      backgroundColor: 'white',
-      padding: 20,
-      borderRadius: 10,
-      alignItems: 'center',
-    },
-    modalInput: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginVertical: 10,
-      paddingHorizontal: 10,
-    },
-    modalButton: {
-      backgroundColor: 'gray',
-      padding: 10,
-      borderRadius: 5,
-      marginTop: 10,
-    },
-    backButton: {
-      width: 30, 
-      height: 30, 
-      resizeMode: 'contain', 
-    },
-    viewAchievements: {
-      width: 'auto',
-      height: 'auto',
-      padding: 10
-    }
-  });
-
-
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  congratText: {
+    fontSize: 32,
+    fontFamily: 'Coiny',
+  },
+  timerText: {
+    fontSize: 20,
+    fontFamily: "Montserrat_500Medium",
+  },
+  cooksonaText: {
+    marginTop: 10,
+    fontSize: 20,
+    fontFamily: "Montserrat_500Medium",
+    textAlign: 'center'
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    width: 300,
+    height: 375,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  backButton: {
+    width: 24,
+    height: 24,
+  },
+  congratulationsImage: {
+    width: 130, 
+    height: 100, 
+    marginBottom: 10,
+  },
+  modalButton: {
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  viewAchievements: {
+    width: 257,
+    height: 38,
+    padding: 10,
+  },
+});
 export default AchievementsModal

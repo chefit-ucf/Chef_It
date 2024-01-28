@@ -3,6 +3,10 @@ import { View, Image, Text, ScrollView, Pressable, StyleSheet, } from 'react-nat
 import recipeDetails from '../BackendElements/recipes.js';
 import AchievementsModal from '../SubScreens/achievementModal.js';
 import ServingModal from '../SubScreens/servingModal.js';
+import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+
+
 
 const RecipePage = () => {
   const [showDirections, setShowDirections] = useState(false);
@@ -20,6 +24,8 @@ const RecipePage = () => {
   const [isCongratulationModalVisible, setIsCongratulationModalVisible] = useState(false);
   const [currentTime, setCurrentTime] = useState(null);
   const [startTime, setStartTime] = useState(null);
+  const [isContainerVisible, setIsContainerVisible] = useState(true);
+  const [isCookAlongInitiated, setIsCookAlongInitiated] = useState(false); 
 
 
 
@@ -34,10 +40,9 @@ const timerIntervalRef = useRef(null);
 
     if (timer !== null && !isPaused) {
       timerInterval = setInterval(() => {
-        // ... (previous code)
       }, 1000);
 
-      timerIntervalRef.current = timerInterval; // Save the interval reference in the ref
+      timerIntervalRef.current = timerInterval; 
 
     if (startTimerOnPress && timer === null) {
       setTimer(initialDuration);
@@ -48,7 +53,7 @@ const timerIntervalRef = useRef(null);
     }
   }
   return () => {
-    clearInterval(timerIntervalRef.current); // Clear the interval using the ref
+    clearInterval(timerIntervalRef.current); 
   };
 }, [startTimerOnPress, timer, isPaused, initialDuration, completedSteps]);
 
@@ -73,7 +78,7 @@ const timerIntervalRef = useRef(null);
             return null;
           }
         });
-        setCurrentTime((prevTime) => prevTime + 1000); // Update currentTime every second
+        setCurrentTime((prevTime) => prevTime + 1000); 
       }, 1000);
   
       recipe.directions.forEach((step, index) => {
@@ -92,7 +97,6 @@ const timerIntervalRef = useRef(null);
     const seconds = timeInSeconds % 60;
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
-  
   const handleStartButtonPress = () => {
     setStartTimerOnPress(true);
     setIsPaused(false);
@@ -149,111 +153,169 @@ const toggleModal = (visible) => {
   console.log('Setting isModalVisible to:', visible);
   setIsModalVisible(visible);
 };
-
+let [fontsLoaded] = useFonts({
+  Montserrat_300Light,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold
+})
+if (!fontsLoaded) {
+  return <Text>Loading...</Text>
+}
   return (
     <ScrollView>
-        <View style={styles.imageContainer}>
+    <View style={styles.imageContainer}>
     <Image source={recipe.imageSource} style={styles.image} />
    <View style={styles.topButtonsContainer}>
-  <Image source={backImage} style={styles.backButton} />
-  <View style={styles.rightButtonsContainer}>
+    <Image source={backImage} style={styles.backButton} />
+    <View style={styles.rightButtonsContainer}>
     <Image source={shareImage} style={styles.topButtons} />
     <Image source={saveImage} style={styles.topButtons} />
   </View>
+  <View style={styles.whiteContainer}>
+  <Text style={styles.title}>{recipe.title}</Text>
+
+    </View>
   </View>
 </View>      
       <View style={styles.container}>
-        <Text style={styles.title}>{recipe.title}</Text>
-        <Text>By {recipe.username}</Text>
-        <Text>{recipe.rating}<Pressable><Text>  Rate</Text></Pressable></Text>
+      <Text style={styles.username}>By {recipe.username}</Text>
+        <Text style={styles.rating}>{recipe.rating}<Pressable><Text>  Rate</Text></Pressable></Text>
         {isTimerVisible && (
-          <View style={styles.timerContainerTop}>
             <Text style={styles.timerText}>
-              Cook Time: {formatTime(timer)}
+              Timer: {formatTime(timer)}
             </Text>
-          </View>
         )}
-  <View>
-          <View style={styles.servingSizeContainer}>
-          <Pressable onPress={() => toggleModal(true)}>
-  <Text>Serves: {newServingSize}</Text>
-</Pressable>
-            <Text>Mins: {recipe.servingSize.minutes}</Text>
-          </View>
-          <View style={styles.nutritionContainer}>
-            <Text style={styles.nutritionText}>Nutrition Per Serving</Text>
-            <Text>Calories: {recipe.servingSize.nutrition.calories}</Text>
-            <Text>Carbs: {recipe.servingSize.nutrition.carbs}g</Text>
-            <Text>Protein: {recipe.servingSize.nutrition.protein}g</Text>
-            <Text>Fat: {recipe.servingSize.nutrition.fat}g</Text>
-          </View>
-
-      </View>
-      {areTimerButtonsVisible && (
+         {areTimerButtonsVisible && (
         <View>
   <View style={styles.buttonContainer}>
-    <Pressable style={styles.controlButton} onPress={handlePauseButtonPress}>
-      <Text>Pause</Text>
+    <Pressable onPress={handlePauseButtonPress}>
+      <Text style={styles.timerButton}>Pause</Text>
     </Pressable>
-    <Pressable style={styles.controlButton} onPress={handleResetButtonPress}>
-      <Text>Reset</Text>
+    <Pressable onPress={handleResetButtonPress}>
+      <Text style={styles.timerButton}>Reset</Text>
     </Pressable>
-    <Pressable style={styles.controlButton} onPress={handleStopButtonPress}>
-      <Text>Stop</Text>
+    <Pressable onPress={handleStopButtonPress}>
+      <Text style={styles.timerButton}>Stop</Text>
     </Pressable>
   </View> 
   <View>
-        <Pressable style={styles.controlButton} onPress={handleStartButtonPress}>
+        <Pressable onPress={handleStartButtonPress}>
         <Image source = {startImage} style={styles.startButton}></Image>
       </Pressable>
       </View>
       </View>
   )}
-        <View style={styles.buttonContainer}>
-          <Pressable
-            style={[styles.button, selectedButton === 'recipe' && styles.selectedButton]}
-            onPress={() => handleButtonPress('recipe')}
-          >
-            <Text>Recipe</Text>
-          </Pressable>
+  <View>
+  <View style={[styles.servingSizeContainer, { display: isContainerVisible ? 'flex' : 'none' }]}>
+      <View style={styles.servingItem}>
+      <Pressable onPress={() => toggleModal(true)}>
+        <Text style={styles.servingValue}>{newServingSize}</Text>
+        <Text style={styles.servingLabel}>Serves</Text>
+      </Pressable>
+      </View>
+      <View style={styles.servingItem}>
+      <Text style={styles.servingValue}>{recipe.servingSize.minutes}</Text>
+      <Text style={styles.servingLabel}>Mins</Text>
+      </View>
+      <View style={styles.LastServingItem}>
+      <Text style={styles.servingValue}>{recipe.ingredients.length}</Text>
+      <Text style={styles.servingLabel}>Ingredients</Text>
+      </View>
+    </View>
+    <View style={[{paddingTop: 15}, { display: isContainerVisible ? 'flex' : 'none' }]}>
+    <Text style={styles.nutritionText}>Nutrition per Serving</Text>
+    <View style={styles.nutritionContainer}>
+  <View style={styles.nutritionItem}>
+    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.calories}</Text>
+    <Text style={styles.nutritionLabel}>Calories</Text>
 
-          <Pressable
-            style={[styles.button, selectedButton === 'directions' && styles.selectedButton]}
-            onPress={() => handleButtonPress('directions')}
-          >
-            <Text>Directions</Text>
-          </Pressable>
-        </View>
+  </View>
+  <View style={styles.nutritionItem}>
+    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.carbs}g</Text>
+    <Text style={styles.nutritionLabel}>Carbs</Text>
+
+  </View>
+  <View style={styles.nutritionItem}>
+    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.protein}g</Text>
+    <Text style={styles.nutritionLabel}>Protein</Text>
+
+  </View>
+  <View style={styles.lastNutritionItem}>
+    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.fat}g</Text>
+    <Text style={styles.nutritionLabel}>Fat</Text>
+  </View>
+  </View>
+</View>
+      </View>
+<View style={styles.buttonContainer}>
+  <Pressable
+    style={[
+      styles.button,
+      styles.buttonWithBorder,
+      selectedButton === 'recipe' && styles.selectedButton,
+    ]}
+    onPress={() => handleButtonPress('recipe')}
+  >
+    <Text style={[styles.buttonText, selectedButton === 'recipe' && styles.selectedButtonText]}>Recipe</Text>
+  </Pressable>
+
+  <Pressable
+    style={[
+      styles.button,
+      styles.buttonWithBorder,
+      selectedButton === 'directions' && styles.selectedButton,
+    ]}
+    onPress={() => handleButtonPress('directions')}
+  >
+    <Text style={[styles.buttonText, selectedButton === 'directions' && styles.selectedButtonText]}>Directions</Text>
+  </Pressable>
+</View>
+
         <View style={styles.content}>
   {selectedButton === 'directions' ? (
       <View>
-      {recipe.directions.map((step, index) => (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }} key={index}>
-         <Image
-  source={completedSteps.includes(index) ? checkboxImageCheckedSource : checkboxImageSource}
-  style={{ width: 20, height: 20, marginRight: 5 }}
-/>
-          <Text>{`${index + 1}: ${step.text}`}</Text>
-        </View>
-     ))}
+     {recipe.directions.map((step, index) => (
+  <View key={index} style={styles.stepContainer}>
+    <Text style={styles.directions}>{`${index + 1}. ${step.text}`}</Text>
+    <Image
+      source={
+        completedSteps.includes(index)
+          ? checkboxImageCheckedSource
+          : checkboxImageSource
+      }
+      style={{ width: 25, height: 25 }}
+    />
+  </View>
+))}
    </View>
   ) : (
     <View>
       {recipe.ingredients.map((item, index) => (
-        <Text key={index}>{`${item.quantity} ${item.unit} ${item.name}`}</Text>
+        <Text style={styles.recipe} key={index}>{`${item.quantity} ${item.unit} ${item.name}`}</Text>
       ))}
     </View>
   )}
 </View>
       </View>
-<Text>Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Text>
-<Pressable style={styles.controlButton} onPress={() => {
-     setTimer(null);
-     setIsTimerVisible(true);
-  setAreTimerButtonsVisible(true);
-}}>
-  <Text><Image source={cookAlongImage} style={styles.cookAlong}></Image></Text>
-</Pressable>
+<Text style={styles.cookAlongText}>Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Text>
+<View style={styles.centeredButtonContainer}>
+  <Pressable
+    style={styles.timerButton}
+    onPress={() => {
+      setTimer(null);
+      setIsTimerVisible(true);
+      setAreTimerButtonsVisible(true);
+      setIsContainerVisible(!isContainerVisible);
+      setIsCookAlongInitiated(true)
+    }}
+    
+  >
+    <Text>
+      <Image source={cookAlongImage} style={styles.cookAlong}></Image>
+    </Text>
+  </Pressable>
+</View>
 <ServingModal
     isModalVisible={isModalVisible}
     setIsModalVisible={setIsModalVisible}
@@ -274,56 +336,100 @@ const toggleModal = (visible) => {
 
 const styles = StyleSheet.create({
   image: {
-    width: '100%',
-    height: 200,
+    width: 428,
+    height: 235,
   },
   container: {
-    padding: 16,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    color: '#000',
+    fontFamily: 'Coiny',
+    fontSize: 32,
+    fontStyle: 'normal',
+    letterSpacing: -1.12,
+    textAlign: 'center'
+  },
+  username: {
+    color: '#000',
+    fontFamily: 'Montserrat_400Regular',
+    fontSize: 20,
+    fontStyle: 'normal',
+    letterSpacing: -0.7,
+    textAlign: 'center'
+  },
+  rating: {
+    color: '#000',
+    fontFamily: 'Montserrat_400Regular',
+    fontSize: 15,
+    fontStyle: 'normal',
+    letterSpacing: -0.525,
+    textAlign: 'center'
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 16,
+    marginBottom: 16,
   },
+
   button: {
-    paddingVertical: 8,
-  },
-  selectedButton: {
+    fontFamily: 'Coiny',
+    fontSize: 24,
+    margin: 0,
     borderBottomWidth: 2,
-    borderBottomColor: 'black',
+    borderColor: '#000'
+  },
+
+  buttonText: {
+    fontFamily: 'Coiny',
+    fontSize: 24,
+  },
+
+  selectedButton: {
+    borderBottomColor: '#47A695',
+  },
+
+  selectedButtonText: {
+    color: '#47A695',
   },
   content: {
     marginTop: 8,
   },
-  timer: {
-    fontSize: 20,
-    marginTop: 16,
-    textAlign: 'center',
-  },
-  timerContainer: {
-    marginTop: 16,
-  },
   timerText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 32,
+    fontFamily: "Montserrat_500Medium",
+    textAlign: 'center'
   },
-  timerContainerTop: {
-    marginTop: 16,
+  timerButton: {
+    color: '#000',
+    fontFamily: 'Montserrat_400Regular',
+    fontSize: 24,
+    fontStyle: 'normal',
+    letterSpacing: -0.84,
+    flexShrink: 0
   },
   cookAlong: {
-    width: 100, 
-    height: 100,
-    resizeMode: 'contain',
-  },
+    width: 149,
+    height: 35,
+    flexShrink: 0,
+    textAlign: 'center',
+    marginTop: 5,
+
+},
+centeredButtonContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: 32,
+},
   startButton: {
-    width: 80, 
-    height: 80,
-    resizeMode: 'contain', 
-    textAlign: 'center'
+    width: 96,
+    height: 36,
+    marginTop: 5,
+    alignSelf: 'center',
   },
   imageContainer: {
     position: 'relative', 
@@ -341,18 +447,125 @@ const styles = StyleSheet.create({
   },
   rightButtonsContainer: {
     flexDirection: 'row', 
-    marginLeft: 265
+    marginLeft: 255
   },
   backButton: {
     width: 30, 
     height: 30, 
-    resizeMode: 'contain', 
   },
   topButtons: {
-    width: 30, 
-    height: 30,
-    resizeMode: 'contain', 
+    width: 32.7,
+    height: 32.7,
     marginLeft: 16, 
+  },
+  nutritionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  nutritionItem: {
+    flex: 1,
+    marginRight: 8,
+    paddingRight: 8,
+    borderRightWidth: 1,
+    borderColor: '6F6F6F',
+    alignItems: 'center', 
+  },
+  nutritionText: {
+    fontSize: 16,
+    fontFamily: 'Montserrat_600SemiBold'
+  },
+  lastNutritionItem: {
+    borderRightWidth: 0, 
+    paddingRight: 20,
+    paddingLeft: 20
+  },
+  nutritionLabel: {
+    fontFamily: "Montserrat_400Regular",
+    color: "#535353",
+    fontSize: 20,
+    fontStyle: 'normal',
+    letterSpacing: -0.84
+    },
+  servingLabel: {
+    color: '#535353',
+    textAlign: 'center',
+    fontFamily: 'Montserrat_400Regular',
+    fontSize: 20,
+    fontStyle: 'normal',
+    letterSpacing: -0.84,
+
+  },
+  servingSizeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  servingItem: {
+    flex: 1,
+    borderRightWidth: 1,
+    borderColor: '6F6F6F',
+    alignItems: 'center', 
+    fontSize: 24
+  },
+  LastServingItem: {
+    borderRightWidth: 0, 
+    paddingLeft: 20
+  },
+  servingValue: {
+    color: '#000',
+    fontSize: 24,
+    fontFamily: "Montserrat_500Medium",
+    textAlign: 'center',
+    },
+  directions: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    paddingVertical: 5,
+    color: '#000',
+    fontFamily: "Montserrat",
+    fontSize: 20,
+    fontStyle: 'normal',
+    letterSpacing: -0.7,
+  },
+  stepContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 16, 
+    marginTop: 8,
+  },
+  recipe:{
+    paddingVertical: 5,
+    color: '#000',
+    fontFamily: "Montserrat",
+    fontSize: 20,
+    fontStyle: 'normal',
+    letterSpacing: -0.7,
+  },
+  cookAlongText: {
+    marginTop: 10,
+    color: '#000',
+    textAlign: 'center',
+    fontFamily: 'Montserrat_600SemiBold',
+    fontSize: 20,
+    fontStyle: 'normal',
+    letterSpacing: -0.7,
+    marginBottom: 10
+  },
+  whiteContainer: {
+    position: 'absolute',
+    top: 195,
+    left: 0,
+    right: 0,
+    height: 44,
+    backgroundColor: 'white',
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    paddingLeft: 15,
+    paddingRight: 15
   },
 });
 

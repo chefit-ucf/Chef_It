@@ -2,7 +2,7 @@ const recipeDetails = {
     title: 'Chocolate Chip Cookies',
     username: 'username',
     rating: '★ ★ ★ ★',
-    imageSource: require('../assets/chocolatechipcookies.jpg'),
+    imageSource: require('../assets/chocolatechipcookies.png'),
     ingredients: [
       { quantity: 1/2, unit: 'cup', name: 'sugar' },
       { quantity: 3/4, unit: 'cup', name: 'brown sugar' },
