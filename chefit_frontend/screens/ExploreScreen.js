@@ -4,6 +4,8 @@ import Svg, { Path } from "react-native-svg"
 import Swiper from "../components/Swiper.js"
 import Slider, { DetailedSlider } from "../components/Slider.js"
 
+import Search from '../subScreens/Search.js';
+
 import { swiper, slider1, slider2, slider3 } from "../assets/data/fakeData.js"
 const { width, height } =  Dimensions.get("window")
 
@@ -20,7 +22,10 @@ export default function ExploreScreen({navigation}) {
           </Svg>
           {/* will be changed later */}
             <Text style={{ flex: 1 }} /> 
+            <Search/>
           </View>
+
+
         </View>
       </View>
       <Swiper 

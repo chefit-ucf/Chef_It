@@ -34,7 +34,7 @@ function Profile({ navigation }) {
         Username
       </Text>
       <View style={{width: 1000}}>
-        <MyRecipesAndAchievementsTab />
+        {/* <MyRecipesAndAchievementsTab /> */}
       </View>
       
       <Button

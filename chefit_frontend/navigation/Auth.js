@@ -17,6 +17,7 @@ import PantryScreen from '../screens/PantryScreen.js';
 import AddRecipeScreen from '../screens/AddRecipeScreen.js';
 import MealPrepScreen from '../screens/MealPrepScreen.js';
 import ProfileScreen from '../screens/ProfileScreen.js';
+import { SearchScreen } from '../subScreens/Search.js' 
 
 const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity
@@ -52,9 +53,9 @@ function HomeScreen() {
               ...styles.shadow
             }
           }}
-          initialRouteName='Explore' 
+          initialRouteName='SearchScreen' 
         >
-            <Tab.Screen name="Explore" component={ExploreScreen} options={{
+            <Tab.Screen name="SearchScreen" component={SearchScreen} options={{
               tabBarIcon: ({focused}) => (
                 <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
                   <Image source={require('../assets/navIcons/search.png')}
