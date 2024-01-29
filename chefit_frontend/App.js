@@ -6,7 +6,7 @@ import RecipeScreen from './screens/recipeScreen.js';
 export default function App() {
   return (
     <View style={styles.container}>
-      <RecipeScreen></RecipeScreen>
+      <RecipePage></RecipePage>
       <StatusBar style="auto" />
     </View>
   );

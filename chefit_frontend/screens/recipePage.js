@@ -4,12 +4,15 @@ import recipeDetails from '../BackendElements/recipes.js'; // Change the path ac
 import AchievementsModal from '../SubScreens/achievementModal.js';
 import ServingModal from '../SubScreens/servingModal.js';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
-import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+
 const windowWidth = Dimensions.get('window').width;
 
 
-const RecipePage = () => {
-
+export default function RecipePage({navigation}) {
+  
+  const Stack = createNativeStackNavigator();
   const [showDirections, setShowDirections] = useState(false);
   const [selectedButton, setSelectedButton] = useState('recipe');
   const [timer, setTimer] = useState(null);
@@ -584,5 +587,3 @@ centeredButtonContainer: {
     paddingRight: 15
   },
 });
-
-export default RecipePage;
