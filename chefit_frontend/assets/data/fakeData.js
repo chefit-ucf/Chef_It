@@ -156,3 +156,28 @@ export const DATA3 = [
     title: 'Caribbean',
   },
 ];
+
+export const searchItems = [
+  {
+    image: require("../../assets/food/search_item1.jpg"),
+    title: "Filet Mignon",
+  },
+  {
+    image: require("../../assets/food/search_item2.jpg"),
+    title: "Cheese Burger",
+
+  },
+  {
+    image: require("../../assets/food/search_item3.jpg"),
+    title: "Eggs Benedict",
+  },
+  {
+    image: require("../../assets/food/search_item4.jpg"),
+    title: "Sweet Potato Fries",
+  },
+  {
+    image: require("../../assets/food/search_item5.jpg"),
+    title: "Spaghetti",
+  },
+
+];

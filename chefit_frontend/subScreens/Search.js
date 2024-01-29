@@ -4,7 +4,7 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, View, Dimensions, StatusBar
 import Svg, { Path } from "react-native-svg"
 
 import Filter from '../components/Filter';
-
+import SearchItem from '../components/SearchItem';
 
 export default function Search() {
   const [index, setIndex] = useState(0);
