@@ -407,8 +407,8 @@ const styles = StyleSheet.create({
   },
 
   buttonWithBorder: {
-    borderBottomWidth: 2,
-    borderColor: '#000',
+    borderBottomWidth: 3,
+    borderColor: '#E2E2E2',
     width: 205, // Adjust the width as needed
   },
 
