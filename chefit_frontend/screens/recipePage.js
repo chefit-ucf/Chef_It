@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, Text, ScrollView, Pressable, StyleSheet, } from 'react-native';
-import recipeDetails from '../BackendElements/recipes.js';
+import { View, Image, Text, ScrollView, Pressable, StyleSheet, Dimensions } from 'react-native';
+import recipeDetails from '../BackendElements/recipes.js'; // Change the path accordingly
 import AchievementsModal from '../SubScreens/achievementModal.js';
 import ServingModal from '../SubScreens/servingModal.js';
-import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
-
+const windowWidth = Dimensions.get('window').width;
 
 
 const RecipePage = () => {
+
   const [showDirections, setShowDirections] = useState(false);
   const [selectedButton, setSelectedButton] = useState('recipe');
   const [timer, setTimer] = useState(null);
