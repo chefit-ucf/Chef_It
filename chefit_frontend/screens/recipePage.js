@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, Text, ScrollView, Pressable, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, Text, ScrollView, Pressable, StyleSheet, Dimensions} from 'react-native';
 import recipeDetails from '../BackendElements/recipes.js'; // Change the path accordingly
 import AchievementsModal from '../SubScreens/achievementModal.js';
 import ServingModal from '../SubScreens/servingModal.js';
@@ -14,15 +14,15 @@ export default function RecipePage({navigation}) {
   
   const Stack = createNativeStackNavigator();
   const [showDirections, setShowDirections] = useState(false);
-  const [selectedButton, setSelectedButton] = useState('recipe');
+  const [selectedButton, setSelectedButton] = useState('ingredients');
   const [timer, setTimer] = useState(null);
   const [initialDuration, setInitialDuration] = useState(null);
   const [isTimerVisible, setIsTimerVisible] = useState(false);
   const [startTimerOnPress, setStartTimerOnPress] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
-  const [recipe, setRecipe] = useState(recipeDetails)
-  const [newServingSize, setNewServingSize] = useState(recipeDetails.servingSize.servings);
+  const [recipe, setRecipe] = useState(recipeDetails.recipeId.re001);
+  const [newServingSize, setNewServingSize] = useState(recipeDetails.recipeId.re001.servingSize.servings);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [areTimerButtonsVisible, setAreTimerButtonsVisible] = useState(false);
   const [isCongratulationModalVisible, setIsCongratulationModalVisible] = useState(false);
@@ -171,7 +171,7 @@ if (!fontsLoaded) {
   return (
     <ScrollView>
     <View style={styles.imageContainer}>
-    <Image source={recipe.imageSource} style={styles.image} />
+    <Image source={recipeDetails.recipeId.re001.imageSource} style={styles.image} />
    <View style={styles.topButtonsContainer}>
     <Image source={backImage} style={styles.backButton} />
     <View style={styles.rightButtonsContainer}>
@@ -259,41 +259,49 @@ if (!fontsLoaded) {
     style={[
       styles.button,
       styles.buttonWithBorder,
-      selectedButton === 'recipe' && styles.selectedButton,
-    ]}
-    onPress={() => handleButtonPress('recipe')}
-  >
-    <Text style={[styles.buttonText, selectedButton === 'recipe' && styles.selectedButtonText]}>Recipe</Text>
-  </Pressable>
-
-  <Pressable
-    style={[
-      styles.button,
-      styles.buttonWithBorder,
       selectedButton === 'directions' && styles.selectedButton,
     ]}
     onPress={() => handleButtonPress('directions')}
   >
     <Text style={[styles.buttonText, selectedButton === 'directions' && styles.selectedButtonText]}>Directions</Text>
   </Pressable>
+  <Pressable
+    style={[
+      styles.button,
+      styles.buttonWithBorder,
+      selectedButton === 'ingredients' && styles.selectedButton,
+    ]}
+    onPress={() => handleButtonPress('ingredients')}
+  >
+    <Text style={[styles.buttonText, selectedButton === 'ingredients' && styles.selectedButtonText]}>Ingredients</Text>
+  </Pressable>
 </View>
 
         <View style={styles.content}>
-  {selectedButton === 'directions' ? (
-      <View>
-     {recipe.directions.map((step, index) => (
-  <View key={index} style={styles.stepContainer}>
-    <Text style={styles.directions}>{`${index + 1}. ${step.text}`}</Text>
+        {selectedButton === 'directions' ? (
+  <View>
+    {recipe.directions.map((step, index) => (
+      <View key={index} style={styles.stepContainer}>
+        <View style={styles.direction}>
+  <Text style={styles.directions}>{`${index + 1}. ${step.text}`}</Text>
+  {step.imageSource && (
     <Image
-      source={
-        completedSteps.includes(index)
-          ? checkboxImageCheckedSource
-          : checkboxImageSource
-      }
-      style={[{width: 25, height: 25}, {display: isContainerVisible ? 'none' : 'flex'}]}/>
+      source={step.imageSource}
+      style={styles.directionImage}
+    />
+  )}
+</View>
+        <Image
+          source={
+            completedSteps.includes(index)
+              ? checkboxImageCheckedSource
+              : checkboxImageSource
+          }
+          style={[{width: 25, height: 25}, {display: isContainerVisible ? 'none' : 'flex'}]}
+        />
+      </View>
+    ))}
   </View>
-))}
-   </View>
   ) : (
     <View>
       {recipe.ingredients.map((item, index) => (
@@ -360,6 +368,7 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   username: {
+    marginTop: 6,
     color: '#000',
     fontFamily: 'Montserrat_400Regular',
     fontSize: 20,
@@ -539,6 +548,7 @@ centeredButtonContainer: {
     },
   directions: {
     flexDirection: 'row', 
+    flexWrap: 'wrap',  
     alignItems: 'center',
     paddingVertical: 13,
     paddingLeft: 5,
@@ -548,12 +558,21 @@ centeredButtonContainer: {
     fontStyle: 'normal',
     letterSpacing: -0.7,
   },
+  direction: {
+    flexDirection: 'column',
+    flex: 1, 
+  },
   stepContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingRight: 20, 
     marginTop: 8,
+  },
+  directionImage: {
+    width: 292,
+    height: 132,
+    alignSelf: 'center'
   },
   recipe:{
     paddingVertical: 13,

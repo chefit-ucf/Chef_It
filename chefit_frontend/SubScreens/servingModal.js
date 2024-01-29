@@ -3,6 +3,8 @@ import { Modal, View, Image, Text, TextInput, Pressable, StyleSheet } from 'reac
 import scaleRecipe from './recipeCaculator.js';
 import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+import { BlurView } from 'expo-blur';
+
 
 
 
@@ -29,6 +31,11 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
   }
   return (
     <Modal visible={isModalVisible} transparent>
+      <BlurView
+        style={styles.blurEffect}
+        tint="default"
+        intensity={5}
+      >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <View style={styles.topRow}>
@@ -57,16 +64,22 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
           </View>
         </View>
       </View>
+      </BlurView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  blurEffect: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContent: {
     backgroundColor: 'white',

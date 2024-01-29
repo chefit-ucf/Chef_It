@@ -1,6 +1,8 @@
-import { View, Image, Text, Pressable, StyleSheet, Modal, } from 'react-native';
+import { View, Image, Text, Pressable, StyleSheet, Modal} from 'react-native';
 import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+import { BlurView } from 'expo-blur';
+
 
 
 //Toggle Serving Modal
@@ -37,8 +39,13 @@ const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationMo
   }
   return (
     <Modal visible={isCongratulationModalVisible} transparent>
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+      <BlurView
+        style={styles.blurEffect}
+        tint="default"
+        intensity={5}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
           <Pressable onPress={() => setIsCongratulationModalVisible(false)} style={styles.closeButton}>
             <Image source={xImage} style={styles.backButton} />
           </Pressable>
@@ -52,17 +59,23 @@ const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationMo
             <Image source={viewAchievementsImage} style={styles.viewAchievements} />
           </Pressable>
         </View>
-      </View>
+        </View>
+        </BlurView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  blurEffect: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   congratText: {
     fontSize: 32,
@@ -113,4 +126,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
 export default AchievementsModal
