@@ -1,12 +1,15 @@
 import { StyleSheet, Text, Image, View, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
 import React from 'react'
 import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+
 
 const windowWidth = Dimensions.get('window').width;
 
 // Will be changed once we create algorithm to find these recipes from database
 const RecipeIdeasList = [
     {
+        recipeId: "re006",
         category: "Based On Your Ingredients:",
         title: "French Bread Pizza",
         user: "User8263",
@@ -16,6 +19,7 @@ const RecipeIdeasList = [
         image: require('../assets/food/frenchBreadPizza.png'),
     },
     {
+        recipeId: "re007",
         category: "Based On Your Saved Recipes:",
         title: "Chicken Tostadas",
         user: "User0281",
@@ -25,6 +29,7 @@ const RecipeIdeasList = [
         image: require('../assets/food/chickenTostadas.png')
     },
     {
+        recipeId: "re008",
         category: "Based On The Season:",
         title: "Raspberry Shortbread Cookies",
         user: "User2034",
@@ -38,6 +43,8 @@ const RecipeIdeasList = [
 export default function RecipeIdeasScreen() {
 
     const [savedRecipes, setSavedRecipes] = useState(RecipeIdeasList.map(saved => ({ recipeId: saved, saved: false })));
+    const navigation = useNavigation();
+
 
     const handleSavePress = (index) => {
         setSavedRecipes(prevSavedRecipes => {
@@ -51,7 +58,7 @@ export default function RecipeIdeasScreen() {
         <View style={styles.container}>
             <ScrollView>
                 {RecipeIdeasList.map((item, index) => (
-                    <TouchableOpacity key={index} style={styles.recipeContainer}>
+                    <TouchableOpacity key={index} style={styles.recipeContainer} onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: item.recipeId })}>
                         <Text style={styles.h1}>{item.category}</Text>
                         <Image source={item.image} resizeMode='cover' style={{width: '100%', height: '45%',  borderRadius: 10}}/>
                         <Text style={styles.h2}>{item.title}</Text>
@@ -76,7 +83,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#F8FAF8",
-        paddingBottom: 100
+        paddingBottom: 110
     },
     recipeContainer: {
         margin: 20,

@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react'
 import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 import { testuserInfo } from '../API/data.js';
 import { recipeData } from '../API/recipeData.js';
+import RecipeScreen from './recipe.js';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -11,8 +13,9 @@ export default function SavedRecipesScreen() {
     let userSavedRecipes = testuserInfo.savedUserRecipes;
     let arrLength = userSavedRecipes.length;
 
+    const navigation = useNavigation();
     const [savedRecipes, setSavedRecipes] = useState(userSavedRecipes.map(saved => ({ recipeId: saved, saved: true })));
-
+    
     const handleSavePress = (index) => {
         setSavedRecipes(prevSavedRecipes => {
             const updatedSavedRecipes = [...prevSavedRecipes];
@@ -26,7 +29,7 @@ export default function SavedRecipesScreen() {
             <View style={styles.container}>
             {Array.from({ length: arrLength }, (_, i) => (
                 <View key={i} style={styles.recipeContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: userSavedRecipes[i] })}>
                         <Image source={recipeData.recipeId[userSavedRecipes[i]].src} resizeMode='contain' 
                             style={{width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10}}/>
                         <Text style={styles.titleText}>{recipeData.recipeId[userSavedRecipes[i]].title}</Text>

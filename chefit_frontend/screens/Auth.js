@@ -17,6 +17,7 @@ import PantryScreen from './pantry.js';
 import AddRecipeScreen from './addRecipe.js';
 import MealPrepScreen from './mealPrep.js';
 import ProfileScreen from './profile.js';
+import RecipeScreen from '../subScreens/recipe.js';
 
 const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity
@@ -116,6 +117,7 @@ export default function Auth(props) {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="RecipeScreen" component={RecipeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

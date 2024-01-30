@@ -10,11 +10,11 @@ export const recipeData = {
                 { quantity: 3/4, unit: 'cup', name: 'brown sugar' },
                 { quantity: 1, unit: 'tsp', name: 'salt' },
                 { quantity: 1/2, unit: 'cup', name: 'butter (melted)' },
-                { quantity: 1, unit: 'egg', name: 'egg' },
+                { quantity: 1, unit: '', name: 'egg' },
                 { quantity: 1, unit: 'tsp', name: 'vanilla extract' },
                 { quantity: 1.25, unit: 'cup', name: 'all-purpose flour' },
                 { quantity: 1/2, unit: 'tsp', name: 'baking soda' },
-                { quantity: 4, unit: 'oz', name: 'milk/semi-sweet chips' },
+                { quantity: 4, unit: 'oz', name: 'semi-sweet chips' },
                 { quantity: 4, unit: 'oz', name: 'dark chocolate chunks' }
             ],
             directions: [
@@ -175,7 +175,7 @@ export const recipeData = {
             rating: '★ ★ ★ ★ ★',
             src: require('../assets/recipes/lasagna.jpg'),
             ingredients: [
-                { quantity: 12, unit: 'uncooked', name: 'lasagna noodles' },
+                { quantity: 12, unit: '', name: 'uncooked lasagna noodles' },
                 { quantity: 4, unit: 'cups', name: 'shredded mozzarella cheese' },
                 { quantity: 1/2, unit: 'cup', name: 'parmesan cheese' },
                 { quantity: 1/2, unit: 'lb', name: 'lean ground beef' },
@@ -203,6 +203,144 @@ export const recipeData = {
             timer: {
                 duration: 2,
                 unit: 'hours',
+            },
+            servingSize: {
+                servings: 12,
+                ingredients: 13,
+                nutrition: {
+                    calories: 377, 
+                    carbs: 26, 
+                    protein: 29, 
+                    fat: 16, 
+                }
+            }
+        },
+        "re006" : {
+            title: 'French Bread Pizza',
+            username: 'User8263',
+            rating: '★ ★ ★ ★ ★',
+            src: require('../assets/food/frenchBreadPizza.png'),
+            ingredients: [
+                { quantity: 12, unit: '', name: 'uncooked lasagna noodles' },
+                { quantity: 4, unit: 'cups', name: 'shredded mozzarella cheese' },
+                { quantity: 1/2, unit: 'cup', name: 'parmesan cheese' },
+                { quantity: 1/2, unit: 'lb', name: 'lean ground beef' },
+                { quantity: 1/2, unit: 'lb', name: 'italian sausage' },
+                { quantity: 1, unit: 'diced', name: 'onion' },
+                { quantity: 2, unit: 'cloves', name: 'minced garlic' },
+                { quantity: 36, unit: 'oz', name: 'pasta sauce' },
+                { quantity: 2, unit: 'tbsp', name: 'tomato paste' },
+                { quantity: 1, unit: 'tsp', name: 'italian seasoning' },
+                { quantity: 2, unit: 'cups', name: 'ricotta cheese' },
+                { quantity: 1/4, unit: 'cup', name: 'fresh parsley' },
+                { quantity: 1, unit: 'beaten', name: 'egg' }
+            ],
+            directions: [
+                { text: 'Preheat oven to 350 degrees. In a large pot of salted water, boil lasagna noodles until al dente. Drain, rinse, under cold water, and set aside.', checkpoint: 0 },
+                { text: 'In a large skillet, cook beef, sausage, onion, and garlic over medium-high heat until no pink remains. Drain any fat.', checkpoint: 60 },
+                { text: 'Stir in pasta sauce, tomato paste, italian seasoning, salt, and pepper. Simmer over medium heat for 5 minutes.', checkpoint: 300},
+                { text: 'In a seperate bowl, combine 1 1/2 mozzarella, 1/4 parmesan cheese, ricotta, parsley, egg, and 1/4 salt.', checkpoint: 420 },
+                { text: 'Spread 1 cup of meat sauce in a 9x13 pan or casserole dish. Top it with 3 lasagna noodles, ricotta cheese mixture, and another cup of meat sauce. Repeat twice. Finish with 3 noodles topped with remaining sauce.', checkpoint: 540 },
+                { text: 'Cover with foil and bake for 45 minutes.', checkpoint: 660 },
+                { text: 'Remove the foil and sprinkle with the remaining mozzerlla cheese and parmesan cheese. Bake for another 15 minutes or until browned.', checkpoint: 780 },
+                { text: 'Rest for at least 15 minutes before cutting.', checkpoint: 900 },
+                 { text: 'Let cool & enjoy!', checkpoint: 1080 }
+            ],
+            timer: {
+                duration: 30,
+                unit: 'mins',
+            },
+            servingSize: {
+                servings: 12,
+                ingredients: 13,
+                nutrition: {
+                    calories: 377, 
+                    carbs: 26, 
+                    protein: 29, 
+                    fat: 16, 
+                }
+            }
+        },
+        "re007" : {
+            title: 'Chicken Tostadas',
+            username: 'User0281',
+            rating: '★ ★ ★ ★ ★',
+            src: require('../assets/food/chickenTostadas.png'),
+            ingredients: [
+                { quantity: 12, unit: '', name: 'uncooked lasagna noodles' },
+                { quantity: 4, unit: 'cups', name: 'shredded mozzarella cheese' },
+                { quantity: 1/2, unit: 'cup', name: 'parmesan cheese' },
+                { quantity: 1/2, unit: 'lb', name: 'lean ground beef' },
+                { quantity: 1/2, unit: 'lb', name: 'italian sausage' },
+                { quantity: 1, unit: 'diced', name: 'onion' },
+                { quantity: 2, unit: 'cloves', name: 'minced garlic' },
+                { quantity: 36, unit: 'oz', name: 'pasta sauce' },
+                { quantity: 2, unit: 'tbsp', name: 'tomato paste' },
+                { quantity: 1, unit: 'tsp', name: 'italian seasoning' },
+                { quantity: 2, unit: 'cups', name: 'ricotta cheese' },
+                { quantity: 1/4, unit: 'cup', name: 'fresh parsley' },
+                { quantity: 1, unit: 'beaten', name: 'egg' }
+            ],
+            directions: [
+                { text: 'Preheat oven to 350 degrees. In a large pot of salted water, boil lasagna noodles until al dente. Drain, rinse, under cold water, and set aside.', checkpoint: 0 },
+                { text: 'In a large skillet, cook beef, sausage, onion, and garlic over medium-high heat until no pink remains. Drain any fat.', checkpoint: 60 },
+                { text: 'Stir in pasta sauce, tomato paste, italian seasoning, salt, and pepper. Simmer over medium heat for 5 minutes.', checkpoint: 300},
+                { text: 'In a seperate bowl, combine 1 1/2 mozzarella, 1/4 parmesan cheese, ricotta, parsley, egg, and 1/4 salt.', checkpoint: 420 },
+                { text: 'Spread 1 cup of meat sauce in a 9x13 pan or casserole dish. Top it with 3 lasagna noodles, ricotta cheese mixture, and another cup of meat sauce. Repeat twice. Finish with 3 noodles topped with remaining sauce.', checkpoint: 540 },
+                { text: 'Cover with foil and bake for 45 minutes.', checkpoint: 660 },
+                { text: 'Remove the foil and sprinkle with the remaining mozzerlla cheese and parmesan cheese. Bake for another 15 minutes or until browned.', checkpoint: 780 },
+                { text: 'Rest for at least 15 minutes before cutting.', checkpoint: 900 },
+                 { text: 'Let cool & enjoy!', checkpoint: 1080 }
+            ],
+            timer: {
+                duration: 25,
+                unit: 'mins',
+            },
+            servingSize: {
+                servings: 12,
+                ingredients: 13,
+                nutrition: {
+                    calories: 377, 
+                    carbs: 26, 
+                    protein: 29, 
+                    fat: 16, 
+                }
+            }
+        },
+        "re008" : {
+            title: 'Raspberry Shortbread Cookies',
+            username: 'User2034',
+            rating: '★ ★ ★ ★ ★',
+            src: require('../assets/food/raspberryShortbreadCookies.png'),
+            ingredients: [
+                { quantity: 12, unit: '', name: 'uncooked lasagna noodles' },
+                { quantity: 4, unit: 'cups', name: 'shredded mozzarella cheese' },
+                { quantity: 1/2, unit: 'cup', name: 'parmesan cheese' },
+                { quantity: 1/2, unit: 'lb', name: 'lean ground beef' },
+                { quantity: 1/2, unit: 'lb', name: 'italian sausage' },
+                { quantity: 1, unit: 'diced', name: 'onion' },
+                { quantity: 2, unit: 'cloves', name: 'minced garlic' },
+                { quantity: 36, unit: 'oz', name: 'pasta sauce' },
+                { quantity: 2, unit: 'tbsp', name: 'tomato paste' },
+                { quantity: 1, unit: 'tsp', name: 'italian seasoning' },
+                { quantity: 2, unit: 'cups', name: 'ricotta cheese' },
+                { quantity: 1/4, unit: 'cup', name: 'fresh parsley' },
+                { quantity: 1, unit: 'beaten', name: 'egg' }
+            ],
+            directions: [
+                { text: 'Preheat oven to 350 degrees. In a large pot of salted water, boil lasagna noodles until al dente. Drain, rinse, under cold water, and set aside.', checkpoint: 0 },
+                { text: 'In a large skillet, cook beef, sausage, onion, and garlic over medium-high heat until no pink remains. Drain any fat.', checkpoint: 60 },
+                { text: 'Stir in pasta sauce, tomato paste, italian seasoning, salt, and pepper. Simmer over medium heat for 5 minutes.', checkpoint: 300},
+                { text: 'In a seperate bowl, combine 1 1/2 mozzarella, 1/4 parmesan cheese, ricotta, parsley, egg, and 1/4 salt.', checkpoint: 420 },
+                { text: 'Spread 1 cup of meat sauce in a 9x13 pan or casserole dish. Top it with 3 lasagna noodles, ricotta cheese mixture, and another cup of meat sauce. Repeat twice. Finish with 3 noodles topped with remaining sauce.', checkpoint: 540 },
+                { text: 'Cover with foil and bake for 45 minutes.', checkpoint: 660 },
+                { text: 'Remove the foil and sprinkle with the remaining mozzerlla cheese and parmesan cheese. Bake for another 15 minutes or until browned.', checkpoint: 780 },
+                { text: 'Rest for at least 15 minutes before cutting.', checkpoint: 900 },
+                 { text: 'Let cool & enjoy!', checkpoint: 1080 }
+            ],
+            timer: {
+                duration: 55,
+                unit: 'mins',
             },
             servingSize: {
                 servings: 12,
