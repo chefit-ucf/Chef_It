@@ -161,23 +161,38 @@ export const searchItems = [
   {
     image: require("../../assets/food/search_item1.jpg"),
     title: "Filet Mignon",
+    author: "Author",
+    time: 60,
+    rating: 3,
   },
   {
     image: require("../../assets/food/search_item2.jpg"),
     title: "Cheese Burger",
+    author: "Author",
+    time: 60,
+    rating: 3,
 
   },
   {
     image: require("../../assets/food/search_item3.jpg"),
     title: "Eggs Benedict",
+    author: "Author",
+    time: 60,
+    rating: 3,
   },
   {
     image: require("../../assets/food/search_item4.jpg"),
     title: "Sweet Potato Fries",
+    author: "Author",
+    time: 60,
+    rating: 3,
   },
   {
     image: require("../../assets/food/search_item5.jpg"),
     title: "Spaghetti",
+    author: "Author",
+    time: 60,
+    rating: 3,
   },
 
 ];

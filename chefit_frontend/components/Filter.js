@@ -2,9 +2,6 @@ import { View, StyleSheet, Text, FlatList, Pressable} from 'react-native';
 import React, { useState } from 'react';
 import { DATA, DATA2, DATA3} from "../assets/data/fakeData.js"
 export default function Filter() {
-
-
-
   return (
     <View style={styles.box}>
       <View style={styles.top}>
@@ -37,7 +34,7 @@ export default function Filter() {
         <View style={{paddingVertical: 8}}>
           <Text >Cuisine</Text>
           <FlatList
-            data={DATA2}
+            data={DATA3}
             renderItem={({item}) => <Item title={item.title} />}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
@@ -68,12 +65,7 @@ const Item = ({title}) =>{
   onPress={handlePress}
   >
     <Text 
-          style={({ pressed: isPressed }) => [
-            {
-              ...styles.title,
-              color: isPressed ? "white" : "#8F8F8F"
-            },
-          ]}
+      style={{...styles.pressable}}
     >{title}</Text>
   </Pressable>
 
@@ -94,9 +86,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     marginHorizontal: 8,
     borderRadius: 12,
-
     borderColor: "#CECECE"
-
   },
   flex: {
     display: 'flex',
@@ -132,6 +122,12 @@ const styles = StyleSheet.create({
   },
   title:{
     color: "#8F8F8F",
+  },
+
+  pressable:{
+    fontSize: 12,
+    color: "#8F8F8F",
+
   },
 
 

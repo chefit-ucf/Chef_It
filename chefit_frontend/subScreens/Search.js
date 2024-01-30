@@ -5,6 +5,7 @@ import Svg, { Path } from "react-native-svg"
 
 import Filter from '../components/Filter';
 import SearchItem from '../components/SearchItem';
+import { searchItems } from '../assets/data/fakeData';
 
 export default function Search() {
   const [index, setIndex] = useState(0);
@@ -47,6 +48,16 @@ export  function SearchScreen({navigation}) {
       paddingHorizontal: 16,
       display: "flex",
     },
+
+    flex:{
+      display:'flex',
+      flex: 1,
+      flexDirection:'row',
+      flexWrap:'wrap',
+      width:'100%',
+      // justifyContent: 'space-between', // Arrange items in two columns
+      gap: 8
+    }
     
   });
   return <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1 }}>
@@ -63,7 +74,23 @@ export  function SearchScreen({navigation}) {
         </View>
         <Filter/>
 
-      <ScrollView style={{marginBottom: 62}}>
-      </ScrollView>
+        <ScrollView style={{width: "100%", paddingHorizontal: 8,}}>
+
+        <View style={styles.flex}>
+          {searchItems.map((source)=>(
+            <SearchItem
+              key={source}
+              image={source.image}
+              author={source.author}
+              title={source.title}
+              time={source.time}
+              rating={source.rating}
+            />
+          ))}
+        </View>
+
+        </ScrollView>
+
+
   </SafeAreaView>
 }
