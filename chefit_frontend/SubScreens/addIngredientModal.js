@@ -4,9 +4,12 @@ import { BlurView } from 'expo-blur';
 
 
 const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry }) => {
-    const [ingredient1, setIngredient1] = useState('');
-    const [ingredient2, setIngredient2] = useState('');
-    const [ingredient3, setIngredient3] = useState('');
+    const [ingredientName, setingredientName] = useState('');
+    const [ingredientCalories, setingredientCalories] = useState('');
+    const [ingredientCarbs, setIngredientCarbs] = useState('');
+    const [ingredientProtein, setIngredientProtein] = useState('');
+    const [ingredientFat, setIngredientFat] = useState('');
+
 
   
     const SavePantry = require('../assets/SavePantry.png');
@@ -35,12 +38,12 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                     <TextInput
                         style={styles.modalInput}
                         placeholder="Tomato"
-                        value={ingredient1}
+                        value={ingredientName}
                     />
                     <TextInput
                         style={styles.modalInput}
                         placeholder="Calories"
-                        value={ingredient2}
+                        value={ingredientCalories}
                     />
                    <View style={styles.ingredientDetails}>
                         <View style={styles.detailContainer}>
@@ -48,7 +51,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                             <TextInput
                                 style={styles.modalSmallInput}
                                 placeholder="5g"
-                                value={ingredient1}
+                                value={ingredientCarbs}
                             />
                         </View>
                         <View style={styles.detailContainer}>
@@ -56,7 +59,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                             <TextInput
                                 style={styles.modalSmallInput}
                                 placeholder="0.8g"
-                                value={ingredient2}
+                                value={ingredientCalories}
                             />
                         </View>
                         <View style={styles.detailContainer}>
@@ -64,7 +67,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                             <TextInput
                                 style={styles.modalSmallInput}
                                 placeholder="0.2g"
-                                value={ingredient3}
+                                value={ingredientFat}
                             />
                         </View>
                     </View>
