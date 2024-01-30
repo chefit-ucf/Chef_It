@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Image, Text, ScrollView, Pressable, StyleSheet, Dimensions} from 'react-native';
-import recipeDetails from '../BackendElements/recipes.js'; // Change the path accordingly
+import recipeDetails from '../BackendElements/recipes.js'; 
 import AchievementsModal from '../SubScreens/achievementModal.js';
 import ServingModal from '../SubScreens/servingModal.js';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
@@ -45,7 +45,6 @@ const timerIntervalRef = useRef(null);
 
     if (timer !== null && !isPaused) {
       timerInterval = setInterval(() => {
-        // ... (previous code)
       }, 1000);
 
       timerIntervalRef.current = timerInterval; 
@@ -159,15 +158,7 @@ const toggleModal = (visible) => {
   console.log('Setting isModalVisible to:', visible);
   setIsModalVisible(visible);
 };
-let [fontsLoaded] = useFonts({
-  Montserrat_300Light,
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold
-})
-if (!fontsLoaded) {
-  return <Text>Loading...</Text>
-}
+
   return (
     <ScrollView>
     <View style={styles.imageContainer}>

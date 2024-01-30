@@ -1,18 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Image, Text, Pressable, StyleSheet, TextInput, Switch } from 'react-native';
-import { Coiny_400Regular } from '@expo-google-fonts/coiny';
-import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
-
+import AddIngredientModal from '../SubScreens/addIngredientModal.js';
 
 const RecipeScreen = () => {
-
     const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-    
-    const SaveRecipe = require('../assets/SaveRecipe.png')
-    const AddImage = require('../assets/AddImage.png')
-    const AddIngredient = require('../assets/addIngredient.png')
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [savedToPantry, setSavedToPantry] = useState(false);
 
+
+    const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+    const SaveRecipe = require('../assets/SaveRecipe.png');
+    const AddImage = require('../assets/AddImage.png');
+    const AddIngredient = require('../assets/addIngredient.png');
+    const savedImage = require('../assets/saved.png')
+
+
+    const handleAddIngredientPress = () => {
+        setIsModalVisible(true);
+    };
+ const handleSaveToPantry = () => {
+    // pantry logic here
+    setSavedToPantry(true);
+
+    setIsModalVisible(false);
+  };
     return (
         <View style={styles.screenContainer}>
         <View style={styles.header}>
@@ -34,19 +46,24 @@ const RecipeScreen = () => {
             </Image>
         </View>
         <View style={styles.ingredientsContainer}>
-        <Image source={AddIngredient} style={styles.addIngredient}></Image>
-        <TextInput
-            style={styles.ingredientInput}
-            placeholder={"Ingredient 1"}>
-            </TextInput>
-            <TextInput
-            style={styles.ingredientInput}
-            placeholder={"Ingredient 2"}>
-            </TextInput>
-            <TextInput
-            style={styles.ingredientInput}
-            placeholder={"Ingredient 3"}>
-            </TextInput>
+            <Pressable onPress={handleAddIngredientPress}>
+                    <Image source={AddIngredient} style={styles.addIngredient} />
+                </Pressable>
+                <View style={styles.container}>
+  <TextInput
+    style={styles.ingredientInput}
+    placeholder={"Ingredient 1"}
+  />
+  {savedToPantry && <Image source={savedImage} style={styles.savedImage} />}
+  </View>
+<TextInput
+    style={styles.ingredientInput}
+    placeholder={"Ingredient 2"}
+/>
+<TextInput
+    style={styles.ingredientInput}
+    placeholder={"Ingredient 3"}
+/>
         </View>
         <View style={styles.directionsContainer}>
         <TextInput
@@ -63,6 +80,12 @@ const RecipeScreen = () => {
         style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
       />
       </View>
+      <AddIngredientModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        onSaveToPantry={handleSaveToPantry} 
+      >
+      </AddIngredientModal>
         </View>
         </View>
     )
@@ -73,7 +96,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
       },
     header: {
-        paddingTop: 20, // Adjust the padding to move the container down
+        paddingTop: 20,
         flexDirection: 'row',
       },
       addRecipeContainer: {
@@ -85,15 +108,10 @@ const styles = StyleSheet.create({
         height: 515,
         flexShrink: 0,
         alignItems: 'center',
-        justifyContent: 'space-evenly', // Change this line
+        justifyContent: 'space-evenly',
         marginBottom: 20,
-        shadowColor: '#1E4B43',
-        shadowOffset: {
-            width: 0,
-            height: 5,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
+        boxShadow: '0px 5px 10px rgba(30, 75, 67, 0.2)',
+
     },
     
     ingredientsContainer: {
@@ -106,13 +124,7 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         alignItems: 'center',
         marginBottom: 20,
-        shadowColor: '#1E4B43',
-        shadowOffset: {
-            width: 0,
-            height: 5,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
+        boxShadow: '0px 5px 10px rgba(30, 75, 67, 0.2)',
     },
     directionsContainer: {
         paddingTop: 20,
@@ -124,13 +136,7 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         alignItems: 'center',
         marginBottom: 20,
-        shadowColor: '#1E4B43',
-        shadowOffset: {
-            width: 0,
-            height: 5,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
+        boxShadow: '0px 5px 10px rgba(30, 75, 67, 0.2)',
     },
     directionsInput: {
         display: "flex",
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: "#F2F2F2",
         color: "#5A5A5A",
-        fontFamily: "Montserrat",
+        fontFamily: "Montserrat_500Medium",
         fontSize: 16,
         fontWeight: 600,
         letterSpacing: -0.56,
@@ -165,14 +171,15 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     privateText: {
-        color: "#000",
+        color: "#5A5A5A",
+        fontFamily: "Montserrat_500Medium",
         fontSize: 16,
         fontWeight: 600,
     },
     title: {
         fontSize: 28,
         fontFamily: 'Coiny',
-        marginRight: 75, // Add margin to increase spacing
+        marginRight: 75,
       },
     recipeImage: {
         width: 340,
@@ -183,6 +190,7 @@ const styles = StyleSheet.create({
         width: 98, 
         height: 36,
     },
+    
     recipeInput: {
         display: "flex",
         width: 341,
@@ -194,7 +202,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: "#F2F2F2",
         color: "#5A5A5A",
-        fontFamily: "Montserrat",
+        fontFamily: "Montserrat_500Medium",
         fontSize: 16,
         fontWeight: 600,
         letterSpacing: -0.56,
@@ -210,7 +218,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: "#F2F2F2",
         color: "#5A5A5A",
-        fontFamily: "Montserrat",
+        fontFamily: "Montserrat_500Medium",
         fontSize: 16,
         fontWeight: 600,
         letterSpacing: -0.56,
@@ -233,11 +241,21 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: "#F2F2F2",
         color: "#5A5A5A",
-        fontFamily: "Montserrat",
+        fontFamily: "Montserrat_500Medium",
         fontSize: 16,
         fontWeight: 600,
         letterSpacing: -0.56
-    }
+    },
+    savedImage: {
+        width: 98,
+        height: 36,
+        position: 'absolute',
+        top: 4,
+        right: 135
+      },
+      container: {
+        flexDirection: 'row'
+      }
   });
     
 export default RecipeScreen
