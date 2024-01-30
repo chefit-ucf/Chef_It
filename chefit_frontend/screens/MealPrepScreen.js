@@ -1,18 +1,34 @@
-import React from 'react';
-import { Button, View, Text } from 'react-native';
+import React, {useState} from 'react';
+import { Button, SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import MealModal from '../components/MealModal';
 
+const styles =  StyleSheet.create({
 
-
-
+  view: {
+    paddingHorizontal: 4,
+    display:'flex',
+    alignContent:"center",
+    rowGap: 12
+  }
+})
 
 export default function MealPrepScreen({navigation}) {
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>
-        this is the meal prep screen
-      </Text>
-     
-    
-    </View>
-    );
+const [selected, setSelected] = useState('')
+
+
+    return <SafeAreaView style={styles.view}>
+    <Calendar
+      onDayPress={day => {
+        setSelected(day.dateString);
+      }}
+      markedDates={{
+        [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
+      }}
+    />
+      <MealModal
+        date={selected}
+      />
+
+    </SafeAreaView>
 }

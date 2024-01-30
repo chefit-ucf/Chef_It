@@ -79,8 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   box: {
-    overflow: 'hidden',
-    // paddingHorizontal: 16,
+    // overflow: 'hidden',
     borderWidth: 2,
     borderColor: 'black',
     display: 'flex',
@@ -91,7 +90,10 @@ const styles = StyleSheet.create({
   flex: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-evenly'    
+    
   },
+
   top:{
     // borderRadius: 8,
     backgroundColor: "#48A696",
