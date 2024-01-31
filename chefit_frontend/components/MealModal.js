@@ -8,8 +8,8 @@ export default function MealModal({ date }) {
   return (
     <View style={styles.view}>
       <View style={styles.box}>
-        <View style={{...styles.flex, justifyContent:"space-between", width: '100%', padding: 12}}>
-          <Text>Today</Text>
+        <View style={{...styles.flex, justifyContent:"space-between", width: '100%', padding: 12, paddingHorizontal: 20}}>
+          <Text style={styles.title}>Today</Text>
           <Pressable>
           <Svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
           <Path 
@@ -36,22 +36,22 @@ export default function MealModal({ date }) {
               />
 
             </Svg>
-              <Text style={{...styles.absolute, ...styles.center}}>826 {"\n"} Remaining</Text>
+              <Text style={{...styles.absolute, ...styles.center, ...styles.title}}>826 {"\n"} Remaining</Text>
           </View>
         </View>
         <View style={{...styles.flex, justifyContent: 'center', padding: 12, paddingTop: 0,}}>
           <View>
-            <Text>Carbs</Text>
-            <Text>10g</Text>
+            <Text style={styles.title}>Carbs</Text>
+            <Text style={styles.title}>10g</Text>
           </View>
           <View>
-            <Text>Protien</Text>
-            <Text>10g</Text>
+            <Text style={styles.title}t>Protein</Text>
+            <Text style={styles.title}>10g</Text>
 
           </View>
           <View>
-            <Text>Fat</Text>
-            <Text>10g</Text>
+            <Text style={styles.title}>Fat</Text>
+            <Text style={styles.title}>10g</Text>
           </View>
         </View>
       </View>
@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 16,
   },
   box: {
     backgroundColor: '#FFFFFF',
@@ -95,5 +94,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 24
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
   }
 });

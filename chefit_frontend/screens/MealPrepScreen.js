@@ -4,12 +4,15 @@ import { Calendar } from 'react-native-calendars';
 import MealModal from '../components/MealModal';
 
 const styles =  StyleSheet.create({
-
   view: {
-    paddingHorizontal: 4,
     display:'flex',
     alignContent:"center",
-    rowGap: 12
+    rowGap: 12,
+    marginHorizontal: 16,
+
+  },
+  calendar: {
+    borderRadius:  12,
   }
 })
 
@@ -25,6 +28,7 @@ const [selected, setSelected] = useState('')
       markedDates={{
         [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
       }}
+      style={styles.calendar}
     />
       <MealModal
         date={selected}
