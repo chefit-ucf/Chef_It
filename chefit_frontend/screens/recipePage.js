@@ -32,10 +32,6 @@ export default function RecipePage({navigation}) {
   const [isCookAlongInitiated, setIsCookAlongInitiated] = useState(false); 
 
 
-
-
-
-
 //Timer
 const timerIntervalRef = useRef(null);
 

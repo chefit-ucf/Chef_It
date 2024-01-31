@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     header: {
         paddingTop: 20,
         flexDirection: 'row',
+        marginTop: 20
       },
       addRecipeContainer: {
         paddingTop: 20,
