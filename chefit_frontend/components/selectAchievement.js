@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable} from 'react-native';
 
-import { testuserInfo } from '../API/data';
 
 const AchievementsButton = ({ navigation, title, description, unlockedImage, timeTriggered, rewardImage }) => {
     return (
-      <View style={styles.button}>
+        <View style={styles.button}>
         <Pressable  onPress={() => navigation.navigate('Display Achievements',  { title, description, unlockedImage, timeTriggered, rewardImage })}>
         <View style={styles.rowContainer}>
           <Image source={unlockedImage} style={styles.icon} />
@@ -32,7 +31,7 @@ const AchievementsButton = ({ navigation, title, description, unlockedImage, tim
       },
       shadowOpacity: 0.25,
       shadowRadius: 11.8,
-      elevation: 5, // for Android shadow
+      elevation: 5,
       marginTop: 16,
       marginBottom: 20,
       marginLeft: 20,

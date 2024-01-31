@@ -5,7 +5,7 @@ import { Button, View, Text } from 'react-native';
 
 
 
-export default function AddRecipe({navigation}) {
+export default function ExploreScreen({navigation}) {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>
@@ -16,4 +16,3 @@ export default function AddRecipe({navigation}) {
     </View>
     );
 }
-

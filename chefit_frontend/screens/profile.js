@@ -17,8 +17,43 @@ const TabComponent = ({navigation}) => {
   const [index, setIndex] = useState(0);
 
   const MyRecipes = () => (
-    <View>
-      <Text>My Recipes</Text>
+    <View style={styles.recipeCard}>
+      
+      <Image 
+          source={require('../assets/chickenAndRiceSoup_recipecardimage.png')}
+          style={{width: 184, height: 140, resizeMode: 'cover', borderTopRightRadius: 20, borderTopLeftRadius: 20, marginBottom: 10}}
+        />
+      <View style={styles.recipeCardHeading}>
+        <Text>
+          Chicken and Rice Soup
+        </Text>
+      </View>
+      <View>
+        <Text style={{color: 'grey', fontWeight: '100', fontSize: 10}}>
+          By: Username01
+        </Text>
+      </View>
+      <View style={styles.timeContainer}>
+        <Text style={{ color: '#47A695', fontWeight: '100', fontSize: 12}}>
+          40 mins
+        </Text>
+        <Image 
+          source={require('../assets/navIcons/time.png')}
+          style={{width: 13, height: 13, resizeMode: 'contain', margin: 3,}}
+        />
+      </View>
+      <View style={{flex: 1, flexDirection: 'row', gap: 85, padding: 3}}>
+        <Image 
+          source={require('../assets/sampleStars.png')}
+          style={{width: 72, height: 15, resizeMode: 'contain',}}
+        />
+        <Image 
+          source={require('../assets/actionIcons/savedRecipe_inactive.png')}
+          style={{width: 10, height: 16, resizeMode: 'contain',}}
+        />
+        </View>
+        
+      
     </View>
   );
 
@@ -119,6 +154,11 @@ export default function ProfileScreen() {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
+        headerStyle: {
+          elevation: 0, 
+          shadowOpacity: 0, 
+          borderBottomWidth: 0,
+        }
       }}
     >
       <Stack.Screen
@@ -126,11 +166,6 @@ export default function ProfileScreen() {
   component={Profile}
   options={({ navigation }) => ({
     headerTitleAlign: 'left',
-    headerStyle: {
-      elevation: 0, 
-      shadowOpacity: 0, 
-      borderBottomWidth: 0,
-    },
     
     headerRight: () => (
       <View>
@@ -153,7 +188,6 @@ export default function ProfileScreen() {
         options={{
           headerTitle: 'Settings',
           headerStyle: {
-            backgroundColor: 'transparent',
             elevation: 0, 
             shadowOpacity: 0, 
             borderBottomWidth: 0,
@@ -168,11 +202,6 @@ export default function ProfileScreen() {
         options={{
           headerTitleAlign: 'left',
           headerTitle: '',
-          headerStyle: {
-            elevation: 0, 
-            shadowOpacity: 0, 
-            borderBottomWidth: 0,
-          },
         }}
       />
        <Stack.Screen
@@ -180,11 +209,6 @@ export default function ProfileScreen() {
         component={DisplayAchievements}
         options={{
           headerTitle: '',
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-          },
         }}
       />
     </Stack.Navigator>
@@ -235,9 +259,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
   },
-  tabContainer: {
-    
+  tabContainer: { 
     marginTop: 16,
     width: "100%",
   },
+  recipeCard:{
+    margin: 30,
+    width: 185,
+    height: 245,
+    borderRadius: 20,
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#E1E1E1',
+    elevation: 5,
+    
+},
+  timeContainer:{
+    flex: 1,
+    flexDirection: 'row',
+    width: 61,
+    height: 16,
+    
+  }
 });

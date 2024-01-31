@@ -9,14 +9,14 @@ const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator();
  
 // Screens of App
-import WelcomeScreen from "../screens/welcome.js"
-import LoginScreen from "../screens/login.js"
-import SignUpScreen from "../screens/signUp.js"
-import ExploreScreen from '../screens/explore.js';
-import PantryScreen from '../screens/pantry.js';
-import AddRecipeScreen from '../screens/addRecipe.js';
-import MealPrepScreen from '../screens/mealPrep.js';
-import ProfileScreen from '../screens/profile.js';
+import WelcomeScreen from "./welcome.js"
+import LoginScreen from "./login.js"
+import SignUpScreen from "./signUp.js"
+import ExploreScreen from './explore.js';
+import PantryScreen from './pantry.js';
+import RecipeScreen from './recipeScreen.js';
+import MealPrepScreen from './mealPrep.js';
+import ProfileScreen from './profile.js';
 
 const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity
@@ -74,7 +74,7 @@ function HomeScreen() {
                 </View>
               )
             }} />
-            <Tab.Screen name="AddRecipe" component={AddRecipeScreen} options={{
+            <Tab.Screen name="AddRecipe" component={RecipeScreen} options={{
               tabBarIcon: ({focuses}) => (
                 <Image source={require('../assets/navIcons/addRecipes.png')}
                 resizeMode='contain'
