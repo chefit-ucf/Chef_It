@@ -1,28 +1,28 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // For navigation
-const Stack = createStackNavigator()
+const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator();
  
 // Screens of App
-import WelcomeScreen from "../screens/WelcomeScreen.js"
-import LoginScreen from '../screens/LoginScreen.js'
-import SignUpScreen from "../screens/SignUpScreen.js"
-import ExploreScreen from '../screens/ExploreScreen.js';
-import PantryScreen from '../screens/PantryScreen.js';
-import AddRecipeScreen from '../screens/AddRecipeScreen.js';
-import MealPrepScreen from '../screens/MealPrepScreen.js';
-import ProfileScreen from '../screens/ProfileScreen.js';
+import WelcomeScreen from "../screens/welcome.js"
+import LoginScreen from "../screens/login.js"
+import SignUpScreen from "../screens/signUp.js"
+import ExploreScreen from '../screens/explore.js';
+import PantryScreen from '../screens/pantry.js';
+import AddRecipeScreen from '../screens/addRecipe.js';
+import MealPrepScreen from '../screens/mealPrep.js';
+import ProfileScreen from '../screens/profile.js';
 
 const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity
     onPress={onPress}
     style={{
-      top: -30,
+      top: -20,
       justifyContent: 'center',
       alignItems: 'center',
     }}>
@@ -56,7 +56,7 @@ function HomeScreen() {
         >
             <Tab.Screen name="Explore" component={ExploreScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
                   <Image source={require('../assets/navIcons/search.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -66,7 +66,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Pantry" component={PantryScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center',  }}>
                   <Image source={require('../assets/navIcons/pantry.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -86,7 +86,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="MealPrep" component={MealPrepScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center',  }}>
                   <Image source={require('../assets/navIcons/calendar.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -96,7 +96,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Profile" component={ProfileScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
+                <View style={{alignItems: 'center', justifyContent: 'center',  }}>
                   <Image source={require('../assets/navIcons/profile.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
