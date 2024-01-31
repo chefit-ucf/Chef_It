@@ -38,7 +38,7 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
         <View style={styles.modalContent}>
           <View style={styles.topRow}>
             <Pressable onPress={() => toggleModal(false)} style={styles.closeButton}>
-              <Image source={require('../assets/buttons/x.png')} style={styles.backButton} />
+              <Image source={require('../assets/addRecipeButtons/x.png')} style={styles.backButton} />
             </Pressable>
             <View style={styles.serveTextContainer}>
               <Text style={styles.serveText}>Input how many people this recipe will serve</Text>

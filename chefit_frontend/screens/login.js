@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
-import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TextInput, TouchableOpacity, Image } from 'react-native'
 import { Text } from '@rneui/themed'
-import {ArrowLeftIcon} from 'react-native-heroicons/solid'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 
+// Just for testing purposes, back-end will be applied later
 const loginData = ([
     {username: "Test", password: "Test1@"},
 ])
@@ -29,10 +31,9 @@ export default function LoginScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.backContainer}>
-            <TouchableOpacity style={styles.backButton}
-                onPress={()=> navigation.goBack()}>
-                <ArrowLeftIcon size="20" color="black" />
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.backButton} onPress={()=> navigation.goBack()}>
+          <Image source={require('../assets/buttons/backButton.png')} style={styles.backButton} />
+        </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>
       <Text style={styles.titleText}>Login</Text>
@@ -77,22 +78,20 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   backButton: {
-    backgroundColor: "#F7D47C",
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    margin: 15,
-    padding: 10,
+    width: 35, 
+    height: 35, 
+    paddingLeft: 10,
     shadowColor: "#494949",
         shadowOffset: {
             width: 0,
-            height: 3,
+            height: 5,
         },
-    shadowOpacity: 0.3
+    shadowOpacity: 0.5
   },
   titleText: {
-    fontSize: 50,
+    fontSize: 55,
     color: "#F7B49B",
-    fontWeight: 'bold',
+    fontFamily: 'Coiny_400Regular',
     padding: 15,
     marginTop: 30
   },
@@ -118,8 +117,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3
   },
   buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 22,
+    fontFamily: 'Coiny_400Regular',
     color: "white"
   },
   loginContainer: {

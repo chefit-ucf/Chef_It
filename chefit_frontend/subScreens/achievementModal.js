@@ -24,7 +24,7 @@ const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationMo
   };
 
   const congratulationsImage = require('../assets/logos/avatar1.png')
-  const xImage = require('../assets/buttons/x.png')
+  const xImage = require('../assets/addRecipeButtons/x.png')
   const viewAchievementsImage = require('../assets/buttons/viewAchievements.png')
   let [fontsLoaded] = useFonts({
     Montserrat_300Light,

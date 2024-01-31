@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export default function MealPrepScreen({navigation}) {
     return (
         <View style={styles.container}>
-            <Text style={styles.titleText}>Calendar Screen</Text>
+            <Text style={styles.titleText}>Meal Prep Screen</Text>
         </View>
     );
 }

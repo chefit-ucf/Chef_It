@@ -91,7 +91,7 @@ function HomeScreen() {
                   <Image source={require('../assets/navIcons/calendar.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
-                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 7}}>Calendar</Text>
+                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 7}}>Meal Prep</Text>
                 </View>
               )
             }}/>

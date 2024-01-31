@@ -406,12 +406,45 @@ export const testuserInfo = {
         "re005"
     ],
     "userAchievements": [
-      {
-          "achievementID": "",
-          "title": "",
-          "description": "",
-          "trigger": false,
-      }
-    ]
+        {
+            "achievementID": "achieve001",
+            "title": "Recipe Pioneer",
+            "UnlockedDescription": "Create your first Recipe!",
+            "LockedDescription": "Hint: Try adding a Recipe!",
+            "trigger": true,
+            "UnlockedImage" : require("../assets/achievementImages/firstrecipe_logo.png"),
+            "LockedImage": require("../assets/achievementImages/lockedAchievement.png"),
+            "lockedReward": require("../assets/achievementImages/lockedAchievement_image.png"),
+            "rewardImage": require("../assets/achievementImages/firstrecipe_rewardImage.png"),
+            "timeTriggered": "Placement Time",
+        },
+
+        {
+            "achievementID": "achieve002",
+            "title": "Social Sous-Chef",
+            "UnlockedDescription": "Like your first Recipe!",
+            "LockedDescription": "Hint: See any Recipes you like? ",
+            "trigger": false,
+            "UnlockedImage" : "../assets/achievementImages/lockedAchievement",
+            "LockedImage": require("../assets/achievementImages/lockedAchievement.png"),
+            "rewardImage": undefined,
+            "lockedReward": require("../assets/achievementImages/lockedAchievement_image.png"),
+            "timeTriggered": "Placement Time",
+        },
+
+        {
+            "achievementID": "achieve003",
+            "title": "Flavorful Facelift",
+            "UnlockedDescription": "Change your Cooksona for the first time!",
+            "LockedDescription": "Hint: Go check out our Cooksonas!",
+            "trigger": false,
+            "UnlockedImage" : "../assets/achievementImages/lockedAchievement",
+            "LockedImage": require("../assets/achievementImages/lockedAchievement.png"),
+            "rewardImage": undefined,
+            "lockedReward": require("../assets/achievementImages/lockedAchievement_image.png"),
+            "timeTriggered": "Placement Time",
+        }
+
+      ]
   }
 

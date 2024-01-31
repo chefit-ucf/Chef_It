@@ -2,15 +2,17 @@ import React from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { Text } from '@rneui/themed'
 import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator()
 
 export default function WelcomeScreen({navigation}) {
     let [fontsLoaded] = useFonts({
+        Coiny_400Regular,
         Montserrat_300Light,
         Montserrat_400Regular,
         Montserrat_500Medium,
-        Montserrat_600SemiBold
+        Montserrat_600SemiBold,
     })
     if (!fontsLoaded) {
         return <Text>Loading...</Text>
@@ -41,11 +43,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     titleText: {
-        fontFamily: "Montserrat_600SemiBold",
-        fontSize: 35,
+        fontFamily: 'Coiny_400Regular',
+        fontSize: 36,
         textAlign: 'center',
         color: "white",
-        fontWeight: "bold",
         padding: 15,
         paddingHorizontal: 20,
         marginTop: 50
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#F7D47C',
         padding: 12,
-        paddingHorizontal: 50,
+        paddingHorizontal: 55,
         borderRadius: 50,
         margin: 10, 
         marginBottom: 100,
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     button2: {
         backgroundColor: '#42A797',
         padding: 12,
-        paddingHorizontal: 50,
+        paddingHorizontal: 45,
         borderRadius: 50,
         margin: 10, 
         marginBottom: 100,
@@ -87,11 +88,11 @@ const styles = StyleSheet.create({
             width: 0,
             height: 5,
         },
-        shadowOpacity: 0.3
+        shadowOpacity: 0.4
     },
     buttonText: {
         fontSize: 24,
         color: 'white',
-        fontWeight: "bold"
+        fontFamily: 'Coiny_400Regular',
     }
 })

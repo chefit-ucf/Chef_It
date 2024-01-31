@@ -18,12 +18,14 @@ export const recipeData = {
                 { quantity: 4, unit: 'oz', name: 'dark chocolate chunks' }
             ],
             directions: [
-                { text: 'In a pot, warm olive oil on medium high. Saute onion & carrots for 4 mins (until soft)', checkpoint: 0 },
-                { text: 'Add garlic & cook for 30 seconds', checkpoint: 60 },
-                { text: 'Season with salt, pepper, thyme, & red pepper flakes', checkpoint: 300},
-                { text: 'Pour in chicken broth & soup to a boil', checkpoint: 420 },
-                { text: 'Add rice & reduce heat to a simmer, stirring occasionally for 20 mins', checkpoint: 540 },
-                { text: 'Stir in shredded chicken', checkpoint: 660 },
+                { text: 'Preheat oven to 350', checkpoint: 0 },
+                { text: 'In a large bowl, whisk together sugars, salt, & butter until a pasta has formed with no lumps', checkpoint: 60 },
+                { text: 'Whisk in egg & vanilla, beating until light ribbons fall off the whisk', checkpoint: 300},
+                { text: 'Sift in flour & baking soda, then fold mixture with a spatula', checkpoint: 420 },
+                { text: 'Fold in chocolate chunks evenly', checkpoint: 540 },
+                { text: 'Chill dough for at least 30 minutes', checkpoint: 660 },
+                { text: 'Scoop the dough onto a pan, leaving at least 4 inches of space between cookies', checkpoint: 780 },
+                { text: 'Bake for 12-15 minutes', checkpoint: 900 },
                 { text: 'Let cool & enjoy!', checkpoint: 1080 }
             ],
             timer: {
@@ -60,15 +62,13 @@ export const recipeData = {
                 { quantity: 11/2, unit: 'cup', name: 'shredded cooked chicken' }
             ],
             directions: [
-                { text: 'Preheat oven to 350', checkpoint: 0 },
-                { text: 'In a large bowl, whisk together sugars, salt, & butter until a pasta has formed with no lumps', checkpoint: 60 },
-                { text: 'Whisk in egg & vanilla, beating until light ribbons fall off the whisk', checkpoint: 300},
-                { text: 'Sift in flour & baking soda, then fold mixture with a spatula', checkpoint: 420 },
-                { text: 'Fold in chocolate chunks evenly', checkpoint: 540 },
-                { text: 'Chill dough for at least 30 minutes', checkpoint: 660 },
-                { text: 'Scoop the dough onto a pan, leaving at least 4 inches of space between cookies', checkpoint: 780 },
-                { text: 'Bake for 12-15 minutes', checkpoint: 900 },
-                 { text: 'Let cool & enjoy!', checkpoint: 1080 }
+                { text: 'In a pot, warm olive oil on medium high. Saute onion & carrots for 4 mins (until soft)', checkpoint: 0 },
+                { text: 'Add garlic & cook for 30 seconds', checkpoint: 60 },
+                { text: 'Season with salt, pepper, thyme, & red pepper flakes', checkpoint: 300},
+                { text: 'Pour in chicken broth & soup to a boil', checkpoint: 420 },
+                { text: 'Add rice & reduce heat to a simmer, stirring occasionally for 20 mins', checkpoint: 540 },
+                { text: 'Stir in shredded chicken', checkpoint: 660 },
+                { text: 'Let cool & enjoy!', checkpoint: 1080 }
             ],
             timer: {
                 duration: 40,

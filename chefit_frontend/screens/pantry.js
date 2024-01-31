@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import React from 'react'
-import { useState } from 'react'
 import { Tab, TabView} from '@rneui/themed'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SafeAreaView } from 'react-native-web';
+import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 
 import IngredientsScreen from '../subScreens/ingredients';
 import SavedRecipesScreen from '../subScreens/savedRecipes';
@@ -14,6 +14,16 @@ const windowWidth = Dimensions.get('window').width;
 
 export default function PantryScreen({navigation}) {
     const [index, setIndex] = React.useState(0);
+    let [fontsLoaded] = useFonts({
+        Montserrat_300Light,
+        Montserrat_400Regular,
+        Montserrat_500Medium,
+        Montserrat_600SemiBold,
+        Coiny_400Regular
+    })
+    if (!fontsLoaded) {
+        return <Text>Loading...</Text>
+    }
 
     return (
         <View style={styles.container}>
@@ -52,11 +62,11 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     titleText: {
-        paddingTop: 45,
+        paddingTop: 50,
         fontSize: 24,
-        fontWeight: "bold",
         textAlign: 'left',
-        marginLeft: 20
+        marginLeft: 20,
+        fontFamily: 'Coiny_400Regular',
     },
     pText: {
         padding: 20,
