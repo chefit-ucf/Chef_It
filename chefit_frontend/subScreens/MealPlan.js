@@ -69,7 +69,9 @@ export default function MealPlan() {
           title={"Weight Goal"}
           list={list2}
         />
-        <Button title='Save'/>
+        <Button title='Save'
+        color="#f194ff"
+        />
       </View>
     </View>
 

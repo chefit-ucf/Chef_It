@@ -46,7 +46,7 @@ export default function MealModal({ navigation, date }) {
             <Text>10g</Text>
           </View>
           <View>
-            <Text>Protien</Text>
+            <Text>Protein</Text>
             <Text>10g</Text>
 
           </View>
