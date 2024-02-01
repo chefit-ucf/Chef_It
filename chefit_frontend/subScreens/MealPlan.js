@@ -1,6 +1,9 @@
 import React from 'react'
-import { SafeAreaView, View, Text, TextInput, Button, StyleSheet } from 'react-native'
+import { SafeAreaView, View, Text, TextInput, StyleSheet } from 'react-native'
+import { Button } from '@rneui/themed';
+
 import BackButton from '../components/BackButton'
+import TextInputs from '../components/TextInputs'
 
 import ListItems from '../components/ListItems'
 
@@ -40,26 +43,19 @@ export default function MealPlan() {
   return <SafeAreaView >
     <View style={styles.view}>
       <View style={styles.flex}>
-        <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-          />
-        <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-          />
-        <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-          />
-        <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-          />
+
+        <TextInputs
+          placeholder={"Age"}
+        />
+        <TextInputs
+          placeholder={"Height"}
+        />
+        <TextInputs
+          placeholder={"Weight"}
+        />
+        <TextInputs
+          placeholder={"Gender"}
+        />
 
         <ListItems
           title={"Daily Activity Level"}
@@ -69,9 +65,13 @@ export default function MealPlan() {
           title={"Weight Goal"}
           list={list2}
         />
-        <Button title='Save'
-        color="#f194ff"
-        />
+          <Button 
+            containerStyle={styles.button}
+            color={'#47A695'}
+            title={"2"}
+            >
+            <Text style={styles.text}> Save</Text>
+          </Button>
       </View>
     </View>
 
@@ -121,7 +121,12 @@ const styles = StyleSheet.create({
   },
   button: {
     padding:16,
+    width: "24%",
     borderRadius: 12,
-    backgroundColor: 'red'
+    alignSelf: 'center'
+  },
+  text: {
+    color: 'white',
+    fontWeight:'bold'
   }
 });

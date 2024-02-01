@@ -53,9 +53,9 @@ function HomeScreen() {
               ...styles.shadow
             }
           }}
-          initialRouteName='MealPrepScreen' 
+          initialRouteName='ExploreScreen' 
         >
-            <Tab.Screen name="MealPrepScreen" component={MealPrepScreen} options={{
+            <Tab.Screen name="ExploreScreen" component={ExploreScreen} options={{
               tabBarIcon: ({focused}) => (
                 <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 18}}>
                   <Image source={require('../assets/navIcons/search.png')}

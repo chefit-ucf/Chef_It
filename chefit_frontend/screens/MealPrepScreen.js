@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import { Button, SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { Button, SafeAreaView, View,  ScrollView, Text, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MealModal from '../components/MealModal';
 import MealPlan from '../subScreens/MealPlan';
 import { createStackNavigator } from '@react-navigation/stack';
 import BackButton from '../components/BackButton';
+import Dropdown from '../components/Dropdown';
 const Stack = createStackNavigator();
 
 
@@ -47,29 +48,75 @@ function MealPrep({navigation}) {
 const [selected, setSelected] = useState('')
 
 
-    return <SafeAreaView style={styles.view}>
-    <Calendar
+    return <SafeAreaView >
+      <View style={styles.view}>
+        
+        <ScrollView
+          showsVerticalScrollIndicator={false}  // Hide vertical scrollbar
+
+        >
+
+
+
+      <View
+        style={{...styles.flex, gap: 12}}
+      >
+      <Calendar
       onDayPress={day => {
         setSelected(day.dateString);
       }}
       markedDates={{
         [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
       }}
-      style={styles.calendar}
+      // style={styles.calendar}
+      theme={{
+        backgroundColor: 'red',
+      }}
+      style={{...styles.calendar}}
     />
       <MealModal
       navigation={navigation}
         date={selected}
       />
 
+
+      <Dropdown
+        icon={require("../assets/food/breakfast.png")}
+        food={"Breakfast"}
+      />
+      <Dropdown
+        icon={require("../assets/food/lunch.png")}
+        food={"Lunch"}
+      />
+      <Dropdown
+        icon={require("../assets/food/dinner.png")}
+        food={"Dinner"}
+      />
+
+      <Dropdown
+        icon={require("../assets/food/snacks.png")}
+        food={"Snacks"}
+      />
+      </View>
+        </ScrollView>
+
+      </View>
+
     </SafeAreaView>
 }
 const styles =  StyleSheet.create({
 
   view: {
-    paddingHorizontal: 4,
+    paddingHorizontal: 12,
     display:'flex',
     alignContent:"center",
-    rowGap: 12
+    rowGap: 12,
+    paddingBottom: 94 // not like this
+  },
+
+  calendar:{
+    // backgroundColor: '#47A695',
+    // borderColor: 'yellow',
+    // borderTopRadius: 12,
   }
 })
