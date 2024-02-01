@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import RecipePage from './screens/recipePage.js';
+import RecipePage from './screens/recipe.js';
 import RecipeScreen from './screens/recipeScreen.js';
 
 export default function App() {

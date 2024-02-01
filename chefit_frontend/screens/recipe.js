@@ -1,28 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, Text, ScrollView, Pressable, StyleSheet, Dimensions} from 'react-native';
-import recipeDetails from '../BackendElements/recipes.js'; 
-import AchievementsModal from '../SubScreens/achievementModal.js';
-import ServingModal from '../SubScreens/servingModal.js';
+import { View, Image, Text, ScrollView, Pressable, StyleSheet, TouchableOpacity} from 'react-native';
+import AchievementsModal from '../subScreens/achievementModal.js';
+import ServingModal from '../subScreens/servingModal.js'
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { recipeData } from '../API/recipeData';
 
-const windowWidth = Dimensions.get('window').width;
+export default function RecipeScreen ({ route, navigation }) {
+  const { currentRecipe } = route.params;
 
-
-export default function RecipePage({navigation}) {
-  
   const Stack = createNativeStackNavigator();
   const [showDirections, setShowDirections] = useState(false);
-  const [selectedButton, setSelectedButton] = useState('ingredients');
+  const [selectedButton, setSelectedButton] = useState('directions');
   const [timer, setTimer] = useState(null);
   const [initialDuration, setInitialDuration] = useState(null);
   const [isTimerVisible, setIsTimerVisible] = useState(false);
   const [startTimerOnPress, setStartTimerOnPress] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
-  const [recipe, setRecipe] = useState(recipeDetails.recipeId.re001);
-  const [newServingSize, setNewServingSize] = useState(recipeDetails.recipeId.re001.servingSize.servings);
+  const [recipe, setRecipe] = useState(recipeData.recipeId[currentRecipe]);
+  const [newServingSize, setNewServingSize] = useState(recipe.servingSize.servings);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [areTimerButtonsVisible, setAreTimerButtonsVisible] = useState(false);
   const [isCongratulationModalVisible, setIsCongratulationModalVisible] = useState(false);
@@ -30,6 +28,7 @@ export default function RecipePage({navigation}) {
   const [startTime, setStartTime] = useState(null);
   const [isContainerVisible, setIsContainerVisible] = useState(true);
   const [isCookAlongInitiated, setIsCookAlongInitiated] = useState(false); 
+
 
 
 //Timer
@@ -41,6 +40,7 @@ const timerIntervalRef = useRef(null);
 
     if (timer !== null && !isPaused) {
       timerInterval = setInterval(() => {
+        // ... (previous code)
       }, 1000);
 
       timerIntervalRef.current = timerInterval; 
@@ -136,44 +136,56 @@ const timerIntervalRef = useRef(null);
     setInitialDuration(recipe.timer.duration * 60);
   }, [recipe.timer.duration]);
 
-  //Filter between Directions and Ingredients
+  // Filter between Directions and Ingredients
   const handleButtonPress = (button) => {
     setSelectedButton(button);
     setShowDirections(button === 'directions');
   };
 //Images
-const checkboxImageSource = require('../assets/unchecked_button.png')
-const cookAlongImage = require('../assets/CookAlong.png')
-const startImage = require('../assets/startButton.png')
-const backImage = require('../assets/backButton.png')
-const shareImage = require('../assets/share.png')
-const saveImage = require('../assets/save.png')
-const checkboxImageCheckedSource = require('../assets/item_checked.png')
+const checkboxImageSource = require('../assets/buttons/unchecked_button.png')
+const cookAlongImage = require('../assets/buttons/CookAlong.png')
+const backImage = require('../assets/buttons/backButton.png')
+const startImage = require('../assets/buttons/startButton.png')
+const shareImage = require('../assets/buttons/share.png')
+const saveImage = require('../assets/buttons/save.png')
+const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
 
 const toggleModal = (visible) => {
   console.log('Setting isModalVisible to:', visible);
   setIsModalVisible(visible);
 };
-
+let [fontsLoaded] = useFonts({
+  Montserrat_300Light,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Coiny_400Regular
+})
+if (!fontsLoaded) {
+  return <Text>Loading...</Text>
+}
   return (
-    <ScrollView>
+  <ScrollView style={{backgroundColor: "white"}}>
     <View style={styles.imageContainer}>
-    <Image source={recipeDetails.recipeId.re001.imageSource} style={styles.image} />
-   <View style={styles.topButtonsContainer}>
-    <Image source={backImage} style={styles.backButton} />
-    <View style={styles.rightButtonsContainer}>
-    <Image source={shareImage} style={styles.topButtons} />
-    <Image source={saveImage} style={styles.topButtons} />
-  </View>
-  <View style={styles.whiteContainer}>
-  <Text style={styles.title}>{recipe.title}</Text>
-
-    </View>
-  </View>
-</View>      
+      <Image source={recipe.src} style={styles.image} />
+      <View style={styles.topButtonsContainer}>
+      <View style={styles.backContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={()=> navigation.goBack()}>
+          <Image source={backImage} style={styles.backButton} />
+        </TouchableOpacity>
+      </View>
+        <View style={styles.rightButtonsContainer}>
+          <Image source={shareImage} style={styles.topButtons} />
+          <Image source={saveImage} style={styles.topButtons} />
+        </View>
+      <View style={styles.whiteContainer}>
+        <Text style={styles.title}>{recipe.title}</Text>
+      </View>
+      </View>
+    </View>      
       <View style={styles.container}>
-      <Text style={styles.username}>By {recipe.username}</Text>
-        <Text style={styles.rating}>{recipe.rating}<Pressable><Text>  Rate</Text></Pressable></Text>
+      <Text style={styles.username}>By: {recipe.username}</Text>
+        <Text style={styles.rating}>{recipe.rating}</Text>
         {isTimerVisible && (
             <Text style={styles.timerText}>
               Timer: {formatTime(timer)}
@@ -208,7 +220,7 @@ const toggleModal = (visible) => {
       </Pressable>
       </View>
       <View style={styles.servingItem}>
-      <Text style={styles.servingValue}>{recipe.servingSize.minutes}</Text>
+      <Text style={styles.servingValue}>{recipe.timer.duration}</Text>
       <Text style={styles.servingLabel}>Mins</Text>
       </View>
       <View style={styles.LastServingItem}>
@@ -217,7 +229,7 @@ const toggleModal = (visible) => {
       </View>
     </View>
     <View style={[{paddingTop: 15}, { display: isContainerVisible ? 'flex' : 'none' }]}>
-    <Text style={styles.nutritionText}>Nutrition per Serving</Text>
+    <Text style={styles.nutritionText}>Nutrition Per Serving</Text>
     <View style={styles.nutritionContainer}>
   <View style={styles.nutritionItem}>
     <Text style={styles.servingValue}>{recipe.servingSize.nutrition.calories}</Text>
@@ -268,9 +280,10 @@ const toggleModal = (visible) => {
         {selectedButton === 'directions' ? (
   <View>
     {recipe.directions.map((step, index) => (
-      <View key={index} style={styles.stepContainer}>
+  <View key={`direction-${index}`} style={styles.stepContainer}>
         <View style={styles.direction}>
-  <Text style={styles.directions}>{`${index + 1}. ${step.text}`}</Text>
+  <Text style={styles.directionsNum}>{`${index + 1}.`}</Text>
+  <Text style={styles.directions}>{`${step.text}`}</Text>
   {step.imageSource && (
     <Image
       source={step.imageSource}
@@ -278,22 +291,32 @@ const toggleModal = (visible) => {
     />
   )}
 </View>
-        <Image
-          source={
-            completedSteps.includes(index)
-              ? checkboxImageCheckedSource
-              : checkboxImageSource
-          }
-          style={[{width: 25, height: 25}, {display: isContainerVisible ? 'none' : 'flex'}]}
-        />
+<TouchableOpacity
+      style={{marginTop: 10, marginLeft: 5}}
+      onPress={() => {
+        if (completedSteps.includes(index)) {
+          setCompletedSteps(completedSteps.filter(i => i !== index));
+        } else {
+          setCompletedSteps([...completedSteps, index]);
+        }
+      }}
+    >
+    <Image
+    source={completedSteps.includes(index) ? checkboxImageCheckedSource : checkboxImageSource}
+    style={[{width: 25, height: 25, marginTop: 10, marginLeft: 5}, {display: isContainerVisible ? 'none' : 'flex'}]}
+    />
+    </TouchableOpacity>
       </View>
     ))}
   </View>
   ) : (
-    <View>
+    <View style={{width: '100%'}}>
       {recipe.ingredients.map((item, index) => (
-        <Text style={styles.recipe} key={index}>{`${item.quantity} ${item.unit} ${item.name}`}</Text>
-      ))}
+  <View key={`ingredient-${index}`} style={{flexDirection: 'row', flex: 1, justifyContent: "flex-start", gap: 30, alignItems: 'center'}}>
+    <Text style={styles.recipeQuantity} key={`quantity-${index}`}>{`${item.quantity}  ${item.unit}`}</Text>
+    <Text style={styles.recipe} key={`name-${index}`}>{`  ${item.name}`}</Text>
+  </View>
+))}
     </View>
   )}
 </View>
@@ -320,7 +343,7 @@ Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Te
 <ServingModal
     isModalVisible={isModalVisible}
     setIsModalVisible={setIsModalVisible}
-    recipeDetails={recipeDetails}
+    recipeDetails={recipe}
     setRecipe={setRecipe}
   />
   <AchievementsModal
@@ -341,14 +364,14 @@ const styles = StyleSheet.create({
     height: 235,
   },
   container: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 20,
+    backgroundColor: "white",
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   title: {
     color: '#000',
-    fontFamily: 'Coiny',
-    fontSize: 32,
+    fontFamily: 'Coiny_400Regular',
+    fontSize: 30,
     fontStyle: 'normal',
     letterSpacing: -1.12,
     textAlign: 'center',
@@ -364,39 +387,39 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   rating: {
-    color: '#000',
+    color: '#F7D47C',
     fontFamily: 'Montserrat_400Regular',
-    fontSize: 15,
+    fontSize: 18,
     fontStyle: 'normal',
     letterSpacing: -0.525,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 10,
+    marginTop: 30,
     marginBottom: 10,
   },
 
   button: {
-    fontFamily: 'Coiny',
+    fontFamily: 'Coiny_400Regular',
     fontSize: 24,
     margin: 0,
     borderBottomWidth: 2,
     borderColor: '#000',
-    width: 205, // Adjust the width as needed
+    width: 205, 
   },
 
   buttonText: {
-    fontFamily: 'Coiny',
-    fontSize: 24,
+    fontFamily: 'Coiny_400Regular',
+    fontSize: 25,
     textAlign: 'center'
   },
 
   buttonWithBorder: {
     borderBottomWidth: 3,
     borderColor: '#E2E2E2',
-    width: 205, // Adjust the width as needed
+    width: 205, 
   },
 
   selectedButton: {
@@ -405,6 +428,25 @@ const styles = StyleSheet.create({
 
   selectedButtonText: {
     color: '#47A695',
+  },
+
+  backContainer: {
+    flexDirection: 'row',
+    alignItem: "left",
+    justifyContent: "left",
+    padding: 10,
+    marginTop: 30
+  },
+
+  backButton: {
+    width: 35, 
+    height: 35, 
+    shadowColor: "#494949",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+    shadowOpacity: 0.5
   },
 
   content: {
@@ -425,17 +467,17 @@ const styles = StyleSheet.create({
     flexShrink: 0
   },
   cookAlong: {
-    width: 149,
-    height: 35,
+    width: 170,
+    height: 40,
     flexShrink: 0,
-    textAlign: 'center',
     marginTop: 5,
-
+    paddingTop: 20
 },
 centeredButtonContainer: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
+  paddingTop: 20,
   marginBottom: 32,
 },
   startButton: {
@@ -451,25 +493,28 @@ centeredButtonContainer: {
   },
   topButtonsContainer: {
     position: 'absolute',
-    left: 0,
     top: 0,
+    width: '100%',
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    paddingHorizontal: 16, 
-    marginTop: 16, 
   },
   rightButtonsContainer: {
     flexDirection: 'row', 
-    marginLeft: 255
-  },
-  backButton: {
-    width: 30, 
-    height: 30, 
+    alignItem: "right",
+    justifyContent: "right",
+    padding: 10,
+    marginTop: 30,
+    gap: 10
   },
   topButtons: {
-    width: 32.7,
-    height: 32.7,
-    marginLeft: 16, 
+    width: 35,
+    height: 35,
+    shadowColor: "#494949",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+    shadowOpacity: 0.8
   },
   nutritionContainer: {
     flexDirection: 'row',
@@ -487,7 +532,9 @@ centeredButtonContainer: {
   },
   nutritionText: {
     fontSize: 16,
-    fontFamily: 'Montserrat_600SemiBold'
+    fontFamily: 'Montserrat_600SemiBold',
+    textAlign: 'center',
+    margin: 5
   },
   lastNutritionItem: {
     borderRightWidth: 0, 
@@ -511,8 +558,8 @@ centeredButtonContainer: {
 
   },
   servingSizeContainer: {
-    flexDirection: 'row',
     justifyContent: 'space-around',
+    flexDirection: 'row',
     alignItems: 'center',
     marginTop: 16,
   },
@@ -520,11 +567,13 @@ centeredButtonContainer: {
     flex: 1,
     borderRightWidth: 1,
     borderColor: '6F6F6F',
+    textAlign: 'center',
     alignItems: 'center', 
-    fontSize: 24
+    fontSize: 24,
   },
   LastServingItem: {
     borderRightWidth: 0, 
+    paddingRight: 20,
     paddingLeft: 20
   },
   servingValue: {
@@ -533,26 +582,34 @@ centeredButtonContainer: {
     fontFamily: "Montserrat_500Medium",
     textAlign: 'center',
     },
+    indentedView: {
+      marginLeft: 30,
+    },
+    directionsNum: {
+      color: '#000',
+      fontFamily: "Montserrat_500Medium",
+      fontSize: 20,
+      fontStyle: 'normal',
+      letterSpacing: -0.7,
+      paddingRight: 8,
+    },
   directions: {
-    flexDirection: 'row', 
     flexWrap: 'wrap',  
-    alignItems: 'center',
-    paddingVertical: 13,
     paddingLeft: 5,
+    paddingRight: 5,
     color: '#000',
     fontFamily:"Montserrat_500Medium",
-    fontSize: 20,
-    fontStyle: 'normal',
+    fontSize: 18,
     letterSpacing: -0.7,
   },
   direction: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     flex: 1, 
+    paddingRight: 20,
+    paddingVertical: 10
   },
   stepContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingRight: 20, 
     marginTop: 8,
   },
@@ -563,33 +620,49 @@ centeredButtonContainer: {
   },
   recipe:{
     paddingVertical: 13,
-    paddingHorizontal: 5,
     color: '#000',
     fontFamily: "Montserrat_500Medium",
-    fontSize: 20,
+    fontSize: 17,
     fontStyle: 'normal',
     letterSpacing: -0.7,
+    textAlign: 'left',
+    flex: 1,
+    marginRight: 50,
+    flexWrap: 'nowrap',
+    flexShrink: 1
+  },
+  recipeQuantity:{
+    flex: 1,
+    textAlign: 'right',
+    paddingVertical: 13,
+    color: '#000',
+    fontFamily: "Montserrat_600SemiBold",
+    fontSize: 18,
+    fontStyle: 'normal',
+    letterSpacing: -0.7,
+    marginLeft: -120
   },
   cookAlongText: {
-    marginTop: 10,
     color: '#000',
     textAlign: 'center',
     fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 20,
+    fontSize: 18,
     fontStyle: 'normal',
     letterSpacing: -0.7,
-    marginBottom: 10
+    paddingVertical: 15,
+    paddingHorizontal: 20
   },
   whiteContainer: {
     position: 'absolute',
-    top: 195,
+    top: 190,
     left: 0,
     right: 0,
-    height: 44,
+    height: 50,
     backgroundColor: 'white',
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
-    paddingLeft: 15,
-    paddingRight: 15
+    textAlign: 'center',
+    padding: 10,
+    paddingBottom: 0
   },
 });
