@@ -276,7 +276,8 @@ if (!fontsLoaded) {
   </Pressable>
 </View>
 
-        <View style={styles.content}>
+          {/*Updated Recipe.js */}
+ <View style={styles.content}>
         {selectedButton === 'directions' ? (
   <View>
     {recipe.directions.map((step, index) => (
@@ -321,6 +322,7 @@ if (!fontsLoaded) {
   )}
 </View>
       </View>
+      {/*Updated Recipe.js */}
       <Text style={[styles.cookAlongText, { display: isContainerVisible ? 'flex' : 'none' }]}>
 Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Text>
 <View style={styles.centeredButtonContainer}>
