@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   congratText: {
     fontSize: 32,
-    fontFamily: 'Coiny',
+    fontFamily: 'Coiny_400Regular',
   },
   timerText: {
     fontSize: 20,

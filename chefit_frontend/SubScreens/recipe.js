@@ -276,11 +276,11 @@ if (!fontsLoaded) {
     <Text style={[styles.buttonText, selectedButton === 'ingredients' && styles.selectedButtonText]}>Ingredients</Text>
   </Pressable>
 </View>
-        <View style={styles.content}>
+<View style={styles.content}>
         {selectedButton === 'directions' ? (
   <View>
     {recipe.directions.map((step, index) => (
-      <View key={index} style={styles.stepContainer}>
+  <View key={`direction-${index}`} style={styles.stepContainer}>
         <View style={styles.direction}>
   <Text style={styles.directionsNum}>{`${index + 1}.`}</Text>
   <Text style={styles.directions}>{`${step.text}`}</Text>
@@ -312,11 +312,11 @@ if (!fontsLoaded) {
   ) : (
     <View style={{width: '100%'}}>
       {recipe.ingredients.map((item, index) => (
-        <View style={{flexDirection: 'row', flex: 1, justifyContent: "flex-start", gap: 30, alignItems: 'center'}}>
-          <Text style={styles.recipeQuantity} key={index}>{`${item.quantity}  ${item.unit}`}</Text>
-          <Text style={styles.recipe} key={index}>{`  ${item.name}`}</Text>
-        </View>
-      ))}
+  <View key={`ingredient-${index}`} style={{flexDirection: 'row', flex: 1, justifyContent: "flex-start", gap: 30, alignItems: 'center'}}>
+    <Text style={styles.recipeQuantity} key={`quantity-${index}`}>{`${item.quantity}  ${item.unit}`}</Text>
+    <Text style={styles.recipe} key={`name-${index}`}>{`  ${item.name}`}</Text>
+  </View>
+))}
     </View>
   )}
 </View>
@@ -334,10 +334,8 @@ Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Te
       setIsCookAlongInitiated(true)
     }}
     
-  >
-    <Text>
-      <Image source={cookAlongImage} style={styles.cookAlong}></Image>
-    </Text>
+  >      
+  <Image source={cookAlongImage} style={styles.cookAlong}></Image>
   </Pressable>
 </View>
 <ServingModal
@@ -481,8 +479,8 @@ centeredButtonContainer: {
   marginBottom: 32,
 },
   startButton: {
-    width: 101,
-    height: 41,
+    width: 100,
+    height: 45,
     marginTop: 5,
     alignSelf: 'center',
   },

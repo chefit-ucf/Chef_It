@@ -107,16 +107,15 @@ export default function AddRecipeScreen()  {
 const styles = StyleSheet.create({
     screenContainer: {
         backgroundColor: 'white',
-        paddingTop: 30,
+        paddingTop: 25,
         flex: 1,
         alignItems: "center",
         paddingBottom: 110
       },
     header: {
-        paddingTop: 20,
         flexDirection: 'row',
         marginTop: 20,
-        alignItems: 'center'
+        alignItems: 'center',
       },
       addRecipeContainer: {
         backgroundColor: 'white',
@@ -169,7 +168,7 @@ const styles = StyleSheet.create({
         color: "#5A5A5A",
         fontFamily: "Montserrat_500Medium",
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight:'600',
         letterSpacing: -0.56,
         marginBottom: 10,
         paddingBottom: 100
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: "#F2F2F2",
         color: "#5A5A5A",
-        fontWeight: 600,
+        fontWeight:'600',
         fontSize: 16,
         letterSpacing: -0.56,
         marginBottom: 10,
@@ -194,10 +193,10 @@ const styles = StyleSheet.create({
         color: "#5A5A5A",
         fontFamily: "Montserrat_500Medium",
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight:'600',
     },
     title: {
-        fontSize: 28,
+        fontSize: 26,
         fontFamily: 'Coiny_400Regular',
         marginRight: 75,
         marginBottom: 5
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
         color: "#5A5A5A",
         fontFamily: "Montserrat_500Medium",
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight:'600',
         letterSpacing: -0.56,
     },
     ingredientInput: {
@@ -242,7 +241,7 @@ const styles = StyleSheet.create({
         color: "#5A5A5A",
         fontFamily: "Montserrat_500Medium",
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight:'600',
         letterSpacing: -0.56,
         marginBottom: 10
     },
@@ -265,7 +264,7 @@ const styles = StyleSheet.create({
         color: "#5A5A5A",
         fontFamily: "Montserrat_500Medium",
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight:'600',
         letterSpacing: -0.56
     },
     savedImage: {

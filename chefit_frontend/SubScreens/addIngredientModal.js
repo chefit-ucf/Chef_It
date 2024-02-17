@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#F2F2F2",
         color: "#5A5A5A",
         fontSize: 16,
-        fontWeight: 600,
-        letterSpacing: -0.56,
+fontWeight: '600',        
+letterSpacing: -0.56,
         marginBottom: 10,
       },
       ingredientDetails: {
@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     ingredientDetailsLabel: {
         color: "#5A5A5A",
         fontSize: 16,
-        fontWeight: 600,
-        marginBottom: 5,
+fontWeight: '600',      
+marginBottom: 5,
     },
     modalSmallInput: {
         width: 99,
@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#F2F2F2",
         color: "#5A5A5A",
         fontSize: 16,
-        fontWeight: 600,
-        letterSpacing: -0.56,
+fontWeight: '600',        
+letterSpacing: -0.56,
         flex: 1,
         marginRight: 10,
         textAlign: 'center'
