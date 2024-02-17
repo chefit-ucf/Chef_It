@@ -15,7 +15,7 @@
     ],
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
-      "package": "com.dig.chefit",
+      "bundleIdentifier": "com.dig.chefit",
       "supportsTablet": true
     },
     "android": {
