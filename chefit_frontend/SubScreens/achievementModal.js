@@ -3,9 +3,7 @@ import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiB
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { BlurView } from 'expo-blur';
 
-
-
-//Toggle Serving Modal
+// Toggle Serving Modal
 const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationModalVisible, currentTime, startTime}) => {
 
   const handleVisitAchievements = () => {
@@ -25,14 +23,15 @@ const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationMo
     return formatTime(elapsedSeconds);
   };
 
-  const congratulationsImage = require('../assets/avatar1.png')
-  const xImage = require('../assets/x.png')
-  const viewAchievementsImage = require('../assets/viewAchievements.png')
+  const congratulationsImage = require('../assets/logos/avatar1.png')
+  const xImage = require('../assets/addRecipeButtons/x.png')
+  const viewAchievementsImage = require('../assets/buttons/viewAchievements.png')
   let [fontsLoaded] = useFonts({
     Montserrat_300Light,
     Montserrat_400Regular,
     Montserrat_500Medium,
-    Montserrat_600SemiBold
+    Montserrat_600SemiBold,
+    Coiny_400Regular
   })
   if (!fontsLoaded) {
     return <Text>Loading...</Text>

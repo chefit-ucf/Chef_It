@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, View, Image, Text, TextInput, Pressable, StyleSheet } from 'react-native';
-import scaleRecipe from './recipeCaculator.js';
+import scaleRecipe from './recipeCalculator.js'
 import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { BlurView } from 'expo-blur';
-
-
-
 
 const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRecipe }) => {
   const [newServingSize, setNewServingSize] = useState(0);
@@ -24,7 +21,8 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
     Montserrat_300Light,
     Montserrat_400Regular,
     Montserrat_500Medium,
-    Montserrat_600SemiBold
+    Montserrat_600SemiBold,
+    Coiny_400Regular
   })
   if (!fontsLoaded) {
     return <Text>Loading...</Text>
@@ -40,7 +38,7 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
         <View style={styles.modalContent}>
           <View style={styles.topRow}>
             <Pressable onPress={() => toggleModal(false)} style={styles.closeButton}>
-              <Image source={require('../assets/x.png')} style={styles.backButton} />
+              <Image source={require('../assets/addRecipeButtons/x.png')} style={styles.backButton} />
             </Pressable>
             <View style={styles.serveTextContainer}>
               <Text style={styles.serveText}>Input how many people this recipe will serve</Text>

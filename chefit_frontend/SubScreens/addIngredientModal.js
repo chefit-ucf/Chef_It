@@ -12,8 +12,8 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
 
 
   
-    const SavePantry = require('../assets/SavePantry.png');
-    const xImage = require('../assets/x.png')
+    const SavePantry = require('../assets/addRecipeButtons/SavePantry.png');
+    const xImage = require('../assets/addRecipeButtons/x.png')
 
     const handleSaveToPantryPress = () => {
         // pantry logic here
@@ -26,7 +26,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
              <BlurView
         style={styles.blurEffect}
         tint="default"
-        intensity={5}
+        intensity={10}
       >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
@@ -96,6 +96,13 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        shadowColor: 'black',
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
       },
       modalContent: {
         backgroundColor: 'white',

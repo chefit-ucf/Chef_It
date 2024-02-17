@@ -1,22 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import RecipePage from './screens/recipe.js';
-import RecipeScreen from './screens/recipeScreen.js';
+import React from 'react'
+import Auth from "./screens/Auth.js"
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <RecipePage></RecipePage>
-      <StatusBar style="auto" />
-    </View>
+    <Auth></Auth>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-});
