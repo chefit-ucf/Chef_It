@@ -4,7 +4,6 @@
     "slug": "chefit_frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -16,6 +15,7 @@
     ],
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
+      "package": "com.dig.chefit",
       "supportsTablet": true
     },
     "android": {
@@ -39,6 +39,11 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1c4a09b2-935d-4a06-a47d-01ea3865ddd8"
+      }
+    }
   }
 }

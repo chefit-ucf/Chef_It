@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import auth from '@react-native-firebase/auth'
+import db, { FirebaseDatabaseTypes } from '@react-native-firebase/database'
 
 // For navigation
 const Stack = createNativeStackNavigator()
@@ -18,6 +20,9 @@ import AddRecipeScreen from './addRecipe.js';
 import MealPrepScreen from './mealPrep.js';
 import ProfileScreen from './profile.js';
 import RecipeScreen from '../subScreens/recipe.js';
+
+
+
 
 const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity
@@ -36,8 +41,21 @@ const CustomTabBarButton = ({children, onPress}) => (
     }}>{children}</View>
   </TouchableOpacity>
 );
-
 function HomeScreen() {
+  const [data, setData] = useState([])
+  const onChange = (snapshot) => {
+    if(snapshot.val()){
+      const values = snapshot.val()
+      setData(values)
+    }
+  }
+  useEffect(()=>{
+    const refPath = "/leaderboard";
+    db().ref(refPath).on("value", onChange)
+    return () => db().ref(refPath).off('value', setData)
+  },[])
+
+
     return (
         <Tab.Navigator 
           tabBarOptions={{showLabel: false}}
