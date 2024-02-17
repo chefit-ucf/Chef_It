@@ -4,7 +4,7 @@
     "slug": "chefit_frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logos/favicon.png",
+    "icon": "./assets/favicon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -15,16 +15,30 @@
       "**/*"
     ],
     "ios": {
+      "googleServicesFile": "./GoogleServicxe-Info.plist",
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.dig.chefit"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }
