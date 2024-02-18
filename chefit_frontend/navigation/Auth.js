@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import {collection, onSnapshot} from 'firebase/firestore'
+import { db } from  '../config/firebase.js'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -38,6 +40,8 @@ const CustomTabBarButton = ({children, onPress}) => (
 );
 
 function HomeScreen() {
+
+
     return (
         <Tab.Navigator 
           tabBarOptions={{showLabel: false}}
@@ -112,7 +116,7 @@ function HomeScreen() {
 export default function Auth(props) {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Home">
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
