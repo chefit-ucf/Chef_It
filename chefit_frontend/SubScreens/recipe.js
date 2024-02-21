@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Image, Text, ScrollView, Pressable, StyleSheet, TouchableOpacity} from 'react-native';
-import AchievementsModal from '../subScreens/achievementModal.js';
-import ServingModal from '../subScreens/servingModal.js'
+import AchievementsModal from './achievementModal.js';
+import ServingModal from './servingModal.js'
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { recipeData } from '../API/recipeData';
+import { recipeData } from '../API/recipeData.js';
 
 
 export default function RecipeScreen ({ route, navigation }) {

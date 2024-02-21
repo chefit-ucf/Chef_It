@@ -8,11 +8,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import SwitchToggle from '../components/switch.js';
 
-import ResetEmail from './ResetEmail';
-import ResetPassword from './ResetPassword';
-import ResetUsername from './ResetUsername';
+import ResetEmail from './ResetEmail.js';
+import ResetPassword from './ResetPassword.js';
+import ResetUsername from './ResetUsername.js';
 
-import BackButton from '../components/BackButton';
+import BackButton from '../components/BackButton.js';
 
 // For navigation
 const Stack = createStackNavigator()

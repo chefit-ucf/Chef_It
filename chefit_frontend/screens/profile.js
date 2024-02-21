@@ -12,7 +12,6 @@ import SettingsScreen from '../subScreens/Settings';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 
-
 const Stack = createStackNavigator();
 
 const TabComponent = ({navigation}) => {
