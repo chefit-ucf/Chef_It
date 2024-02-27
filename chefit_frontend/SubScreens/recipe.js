@@ -7,7 +7,7 @@ import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { collection, onSnapshot, doc, addDoc, deleteDoc } from "firebase/firestore"
 import { db } from "../API/firebase.config.js"
-import { recipeData } from '../API/recipeData';
+import { recipeData } from '../API/recipeData.js';
 
 
 export default function RecipeScreen ({ route, navigation }) {
