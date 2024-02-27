@@ -5,16 +5,8 @@ import ServingModal from './servingModal.js'
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { recipeData } from '../API/recipeData.js';
-import {
-  collection,
-  onSnapshot,
-  doc,
-  addDoc,
-  deleteDoc
-} from "firebase/firestore"
+import { collection, onSnapshot, doc, addDoc, deleteDoc } from "firebase/firestore"
 import { db } from "../API/firebase.config.js"
-
 
 export default function RecipeScreen ({ route, navigation }) {
   const { currentRecipe } = route.params;
@@ -28,8 +20,8 @@ export default function RecipeScreen ({ route, navigation }) {
   const [startTimerOnPress, setStartTimerOnPress] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
-  const [recipe, setRecipe] = useState(recipeData.recipeId[currentRecipe]);
-  const [newServingSize, setNewServingSize] = useState(recipe.servingSize.servings);
+  const [recipe, setRecipe] = useState(null); // Change initial state to null
+  const [newServingSize, setNewServingSize] = useState(null); // Change initial state to null
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [areTimerButtonsVisible, setAreTimerButtonsVisible] = useState(false);
   const [isCongratulationModalVisible, setIsCongratulationModalVisible] = useState(false);
@@ -38,68 +30,44 @@ export default function RecipeScreen ({ route, navigation }) {
   const [isContainerVisible, setIsContainerVisible] = useState(true);
   const [isCookAlongInitiated, setIsCookAlongInitiated] = useState(false); 
 
-
-
 //Timer
 const timerIntervalRef = useRef(null);
 
-  useEffect(() => {
-
-    let timerInterval;
-
-    if (timer !== null && !isPaused) {
-      timerInterval = setInterval(() => {
-        // ... (previous code)
-      }, 1000);
-
-      timerIntervalRef.current = timerInterval; 
-
-    if (startTimerOnPress && timer === null) {
-      setTimer(initialDuration);
-      setIsTimerVisible(true);
-      setStartTimerOnPress(false);
-      setIsPaused(false);
-      
-    }
+useEffect(() => {
+  if (startTimerOnPress && timer === null) {
+    setTimer(initialDuration);
+    setIsTimerVisible(true);
+    setStartTimerOnPress(false);
+    setIsPaused(false);
   }
-  return () => {
-    clearInterval(timerIntervalRef.current); 
-  };
-}, [startTimerOnPress, timer, isPaused, initialDuration, completedSteps]);
 
+  let timerInterval;
+  if (timer !== null && !isPaused) {
+    timerInterval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) {
+          return prevTimer - 1;
+        } else {
+          clearInterval(timerInterval);
+          setIsTimerVisible(true);
+          return null;
+        }
+      });
+      setCurrentTime((prevTime) => prevTime + 1000); 
+    }, 1000);
 
-  useEffect(() => {
-    if (startTimerOnPress && timer === null) {
-      setTimer(initialDuration);
-      setIsTimerVisible(true);
-      setStartTimerOnPress(false);
-      setIsPaused(false);
-    }
-  
-    let timerInterval;
-    if (timer !== null && !isPaused) {
-      timerInterval = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer > 0) {
-            return prevTimer - 1;
-          } else {
-            clearInterval(timerInterval);
-            setIsTimerVisible(true);
-            return null;
-          }
-        });
-        setCurrentTime((prevTime) => prevTime + 1000); 
-      }, 1000);
-  
+    // Ensure timer is not null before accessing its duration property
+    if (timer.duration) {
       recipe.directions.forEach((step, index) => {
-        if (timer <= recipe.timer.duration * 60 - step.checkpoint && !completedSteps.includes(index)) {
+        if (timer <= timer.duration * 60 - step.checkpoint && !completedSteps.includes(index)) {
           setCompletedSteps((prevSteps) => [...prevSteps, index]);
         }
       });
     }
-  
-    return () => clearInterval(timerInterval);
-  }, [startTimerOnPress, timer, isPaused, initialDuration, completedSteps]);
+  }
+
+  return () => clearInterval(timerInterval);
+}, [startTimerOnPress, timer, isPaused, initialDuration, completedSteps, recipe]);
 
 
   const formatTime = (timeInSeconds) => {
