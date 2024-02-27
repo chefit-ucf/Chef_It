@@ -7,6 +7,8 @@ import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { collection, onSnapshot, doc, addDoc, deleteDoc } from "firebase/firestore"
 import { db } from "../API/firebase.config.js"
+import { recipeData } from '../API/recipeData';
+
 
 export default function RecipeScreen ({ route, navigation }) {
   const { currentRecipe } = route.params;
@@ -20,8 +22,8 @@ export default function RecipeScreen ({ route, navigation }) {
   const [startTimerOnPress, setStartTimerOnPress] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
-  const [recipe, setRecipe] = useState(null); // Change initial state to null
-  const [newServingSize, setNewServingSize] = useState(null); // Change initial state to null
+  const [recipe, setRecipe] = useState(recipeData.recipeId[currentRecipe]);
+  const [newServingSize, setNewServingSize] = useState(recipe.servingSize.servings);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [areTimerButtonsVisible, setAreTimerButtonsVisible] = useState(false);
   const [isCongratulationModalVisible, setIsCongratulationModalVisible] = useState(false);
@@ -29,6 +31,22 @@ export default function RecipeScreen ({ route, navigation }) {
   const [startTime, setStartTime] = useState(null);
   const [isContainerVisible, setIsContainerVisible] = useState(true);
   const [isCookAlongInitiated, setIsCookAlongInitiated] = useState(false); 
+  const [recipes, setRecipes] = useState([])
+
+
+  const recipesCollectionRef = collection(db, "recipes")
+
+  useEffect(() => {
+      onSnapshot(recipesCollectionRef, snapshot => {
+        setRecipes(snapshot.docs.map(doc => {
+          return {
+            id: doc.id,
+            viewing: false,
+            ...doc.data()
+          }
+        }))
+      })
+    }, [])
 
 //Timer
 const timerIntervalRef = useRef(null);
@@ -156,8 +174,13 @@ if (!fontsLoaded) {
           <Image source={saveImage} style={styles.topButtons} />
         </View>
       <View style={styles.whiteContainer}>
-        <Text style={styles.title}>{recipe.title}</Text>
-      </View>
+      <>
+      {recipes.map((recipe) => (
+        <View style={{ marginBottom: 20 }} key={recipe.id}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{recipe.title}</Text>
+        </View>
+      ))}
+    </></View>
       </View>
     </View>      
       <View style={styles.container}>
