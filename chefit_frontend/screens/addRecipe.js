@@ -3,11 +3,34 @@ import { View, Image, Text, Pressable, StyleSheet, TextInput, Switch, ScrollView
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import AddIngredientModal from '../subScreens/addIngredientModal.js';
+import {
+    collection,
+    onSnapshot,
+    doc,
+    addDoc,
+    deleteDoc
+  } from "firebase/firestore"
+  import { db } from "../API/firebase.config.js"
 
 export default function AddRecipeScreen()  {
     const [isEnabled, setIsEnabled] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [savedToPantry, setSavedToPantry] = useState(false);
+    const [recipes, setRecipes] = useState([])
+
+    const recipesCollectionRef = collection(db, "recipes")
+
+    useEffect(() => {
+        onSnapshot(recipesCollectionRef, snapshot => {
+          setRecipes(snapshot.docs.map(doc => {
+            return {
+              id: doc.id,
+              viewing: false,
+              ...doc.data()
+            }
+          }))
+        })
+      }, [])
 
     let [fontsLoaded] = useFonts({
         Montserrat_300Light,
@@ -101,8 +124,20 @@ export default function AddRecipeScreen()  {
       </AddIngredientModal>
         </View>
         </ScrollView>
+        <View>
+ {recipes.map((recipe) => (
+   <View style={{ marginBottom: 20 }} key={recipe.id}>
+     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{recipe.title}</Text>
+
+     <Text style={{ marginTop: 5 }}>{recipe.calories}</Text>
+
+   </View>
+ ))}
+</View>
+
         </View>
-    )
+ 
+    );
 }
 const styles = StyleSheet.create({
     screenContainer: {

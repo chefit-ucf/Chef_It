@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "820133144348",
+    "project_id": "chef-it-fdbea",
+    "storage_bucket": "chef-it-fdbea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820133144348:android:fb47ff393ffc9d8d523cd9",
+        "android_client_info": {
+          "package_name": "com.dig.chefit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4D9meLwsU9m4XLBLQYmodLrCHUSsj7Og"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

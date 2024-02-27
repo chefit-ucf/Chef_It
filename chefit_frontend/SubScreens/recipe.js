@@ -6,6 +6,14 @@ import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600Sem
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { recipeData } from '../API/recipeData.js';
+import {
+  collection,
+  onSnapshot,
+  doc,
+  addDoc,
+  deleteDoc
+} from "firebase/firestore"
+import { db } from "../API/firebase.config.js"
 
 
 export default function RecipeScreen ({ route, navigation }) {
