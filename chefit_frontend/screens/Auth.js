@@ -57,7 +57,7 @@ function HomeScreen() {
         >
             <Tab.Screen name="Explore" component={ExploreScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center',}}>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
                   <Image source={require('../assets/navIcons/search.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -67,7 +67,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Pantry" component={PantryScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center',}}>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
                   <Image source={require('../assets/navIcons/pantry.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -87,7 +87,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="MealPrep" component={MealPrepScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', }}>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
                   <Image source={require('../assets/navIcons/calendar.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -97,7 +97,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Profile" component={ProfileScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center',}}>
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
                   <Image source={require('../assets/navIcons/profile.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -117,7 +117,7 @@ export default function Auth(props) {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="RecipeScreen" component={AddRecipeScreen} />
+        <Stack.Screen name="RecipeScreen" component={RecipeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
