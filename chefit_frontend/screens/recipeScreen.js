@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-import React from 'react';
-import { Button, View, Text } from 'react-native';
-
-
-
-
-
-export default function ExploreScreen({navigation}) {
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>
-        this is the add recipe screen
-      </Text>
-      
-       
-    </View>
-    );
-}
-=======
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Image, Text, Pressable, StyleSheet, TextInput, Switch } from 'react-native';
 import AddIngredientModal from '../SubScreens/addIngredientModal.js';
@@ -280,4 +260,3 @@ const styles = StyleSheet.create({
   });
     
 export default RecipeScreen
->>>>>>> 750a795cff354b887a05a14acb51cedb7ecd8b41
