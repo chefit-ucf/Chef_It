@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect , useState} from 'react';
+
 import { SafeAreaView, ScrollView, View, Text, TextInput , Dimensions, StyleSheet, Pressable} from 'react-native';
 import Svg, { Path } from "react-native-svg"
 import Swiper from "../components/Swiper.js"
@@ -9,6 +10,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import BackButton from '../components/BackButton.js';
 import { swiper, slider1, slider2, slider3 } from "../assets/data/fakeData.js"
+
+import {collection, onSnapshot} from 'firebase/firestore'
+import { db } from  '../config/firebase.js'
+
 const { width, height } =  Dimensions.get("window")
 
 
@@ -51,6 +56,35 @@ return  (
 
 export function Explore({navigation}) {
 
+  const [loading, setLoading] = useState(false)
+  const [swiperData, setSwiperData] = useState([])
+
+  // data request for swiper 
+  useEffect(()=>{
+    setLoading(true)
+    const swiperQuery = collection(db, "swiper")
+    onSnapshot(swiperQuery, (snapshot) => {
+      let swiperList = []
+      snapshot.docs.map((doc) => swiperList.push({ ...doc.data(), id: doc.id }))
+      setSwiperData(Object.values(swiperList[0].slides))
+      setLoading(false)
+      console.log(Object.values(swiperList[0].slides), 'in explore')
+    })
+  }, [])
+
+  // data request for slider 
+  // useEffect(()=>{
+  //   setLoading(true)
+  //   const sliderQuery = collection(db, "slider")
+  //   onSnapshot(sliderQuery, (snapshot) => {
+  //     let sliderList = []
+  //     snapshot.docs.map((doc)=> sliderList.push({...doc.data(), id: doc.id}))
+  //     setPeople(sliderList)
+  //     setLoading(false)
+  //     console.log(people)
+  //   })
+  // }, [])
+
 
   return <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1 }}>
     <ScrollView style={{marginBottom: 62}}>
@@ -74,7 +108,7 @@ export function Explore({navigation}) {
       </View>
       
       <Swiper 
-        items={swiper}
+        items={swiperData}
         width={width}
         height={height}
       />
