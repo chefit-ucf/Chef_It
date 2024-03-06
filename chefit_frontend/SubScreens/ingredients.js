@@ -1,46 +1,71 @@
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import React from 'react'
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
 import { categories } from '../components/ingredientsBar.js'
 import { testuserInfo } from '../API/data.js';
+import { db } from "../API/firebase.config.js";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const RenderIngredients = ( {index} ) => {
-    let listOfIngredients;
+    const [ings, setIngs] = useState([]);
+    const ingredientsCollection = collection(db, "users");
+    let category;
 
     if (index === 0) {
-        listOfIngredients = testuserInfo.userIngredients["fruits"];
+        category = "fruits";
     }
     else if (index === 1) {
-        listOfIngredients = testuserInfo.userIngredients["vegetables"];
+        category = "vegetables";
     }
     else if (index === 2) {
-        listOfIngredients = testuserInfo.userIngredients["dairyEggs"];
+        category = "dairyEggs";
     }
     else if (index === 3) {
-        listOfIngredients = testuserInfo.userIngredients["pastaGrains"];
+        category = "pastaGrains";
     }
     else if (index === 4) {
-        listOfIngredients = testuserInfo.userIngredients["bread"];
+        category = "bread";
     }
     else if (index === 5) {
-        listOfIngredients = testuserInfo.userIngredients["condiments"];
+        category = "condiments";
     }
     else if (index === 6) {
-        listOfIngredients = testuserInfo.userIngredients["baking"];
+        category = "baking";
     }
     else if (index === 7) {
-        listOfIngredients = testuserInfo.userIngredients["oilsDressing"];
+        category = "oilsDressing";
     }
     else if (index === 8) {
-        listOfIngredients = testuserInfo.userIngredients["spicesSeasonings"];
+        category = "spicesSeasonings";
     }
     else if (index === 9) {
-        listOfIngredients = testuserInfo.userIngredients["meatsProteins"];
+        category = "meatsProteins";
     }
     else if (index === 10) {
-        listOfIngredients = testuserInfo.userIngredients["alcoholBevs"];
+        category = "alcoholBevs";
     }
+
+    useEffect(() => {
+        const render = onSnapshot(ingredientsCollection, (snapshot) => {
+            setIngs([]);
+          snapshot.docs.forEach((doc) => {
+            const userIngredients = doc.data().userIngredients;
+            const ingredients = userIngredients[category];
+            const mappedIngredients = Object.values(ingredients).map((ingredient) => ({
+              id: doc.id,
+              viewing: false,
+              ...ingredient,
+              src: { uri: ingredient.src },
+            }));
+            setIngs((prevIngs) => [...prevIngs, ...mappedIngredients]);
+          });
+        });
+    
+        return () => render();
+      }, [index]);
+    
+      const listOfIngredients = ings;
+   
     return (
         <View style={{flex: 1, paddingBottom: 100, backgroundColor: "#F8FAF8"}}>
             <ScrollView vertical>

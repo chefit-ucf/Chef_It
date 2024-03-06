@@ -176,10 +176,6 @@ function Profile({ navigation }) {
         </View>
       </View>
     </SafeAreaView>
-    
-
-
-
   )
 }
 

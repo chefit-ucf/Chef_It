@@ -123,16 +123,21 @@ const handleAddIngredients = () => {
 };
   
 const handleAddRecipe = async () => {
-  try {
-    // Add recipe image to Firebase Storage
-    const imageResponse = await fetch(imageUrl);
-    const imageBlob = await imageResponse.blob();
-    const imageRef = ref(storage, `images/${v4()}`);
-    await uploadBytes(imageRef, imageBlob);
-    const imageURL = await getDownloadURL(imageRef);
+    try {
+        // Add recipe image to Firebase Storage
+        const imageResponse = await fetch(imageUrl);
+        const imageBlob = await imageResponse.blob();
+        const imageRef = ref(storage, `images/${v4()}`);
+        await uploadBytes(imageRef, imageBlob);
+        const imageURL = await getDownloadURL(imageRef);
+    
+        // Generate unique unsaved ID for the recipe
+        const unsavedId = v4();
+    
 
     // Add recipe to Firestore
     const docRef = await addDoc(collection(db, 'recipes'), {
+        id: unsavedId, // Assign the unsaved ID
         title: recipeName,
         rating: rating,
         ingredients: ingredients,
@@ -151,7 +156,6 @@ const handleAddRecipe = async () => {
         imageUrl: imageURL,
         username: username,
         privateMode: privateMode
-
     });
 
       const userDocRef = doc(db, 'users', username);
@@ -224,6 +228,7 @@ const handleAddRecipe = async () => {
               await uploadBytes(imageRef, blob);
               const url = await getDownloadURL(imageRef);
               setImageUrl(url.toString());
+              console.log(url)
           }
       } catch (error) {
           console.error('Error uploading image: ', error);

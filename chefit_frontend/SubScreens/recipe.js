@@ -72,6 +72,7 @@ export default function RecipeScreen({ route, navigation }) {
 
     fetchRecipe();
   }, [currentRecipe]);
+  
 /*
   useEffect(() => {
     setInitialDuration(recipe && recipe.timer ? recipe.timer.duration * 60 : 0);
