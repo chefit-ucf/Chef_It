@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, collection } from "firebase/firestore"
+import { getStorage } from "firebase/storage";
+
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyCOg8MmJElzkdIlR0Hr_QgIJ4FGPcdJhS4",
@@ -13,7 +16,9 @@ const firebaseConfig = {
   };
 
 const app = initializeApp(firebaseConfig)
+export const storage = getStorage(app);
 
 const db = getFirestore(app)
 
 export { db }
+export const recipesCollectionRef = collection(db, 'recipes');

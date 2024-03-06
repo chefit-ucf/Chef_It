@@ -1,62 +1,105 @@
-import React, { useState } from 'react';
-import { View, Text, Image, Pressable, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, ScrollView, SafeAreaView, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Tab, TabView } from '@rneui/themed';
 import BackButton from '../components/BackButton';
 import AchievementsButton from "../components/selectAchievement";
 import DisplayCooksonas from '../subScreens/DisplayCooksonas';
 import { testuserInfo } from '../API/data';
-import { recipeData } from '../API/recipeData';
 import DisplayAchievements from '../subScreens/DisplayAchievements';
 import SettingsScreen from '../subScreens/Settings';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+import { db } from "../API/firebase.config.js";
+import { doc, collection, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 const Stack = createStackNavigator();
-
+const windowWidth = Dimensions.get('window').width;
+//
 const TabComponent = ({navigation}) => {
+  const [recipes, setRecipes] = useState([]);
+  const [savedRecipeIds, setSavedRecipeIds] = useState([]);
   const [index, setIndex] = useState(0);
 
+
+  useEffect(() => {
+    const fetchSavedRecipes = async () => {
+      try {
+        const userId = "user001"; // User ID to fetch recipes for
+        const userDocRef = doc(db, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          const recipeIds = userData.recipes || [];
+          setSavedRecipeIds(recipeIds);
+          const recipesCollectionRef = collection(db, "recipes");
+          const snapshot = await onSnapshot(recipesCollectionRef, (snapshot) => {
+            const fetchedRecipes = snapshot.docs
+              .filter(doc => recipeIds.includes(doc.id))
+              .map(doc => ({ id: doc.id, ...doc.data() }));
+            setRecipes(fetchedRecipes);
+          });
+        } else {
+          console.log("User data not found");
+        }
+      } catch (error) {
+        console.error("Error fetching saved recipes:", error);
+      }
+    };
+
+    fetchSavedRecipes();
+  }, []);
+
+  const unSavedImage = require('../assets/buttons/unsavedButton.png');
+  const savedImage = require('../assets/buttons/saveButton.png');
+
+  const handleSavePress = async (recipeId) => {
+    try {
+      const userId = "user001"; // User ID
+      const userDocRef = doc(db, "users", userId);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        let updatedSavedRecipeIds = [...savedRecipeIds];
+        if (!savedRecipeIds.includes(recipeId)) {
+          updatedSavedRecipeIds.push(recipeId);
+        } else {
+          updatedSavedRecipeIds = updatedSavedRecipeIds.filter(id => id !== recipeId);
+        }
+        await updateDoc(userDocRef, { savedRecipes: updatedSavedRecipeIds });
+        setSavedRecipeIds(updatedSavedRecipeIds);
+      }
+    } catch (error) {
+      console.error("Error updating saved recipes:", error);
+    }
+  };
+
   const MyRecipes = () => (
-    <View>
-    <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: "re002" })}>
-    <View style={styles.recipeCard}>
-      <Image 
-          source={recipeData.recipeId.re002.src}
-          style={{width: 184, height: 140, resizeMode: 'cover', borderTopRightRadius: 20, borderTopLeftRadius: 20, marginBottom: 10}}
-        />
-      <View>
-        <Text style={{fontWeight: "bold", marginLeft: 10}}>
-          Chicken and Rice Soup
-        </Text>
-      </View>
-      <View>
-        <Text style={{color: 'grey', fontSize: 10, marginLeft: 10, paddingTop: 5}}>
-          By: Username01
-        </Text>
-      </View>
-      <View style={styles.timeContainer}>
-        <Text style={{ color: '#47A695', fontWeight: 'bold', fontSize: 12, marginLeft: 10, paddingTop: 5}}>
-          40 mins
-        </Text>
-        <Image 
-          source={require('../assets/icons/timer.png')}
-          style={{width: 13, height: 13, resizeMode: 'contain', margin: 3}}
-        />
-      </View>
-      <View style={{flex: 1, flexDirection: 'row', gap: 85, padding: 3, alignItems: 'center', paddingBottom: 10}}>
-      <Text style={styles.rating}>{recipeData.recipeId.re002.rating}</Text>
-        <Image 
-          source={require('../assets/buttons/saveButton.png')}
-          style={{width: 15, height: 15, resizeMode: 'contain'}}
-        />
+    <View style={styles.container}>
+      {recipes.map((recipe) => (
+        <View key={recipe.id} style={styles.recipeContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
+            <Image
+              source={{ uri: recipe.imageUrl }}
+              style={{ width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
+            />
+            <Text style={styles.titleText}>{recipe.title}</Text>
+            <Text style={styles.userText}>By: {recipe.username}</Text>
+            <View style={styles.timeContainer}>
+              <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
+              <Image source={require('../assets/icons/timer.png')} style={{ width: 18, height: 18, marginTop: 5, marginLeft: 7 }} />
+            </View>
+            <View style={styles.bottomContainer}>
+              <Text style={styles.rating}>{recipe.rating}</Text>
+              <TouchableOpacity onPress={() => handleSavePress(recipe.id)} style={styles.saveButton}>
+                <Image source={savedRecipeIds.includes(recipe.id) ? savedImage : unSavedImage} style={styles.savedIcon} />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         </View>
-        
-    </View>
-    </TouchableOpacity>
+      ))}
     </View>
   );
-
   const MyAchievements = () => (
         <View style={styles.Achievementcontainer}>
               {testuserInfo.userAchievements.map((achievement, index) => (
@@ -234,10 +277,66 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    
-  },
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: 7,
+    paddingTop: 10,
+    gap: 20
+},
+recipeContainer: {
+    backgroundColor: "white",
+    width: (windowWidth / 2.3),
+    height: (windowWidth / 1.7),
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOffset: {
+        width: 0,
+        height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+},
+titleText: {
+    fontSize: windowWidth / 31.5,
+    fontWeight: 'bold',
+    margin: 10
+},
+userText: {
+    fontSize: windowWidth / 35,
+    color: "grey",
+    marginLeft: 10
+},
+timeText: {
+    fontSize: windowWidth / 32,
+    fontWeight: 'bold',
+    color: '#42A797',
+    marginLeft: 10,
+    marginTop: 5
+},
+rating: {
+    marginLeft: 8,
+    marginTop: 10,
+    fontSize: windowWidth / 25,
+    color: '#F7D47C'
+},
+timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+},
+bottomContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+},
+saveButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 10
+},
+savedIcon: {
+    width: windowWidth / 20,
+    height: windowWidth / 20
+},
   Achievementcontainer: {
     margin: 10
   },
@@ -281,26 +380,22 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   recipeCard:{
-    margin: 30,
-    width: 185,
-    height: 245,
-    borderRadius: 20,
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    borderColor: '#E1E1E1',
-    elevation: 5,
-    shadowColor: 'black',
-    shadowOffset: {
-        width: 0,
-        height: 4,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-},
+      backgroundColor: "white",
+      width: (windowWidth / 2.3),
+      height: (windowWidth / 1.7),
+      borderRadius: 10,
+      shadowColor: 'black',
+      shadowOffset: {
+          width: 0,
+          height: 4,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+  },
   timeContainer:{
     flex: 1,
     flexDirection: 'row',
-    width: 61,
+    width: 'auto',
     height: 16,
     alignItems: 'center'
   },

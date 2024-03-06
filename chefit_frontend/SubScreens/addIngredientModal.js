@@ -9,6 +9,8 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
     const [ingredientCarbs, setIngredientCarbs] = useState('');
     const [ingredientProtein, setIngredientProtein] = useState('');
     const [ingredientFat, setIngredientFat] = useState('');
+    const [ingredientType, setIngredientType] = useState('');
+
 
 
   
@@ -42,6 +44,11 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                     />
                     <TextInput
                         style={styles.modalInput}
+                        placeholder="Type"
+                        value={ingredientType}
+                    />
+                    <TextInput
+                        style={styles.modalInput}
                         placeholder="Calories"
                         value={ingredientCalories}
                     />
@@ -59,7 +66,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                             <TextInput
                                 style={styles.modalSmallInput}
                                 placeholder="0.8g"
-                                value={ingredientCalories}
+                                value={ingredientProtein}
                             />
                         </View>
                         <View style={styles.detailContainer}>

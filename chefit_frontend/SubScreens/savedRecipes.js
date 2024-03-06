@@ -1,52 +1,84 @@
 import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
-import React from 'react'
-import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
-
-import { testuserInfo } from '../API/data.js';
-import { recipeData } from '../API/recipeData.js';
-import RecipeScreen from './recipe.js';
+import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { collection, onSnapshot, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import { db } from "../API/firebase.config.js";
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function SavedRecipesScreen() {
-    let userSavedRecipes = testuserInfo.savedUserRecipes;
-    let arrLength = userSavedRecipes.length;
-
     const navigation = useNavigation();
-    const [savedRecipes, setSavedRecipes] = useState(userSavedRecipes.map(saved => ({ recipeId: saved, saved: true })));
-    
-    const handleSavePress = (index) => {
-        setSavedRecipes(prevSavedRecipes => {
-            const updatedSavedRecipes = [...prevSavedRecipes];
-            updatedSavedRecipes[index].saved = !updatedSavedRecipes[index].saved;
-            return updatedSavedRecipes;
-        });
+    const [recipes, setRecipes] = useState([]);
+
+    useEffect(() => {
+        const fetchSavedRecipes = async () => {
+            try {
+                const userId = "user001"; // User ID to fetch recipes for
+                const userDocRef = doc(db, "users", userId);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    const savedRecipeIds = userData.savedRecipes || [];
+                    const recipesCollectionRef = collection(db, "recipes");
+                    const snapshot = await onSnapshot(recipesCollectionRef, (snapshot) => {
+                        const fetchedRecipes = snapshot.docs
+                            .filter(doc => savedRecipeIds.includes(doc.id))
+                            .map(doc => ({ id: doc.id, ...doc.data() }));
+                        setRecipes(fetchedRecipes);
+                    });
+                } else {
+                    console.log("User data not found");
+                }
+            } catch (error) {
+                console.error("Error fetching saved recipes:", error);
+            }
+        };
+
+        fetchSavedRecipes();
+    }, []);
+
+    const handleRemoveFromSaved = async (recipeId) => {
+        try {
+            const userId = "user001"; // User ID
+            const userDocRef = doc(db, "users", userId);
+            await updateDoc(userDocRef, {
+                savedRecipes: arrayRemove(recipeId)
+            });
+            console.log("Recipe removed from saved recipes");
+        } catch (error) {
+            console.error("Error removing recipe from saved recipes:", error);
+        }
+    };
+
+    const handleSavePress = async (index, recipeId) => {
+        await handleRemoveFromSaved(recipeId);
+        // Remove the recipe from the state
+        setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
     };
 
     return (
         <ScrollView vertical>
             <View style={styles.container}>
-            {Array.from({ length: arrLength }, (_, i) => (
-                <View key={i} style={styles.recipeContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: userSavedRecipes[i] })}>
-                        <Image source={recipeData.recipeId[userSavedRecipes[i]].src} resizeMode='contain' 
-                            style={{width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10}}/>
-                        <Text style={styles.titleText}>{recipeData.recipeId[userSavedRecipes[i]].title}</Text>
-                        <Text style={styles.userText}>By: {recipeData.recipeId[userSavedRecipes[i]].username}</Text>
-                        <View style={styles.timeContainer}>
-                            <Text style={styles.timeText}>{recipeData.recipeId[userSavedRecipes[i]].timer.duration} {recipeData.recipeId[userSavedRecipes[i]].timer.unit}</Text>
-                            <Image source={require('../assets/icons/timer.png')} style={{width: 18, height: 18, marginTop: 5, marginLeft: 7}} />
-                        </View>
-                        <View style={styles.bottomContainer}>
-                            <Text style={styles.rating}>{recipeData.recipeId[userSavedRecipes[i]].rating}</Text>
-                            <TouchableOpacity onPress={() => handleSavePress(i)} style={styles.saveButton}>
-                                <Image source={savedRecipes[i].saved ? require('../assets/buttons/saveButton.png') : require('../assets/buttons/unsavedButton.png')} style={styles.savedIcon}/>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            ))} 
+                {recipes.map((recipe, index) => (
+                    <View key={index} style={styles.recipeContainer}>
+                        <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
+                            <Image source={{ uri: recipe.imageUrl }} resizeMode='contain' 
+                                style={{width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10}} />
+                            <Text style={styles.titleText}>{recipe.title}</Text>
+                            <Text style={styles.userText}>By: {recipe.username}</Text>
+                            <View style={styles.timeContainer}>
+                                <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
+                                <Image source={require('../assets/icons/timer.png')} style={{width: 18, height: 18, marginTop: 5, marginLeft: 7}} />
+                            </View>
+                            <View style={styles.bottomContainer}>
+                                <Text style={styles.rating}>{recipe.rating}</Text>
+                                <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
+                                    <Image source={require('../assets/buttons/saveButton.png')} style={styles.savedIcon} />
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                ))}
             </View>
         </ScrollView>
     );

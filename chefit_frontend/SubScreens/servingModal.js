@@ -5,8 +5,10 @@ import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiB
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { BlurView } from 'expo-blur';
 
-const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRecipe }) => {
-  const [newServingSize, setNewServingSize] = useState(0);
+const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRecipe, currentServingSize }) => {
+  const [newServingSize, setNewServingSize] = useState(currentServingSize);
+
+  console.log("Current Serving Size:", currentServingSize);
 
   const toggleModal = (visible) => {
     setIsModalVisible(visible);
@@ -46,13 +48,12 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
           </View>
           <View style={styles.servingBox}>
             <View>
-              <TextInput
-                style={styles.modalInput}
-                inputMode="numeric"
-                placeholder="New serving size"
-                value={newServingSize.toString()}
-                onChangeText={(text) => setNewServingSize(parseInt(text) || 0)}
-              />
+            <TextInput
+  style={styles.modalInput}
+  inputMode="numeric"
+  value={newServingSize} // Convert to string
+  onChangeText={(text) => setNewServingSize(parseInt(text) || 0)}
+/>
             </View>
             <View>
               <Pressable style={styles.modalButton} onPress={handleServesButtonPress}>
