@@ -43,6 +43,8 @@ export default function AddRecipeScreen() {
     const [privateMode, setPrivateMode] = useState(false); 
 
 
+
+
     const renderIngredientInputs = () => {
       return ingredients.map((ingredient, index) => (
           <View key={'ingredients' + index} style={styles.inputContainer}>
@@ -204,6 +206,9 @@ const handleAddRecipe = async () => {
     const AddImage = require('../assets/addRecipeButtons/AddImage.png');
     const AddIngredient = require('../assets/addRecipeButtons/addIngredient.png');
     const savedImage = require('../assets/addRecipeButtons/saved.png')
+    const addPantry = require('../assets/addRecipeButtons/AddPantry.png')
+
+
 
 
     const handleAddImage = async () => {
@@ -235,7 +240,7 @@ const handleAddRecipe = async () => {
           alert('Error uploading image. Please try again.');
       }
   };
-    const handleAddIngredientPress = () => {
+    const handleAddPantry = () => {
       setIsModalVisible(true);
   };
   const handleSaveToPantry = () => {
@@ -345,6 +350,9 @@ const handleFatChange = (text) => {
 </View>
                 </View>
                 <View style={styles.ingredientsContainer}>
+                <Pressable onPress={handleAddPantry}>
+                        <Image source={addPantry} style={styles.addPantry} />
+                        </Pressable>
                 <Pressable onPress={handleAddIngredients}>
                         <Image source={AddIngredient} style={styles.addIngredient} />
                         </Pressable>
@@ -411,12 +419,18 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         borderColor: '#ECECEC',
         borderWidth: 1,
-        width: 388,
-        height: 250,
+        width: 'auto',
+        height: 'auto',
         flexShrink: 0,
         alignItems: 'center',
         marginBottom: 20,
         boxShadow: '0px 5px 10px rgba(30, 75, 67, 0.2)',
+    },
+    addPantry: {
+        width: 135, 
+        height: 36,
+        marginRight: 200,   
+        marginBottom: -25
     },
     directionsContainer: {
         backgroundColor: 'white',
@@ -424,8 +438,8 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         borderColor: '#ECECEC',
         borderWidth: 1,
-        width: 388,
-        height: 280,
+        width: 'auto',
+        height: 'auto',
         flexShrink: 0,
         alignItems: 'center',
         marginBottom: 20,
