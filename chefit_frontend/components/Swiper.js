@@ -8,7 +8,8 @@ export default function Swiper({items, width, height}) {
   
 
   useEffect(()=>{
-    console.log(items[0], 'in swiper')
+    console.log(items, 'in swiper')
+
   }, [])
 
   const styles = StyleSheet.create({
@@ -43,7 +44,7 @@ export default function Swiper({items, width, height}) {
       <View key={source} style={styles.picture}>
         <View style={{ width: '100%', marginBottom: 8 }}>
           <View>
-            <Image style={{ width: '100%' }} src={source.image} />
+            <Image style={{ width: '100%' }} source={{uri: source.image}} />
           </View>
           <View style={{ borderTopWidth: 0, borderWidth: 2, borderRadius: 8, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderColor: '#ECECEC' }}>
             <View style={{ padding: 8 }}>

@@ -63,13 +63,25 @@ export function Explore({navigation}) {
   useEffect(()=>{
     setLoading(true)
     const swiperQuery = collection(db, "swiper")
-    onSnapshot(swiperQuery, (snapshot) => {
+    const render = onSnapshot(swiperQuery, (snapshot) => {
       let swiperList = []
-      snapshot.docs.map((doc) => swiperList.push({ ...doc.data(), id: doc.id }))
-      setSwiperData(Object.values(swiperList[0].slides))
+
+      snapshot.docs.map((doc) => {
+        const data = doc.data()
+
+        swiperList = (data["slides"])
+
+        const mapList = swiperList.map((item) => ({
+          ...item,
+          src: item.image,
+        }));
+        setSwiperData([...mapList])
+      })
       setLoading(false)
-      console.log(Object.values(swiperList[0].slides), 'in explore')
+      console.log(swiperData)
+
     })
+    return () => render();
   }, [])
 
   // data request for slider 
