@@ -98,7 +98,7 @@ const TabComponent = ({navigation}) => {
           </TouchableOpacity>
         </View>
       ))}
-    </View>
+      </View>
   );
   const MyAchievements = () => (
         <View style={styles.Achievementcontainer}>
@@ -116,39 +116,38 @@ const TabComponent = ({navigation}) => {
         </View>
   );
 
-  return (
-    <View>
-      <Tab
-        value={index}
-        onChange={(e) => setIndex(e)}
-        indicatorStyle={{
-          backgroundColor: 'white',
-          height: 3,
-          elevation: 5,
-          shadowColor: 'rgba(0, 0, 0, 0.25)',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 1,
-          shadowRadius: 4,
-        }}
-        buttonStyle={{ borderColor: 'transparent'}}
-        variant='default' disableIndicator='false'>
-        <Tab.Item title="My Recipes" titleStyle={(active) => ({ height: 40, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}
-          buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
-        <Tab.Item title="Achievements" titleStyle={(active) => ({ height: 40, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}
-          buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
-      </Tab>
-      <TabView value={index} onChange={setIndex} animationType="timing" disableSwipe={true} tabItemContainerStyle={{flex: 1,}}>
-        <TabView.Item>
-          <MyRecipes />
-        </TabView.Item>
-        <TabView.Item>
-          <MyAchievements />
-        </TabView.Item>
-      </TabView>
-    </View>
-  );
-}
-
+    return (
+        <View>
+          <Tab
+            value={index}
+            onChange={(e) => setIndex(e)}
+            indicatorStyle={{
+              backgroundColor: 'white',
+              height: 3,
+              elevation: 5,
+              shadowColor: 'rgba(0, 0, 0, 0.25)',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 1,
+              shadowRadius: 4,
+            }}
+            buttonStyle={{ borderColor: 'transparent'}}
+            variant='default' disableIndicator='false'>
+            <Tab.Item title="My Recipes" titleStyle={(active) => ({ height: 40, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}
+              buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
+            <Tab.Item title="Achievements" titleStyle={(active) => ({ height: 40, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}
+              buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
+          </Tab>
+          <TabView value={index} onChange={setIndex} animationType="timing" disableSwipe={true} tabItemContainerStyle={{flex: 1,}}>
+            <TabView.Item>
+              <MyRecipes />
+            </TabView.Item>
+            <TabView.Item>
+              <MyAchievements />
+            </TabView.Item>
+          </TabView>
+        </View>
+    );
+  };
 function Profile({ navigation }) {
   return (
       

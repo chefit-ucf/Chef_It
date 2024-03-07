@@ -139,7 +139,7 @@ const handleAddRecipe = async () => {
 
     // Add recipe to Firestore
     const docRef = await addDoc(collection(db, 'recipes'), {
-        id: unsavedId, // Assign the unsaved ID
+        savedid: unsavedId, // Assign the unsaved ID
         title: recipeName,
         rating: rating,
         ingredients: ingredients,
@@ -350,13 +350,17 @@ const handleFatChange = (text) => {
 </View>
                 </View>
                 <View style={styles.ingredientsContainer}>
+                    <View>
                 <Pressable onPress={handleAddPantry}>
                         <Image source={addPantry} style={styles.addPantry} />
                         </Pressable>
+                        </View>
+                        <View>
                 <Pressable onPress={handleAddIngredients}>
                         <Image source={AddIngredient} style={styles.addIngredient} />
                         </Pressable>
                         {renderIngredientInputs()}
+                        </View>
                     </View>
                 <View>
                 <View style={styles.directionsContainer}>
