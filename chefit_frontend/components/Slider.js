@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { StyleSheet, View, ScrollView, Text, Image, Dimensions } from 'react-native';
 
-export default function Slider({ title, items, width, height }) {
+export default function Slider({ slider, title, items, width, height }) {
 
+  useEffect(()=>{
+    console.log(slider, 'help!!')
+  }, [])
   const styles = StyleSheet.create({
     
     container: {

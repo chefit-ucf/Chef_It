@@ -75,23 +75,20 @@ useEffect(() => {
     }));
     setSwiperData([...mappedIngredients]);
   });
-  console.log(swiperData);
 });
 
-  // Log the updated data when the component unmounts
-}, []); // Dependency array is empty to run only once when the component mounts
+}, []);
 
   // data request for slider 
-  // useEffect(()=>{
-  //   const sliderQuery = collection(db, "slider")
-  //   onSnapshot(sliderQuery, (snapshot) => {
-  //     let sliderList = []
-  //     snapshot.docs.map((doc)=> sliderList.push({...doc.data(), id: doc.id}))
-  //     setPeople(sliderList)
-  //     setLoading(false)
-  //     console.log(people)
-  //   })
-  // }, [])
+  useEffect(()=>{
+    const sliderQuery = collection(db, "slider")
+    onSnapshot(sliderQuery, (snapshot) => {
+      let sliderList = []
+      snapshot.docs.map((doc)=> sliderList.push({...doc.data(), id: doc.id}))
+      setSliderData(sliderList)
+    })
+    console.log(sliderData)
+  }, [])
 
 
   return <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1 }}>
@@ -124,6 +121,8 @@ useEffect(() => {
       <Slider 
         title={"Trending Recipes"}
         items={slider1}
+        slider={sliderData}
+
         width={width}
         height={height}
       />
