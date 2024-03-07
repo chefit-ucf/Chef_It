@@ -56,37 +56,33 @@ return  (
 
 export function Explore({navigation}) {
 
-  const [loading, setLoading] = useState(false)
   const [swiperData, setSwiperData] = useState([])
+  const [sliderData, setSliderData] = useState([])
 
-  // data request for swiper 
-  useEffect(()=>{
-    setLoading(true)
-    const swiperQuery = collection(db, "swiper")
-    const render = onSnapshot(swiperQuery, (snapshot) => {
-      let swiperList = []
+// data request for swiper
+useEffect(() => {
+  const swiperQuery = collection(db, "swiper");
+  onSnapshot(swiperQuery, (snapshot) => {
+    setSwiperData([]);
 
-      snapshot.docs.map((doc) => {
-        const data = doc.data()
+  snapshot.docs.forEach((doc) => {
+    const slides = doc.data();
+    
+    const maps = slides["slides"]
+    const mappedIngredients = Object.values(maps).map((slide) => ({
+      ...slide,
+      src: {uri: slide.src}
+    }));
+    setSwiperData([...mappedIngredients]);
+  });
+  console.log(swiperData);
+});
 
-        swiperList = (data["slides"])
-
-        const mapList = swiperList.map((item) => ({
-          ...item,
-          src: item.image,
-        }));
-        setSwiperData([...mapList])
-      })
-      setLoading(false)
-      console.log(swiperData)
-
-    })
-    return () => render();
-  }, [])
+  // Log the updated data when the component unmounts
+}, []); // Dependency array is empty to run only once when the component mounts
 
   // data request for slider 
   // useEffect(()=>{
-  //   setLoading(true)
   //   const sliderQuery = collection(db, "slider")
   //   onSnapshot(sliderQuery, (snapshot) => {
   //     let sliderList = []
@@ -121,6 +117,7 @@ export function Explore({navigation}) {
       
       <Swiper 
         items={swiperData}
+        swiper={swiper}
         width={width}
         height={height}
       />

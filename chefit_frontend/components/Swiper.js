@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react'
 import Svg, { Path } from "react-native-svg"
-
+import { useState } from 'react';
 import { StyleSheet,  View, ScrollView, Text, Image, Dimensions } from 'react-native';
 
 
-export default function Swiper({items, width, height}) {
-  
+export default function Swiper({items, swiper, width, height}) {
+  const [image, setImage] = useState(null)
 
   useEffect(()=>{
-    console.log(items, 'in swiper')
-
+    setImage(items)
+    console.log(image, 'help!!')
   }, [])
 
   const styles = StyleSheet.create({
@@ -40,11 +40,11 @@ export default function Swiper({items, width, height}) {
       decelerationRate={"fast"}
       horizontal
     >
-      {items.map((source) => (
+      {items.map((source, index) => (
       <View key={source} style={styles.picture}>
         <View style={{ width: '100%', marginBottom: 8 }}>
           <View>
-            <Image style={{ width: '100%' }} source={{uri: source.image}} />
+            <Image style={{ width: '100%' }} source={swiper[index].image} />
           </View>
           <View style={{ borderTopWidth: 0, borderWidth: 2, borderRadius: 8, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderColor: '#ECECEC' }}>
             <View style={{ padding: 8 }}>
