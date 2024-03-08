@@ -40,7 +40,7 @@ export default function LoginScreen({navigation}) {
       <Text style={styles.titleText}>Login</Text>
       <Text style={styles.introText}>Welcome back you've been missed!</Text>
       <View style={styles.loginContainer}>
-          <TextInput style={styles.input} placeholder='Username/Email' value={username} onChangeText={text=>setUsername(text)}/>
+          <TextInput style={styles.input} placeholder='Email Address' value={username} onChangeText={text=>setUsername(text)}/>
       </View>
       <View style={styles.loginContainer}>
           <TextInput style={styles.input} placeholder='Password' value={password} secureTextEntry onChangeText={text=>setPassword(text)}/>
