@@ -4,7 +4,7 @@ import Svg, { Path } from "react-native-svg"
 import { StyleSheet,  View, ScrollView, Text, Image } from 'react-native';
 
 
-export default function Swiper({items, width, height}) {
+export default function Swiper({swiper, items, width, height}) {
 
   const styles = StyleSheet.create({
     container: {
@@ -35,11 +35,11 @@ export default function Swiper({items, width, height}) {
       decelerationRate={"fast"}
       horizontal
     >
-      {items.map((source) => (
+      {items.map((source, index) => (
       <View key={source} style={styles.picture}>
         <View style={{ width: '100%', marginBottom: 8 }}>
           <View>
-            <Image style={{ width: '100%' }} source={source.image} />
+            <Image style={{ width: '100%' }} source={swiper[index].image} />
           </View>
           <View style={{ borderTopWidth: 0, borderWidth: 2, borderRadius: 8, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderColor: '#ECECEC' }}>
             <View style={{ padding: 8 }}>
