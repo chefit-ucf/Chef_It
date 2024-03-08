@@ -13,7 +13,7 @@ export default function SavedRecipesScreen() {
     useEffect(() => {
         const fetchSavedRecipes = async () => {
             try {
-                const userId = "user001"; // User ID to fetch recipes for
+                const userId = "adminUser01"; // User ID to fetch recipes for
                 const userDocRef = doc(db, "users", userId);
                 const userDocSnap = await getDoc(userDocRef);
                 if (userDocSnap.exists()) {

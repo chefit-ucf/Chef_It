@@ -25,7 +25,7 @@ const TabComponent = ({navigation}) => {
   useEffect(() => {
     const fetchSavedRecipes = async () => {
       try {
-        const userId = "user001"; // User ID to fetch recipes for
+        const userId = "adminUser01"; // User ID to fetch recipes for
         const userDocRef = doc(db, "users", userId);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
@@ -55,7 +55,7 @@ const TabComponent = ({navigation}) => {
 
   const handleSavePress = async (recipeId) => {
     try {
-      const userId = "user001"; // User ID
+      const userId = "adminUser01"; // User ID
       const userDocRef = doc(db, "users", userId);
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists()) {

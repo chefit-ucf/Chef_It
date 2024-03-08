@@ -25,35 +25,40 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
     const [ingredientFat, setIngredientFat] = useState('');
     const [ingredientType, setIngredientType] = useState('');
     const [imageUrl, setImageUrl] = useState('');
-    const [username, setUsername] = useState('user001'); // Set the default username
+    const [username, setUsername] = useState('adminUser01'); // Set the default username
 
+    // Mapping between displayed values and database values
+    const typeMapping = {
+        "Alcohol & Beverages": "alcoholBevs",
+        "Baking": "baking",
+        "Bread": "bread",
+        "Condiments": "condiments",
+        "Dairy & Eggs": "dairyEggs",
+        "Fruits": "fruits",
+        "Meats & Proteins": "meatsProteins",
+        "Oils & Dressing": "oilsDressing",
+        "Pasta & Grains": "pastaGrains",
+        "Spices & Seasonings": "spicesSeasonings",
+        "Vegetables": "vegetables"
+    };
 
-
-    const countries = [
-        "Alcohol & Beverages",
-        "Baking",
-        "Bread",
-        "Condiments",
-        "Dairy & Eggs",
-        "Fruits",
-        "Meats & Proteins",
-        "Oils & Dressing",
-        "Pasta & Grains",
-        "Spices & Seasonings",
-        "Vegetables"
-    ];
+    const countries = Object.keys(typeMapping);
 
     const saveIngredientToDatabase = async () => {
         if (ingredientName && ingredientCalories && ingredientCarbs && ingredientProtein && ingredientFat && ingredientType && imageUrl) {
             try {
                 const ingredientData = {
-                    name: ingredientName,
-                    calories: ingredientCalories,
-                    carbs: ingredientCarbs,
-                    protein: ingredientProtein,
-                    fat: ingredientFat,
-                    type: ingredientType,
-                    image: imageUrl
+                    [v4()]: { // Generate unique ID for the ingredient
+                        title: ingredientName,
+                        type: typeMapping[ingredientType],
+                        src: imageUrl,
+                        nutrition: {
+                            calories: parseFloat(ingredientCalories),
+                            fats: parseFloat(ingredientFat),
+                            proteins: parseFloat(ingredientProtein),
+                            carbs: parseFloat(ingredientCarbs)
+                        }
+                    }
                 };
     
                 // Reference to the user's document
@@ -66,13 +71,22 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                 if (userDocSnapshot.exists()) {
                     const userData = userDocSnapshot.data();
     
-                    // Ensure userData.userIngredients is an array before spreading
-                    const updatedUserIngredients = Array.isArray(userData.userIngredients) ? [...userData.userIngredients, ingredientData] : [ingredientData];
+                    const updatedUserIngredients = userData.userIngredients || {};
     
-                    // Update the user's document with the new ingredients
+                    // Ensure the ingredient type exists in userIngredients
+                    if (!updatedUserIngredients.hasOwnProperty(typeMapping[ingredientType])) {
+                        // If the type doesn't exist, initialize it as an empty object
+                        updatedUserIngredients[typeMapping[ingredientType]] = {};
+                    }
+    
+                    // Merge the new ingredientData with the existing userIngredients
+                    updatedUserIngredients[typeMapping[ingredientType]] = {
+                        ...updatedUserIngredients[typeMapping[ingredientType]],
+                        ...ingredientData
+                    };
+    
+                    // Update the user's document with the new userIngredients
                     await setDoc(userDocRef, { userIngredients: updatedUserIngredients }, { merge: true });
-                } else {
-                    console.error('User data not found for username: ', username);
                 }
     
                 // Clear input fields after saving
@@ -90,6 +104,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
             alert("Please fill in all the fields.");
         }
     };
+    
     const SavePantry = require('../assets/addRecipeButtons/SavePantry.png');
     const xImage = require('../assets/addRecipeButtons/x.png');
 
@@ -122,6 +137,8 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
     
                 await uploadBytes(storageRef, blob);
                 const url = await getDownloadURL(storageRef);
+                
+                // Set imageUrl to the uploaded image URL
                 setImageUrl(url);
             }
         } catch (error) {
@@ -129,6 +146,14 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
             alert('Error uploading image. Please try again.');
         }
     };
+    
+    // Add a default image URL
+    const defaultImageUrl = 'https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2Fingredients%2FAddImage.png?alt=media&token=e06caca4-552e-4108-9ad1-669a499b4399';
+    
+    // Check if imageUrl is empty, if yes, set it to defaultImageUrl
+    if (!imageUrl) {
+        setImageUrl(defaultImageUrl);
+    }
     return (
         <Modal visible={isModalVisible} transparent>
             <BlurView
@@ -167,11 +192,17 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                         />
                         </View>
                         <TextInput
-                            style={styles.modalInput}
-                            placeholder="Calories"
-                            value={ingredientCalories}
-                            onChangeText={setIngredientCalories}
-                        />
+                        style={styles.modalInput}
+                        placeholder="Calories"
+                        value={ingredientCalories}
+                        onChangeText={text => {
+                            // Allow only numeric input
+                            if (/^\d+$/.test(text) || text === '') {
+                                setIngredientCalories(text);
+                            }
+                        }}
+                        keyboardType="numeric" // This will open a numeric keyboard
+                    />
                         <Pressable
                             style={styles.uploadButton}
                             onPress={handleAddImage}
@@ -185,7 +216,13 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                     style={styles.modalSmallInput}
                                     placeholder="5g"
                                     value={ingredientCarbs}
-                                    onChangeText={setIngredientCarbs}
+                                    onChangeText={text => {
+                                        // Allow only numeric input
+                                        if (/^\d+$/.test(text) || text === '') {
+                                            setIngredientCarbs(text);
+                                        }
+                                    }}
+                                    keyboardType="numeric" // This will open a numeric keyboard
                                 />
                             </View>
                             <View style={styles.detailContainer}>
@@ -194,7 +231,13 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                     style={styles.modalSmallInput}
                                     placeholder="0.8g"
                                     value={ingredientProtein}
-                                    onChangeText={setIngredientProtein}
+                                    onChangeText={text => {
+                                        // Allow only numeric input
+                                        if (/^\d+$/.test(text) || text === '') {
+                                            setIngredientProtein(text);
+                                        }
+                                    }}
+                                    keyboardType="numeric" // This will open a numeric keyboard
                                 />
                             </View>
                             <View style={styles.detailContainer}>
@@ -203,8 +246,15 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                     style={styles.modalSmallInput}
                                     placeholder="0.2g"
                                     value={ingredientFat}
-                                    onChangeText={setIngredientFat}
+                                    onChangeText={text => {
+                                        // Allow only numeric input
+                                        if (/^\d+$/.test(text) || text === '') {
+                                            setIngredientFat(text);
+                                        }
+                                    }}
+                                    keyboardType="numeric" // This will open a numeric keyboard
                                 />
+
                             </View>
                         </View>
                         <Pressable
