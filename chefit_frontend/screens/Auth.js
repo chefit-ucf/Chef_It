@@ -18,6 +18,7 @@ import AddRecipeScreen from './addRecipe.js';
 import MealPrepScreen from './mealPrep.js';
 import ProfileScreen from './profile.js';
 import RecipeScreen from '../subScreens/recipe.js';
+import { SearchScreen } from '../subScreens/Search.js' 
 
 const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity
