@@ -3,8 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { collection, onSnapshot, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { db } from "../API/firebase.config.js";
+import { Ionicons } from '@expo/vector-icons';
+
 
 const windowWidth = Dimensions.get('window').width;
+
+const Star = ({ filled }) => (
+    <View style={{ display: filled ? 'flex' : 'none', marginRight: 2 }}>
+      <Ionicons name="ios-star" size={15} color="#ffc107" />
+    </View>
+  );
 
 export default function SavedRecipesScreen() {
     const navigation = useNavigation();
@@ -13,7 +21,7 @@ export default function SavedRecipesScreen() {
     useEffect(() => {
         const fetchSavedRecipes = async () => {
             try {
-                const userId = "adminUser01"; // User ID to fetch recipes for
+                const userId = "adminUser01"; 
                 const userDocRef = doc(db, "users", userId);
                 const userDocSnap = await getDoc(userDocRef);
                 if (userDocSnap.exists()) {
@@ -39,7 +47,7 @@ export default function SavedRecipesScreen() {
 
     const handleRemoveFromSaved = async (recipeId) => {
         try {
-            const userId = "user001"; // User ID
+            const userId = "user001"; 
             const userDocRef = doc(db, "users", userId);
             await updateDoc(userDocRef, {
                 savedRecipes: arrayRemove(recipeId)
@@ -52,7 +60,6 @@ export default function SavedRecipesScreen() {
 
     const handleSavePress = async (index, recipeId) => {
         await handleRemoveFromSaved(recipeId);
-        // Remove the recipe from the state
         setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
     };
 
@@ -70,9 +77,14 @@ export default function SavedRecipesScreen() {
                                 <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
                                 <Image source={require('../assets/icons/timer.png')} style={{width: 18, height: 18, marginTop: 5, marginLeft: 7}} />
                             </View>
-                            <View style={styles.bottomContainer}>
-                                <Text style={styles.rating}>{recipe.rating}</Text>
-                                <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
+                            <View style={[styles.bottomContainer, { marginLeft: 10 }]}>
+                                {[...Array(5)].map((_, starIndex) => (
+                                    <Star key={starIndex} filled={starIndex < recipe.rating} />
+                                ))}
+                            <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
+                                <Image source={require('../assets/buttons/saveButton.png')} style={styles.savedIcon} />
+                            </TouchableOpacity>                                
+                            <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
                                     <Image source={require('../assets/buttons/saveButton.png')} style={styles.savedIcon} />
                                 </TouchableOpacity>
                             </View>

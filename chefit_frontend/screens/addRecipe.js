@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, Text, Pressable, StyleSheet, TextInput, Switch, ScrollView } from 'react-native';
+import { View, Image, Text, Pressable, StyleSheet, TextInput, Switch, ScrollView, SafeAreaView } from 'react-native';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import AddIngredientModal from '../subScreens/addIngredientModal.js';
@@ -37,7 +37,7 @@ export default function AddRecipeScreen() {
     const [fat, setFat] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [imageUpload, setImageUpload] = useState(null);
-    const [username, setUsername] = useState('adminUuser01'); // Set the default username
+    const [username, setUsername] = useState('adminUuser01'); 
     const [directions, setDirections] = useState([{ text: '', checkpoint: 0 }]);
     const [ingredients, setIngredients] = useState([{ name: '', quantity: '' , unit: '' }]);
     const [privateMode, setPrivateMode] = useState(false); 
@@ -66,11 +66,10 @@ export default function AddRecipeScreen() {
                   value={ingredient.unit}
                   onChangeText={(unit) => handleIngredientChange(ingredient.name, unit, ingredient.quantity, index)}
               />
-              {ingredients.length > 1 && (
+             
                   <Pressable onPress={() => handleRemoveIngredient(index)}>
-                      <Text style={styles.removeDirectionText}>Remove</Text>
+                      <Image source={removeButton} style={styles.removeButton}></Image>
                   </Pressable>
-              )}
           </View>
       ));
   };
@@ -88,7 +87,7 @@ const handleRemoveIngredient = (index) => {
     newIngredients.splice(index, 1);
     setIngredients(newIngredients);
 };
-const handleAddIngredients = () => {
+const addIngredientInput = () => {
   setIngredients([...ingredients, { name: '', unit: '', quantity: '' }]);
 };
     const renderDirectionInputs = () => {
@@ -102,7 +101,7 @@ const handleAddIngredients = () => {
               />
               {directions.length > 1 && (
                   <Pressable onPress={() => handleRemoveDirection(index)}>
-                      <Text style={styles.removeDirectionText}>Remove</Text>
+                      <Image source={removeButton} style={styles.removeButton}></Image>
                   </Pressable>
               )}
           </View>
@@ -207,6 +206,7 @@ const handleAddRecipe = async () => {
     const AddIngredient = require('../assets/addRecipeButtons/addIngredient.png');
     const savedImage = require('../assets/addRecipeButtons/saved.png')
     const addPantry = require('../assets/addRecipeButtons/AddPantry.png')
+    const removeButton= require('../assets/buttons/RemoveButton.png')
 
 
 
@@ -240,11 +240,10 @@ const handleAddRecipe = async () => {
           alert('Error uploading image. Please try again.');
       }
   };
-    const handleAddPantry = () => {
+    const addToPantry = () => {
       setIsModalVisible(true);
   };
   const handleSaveToPantry = () => {
-      // pantry logic here
       setSavedToPantry(true);
 
       setIsModalVisible(false);
@@ -286,108 +285,120 @@ const handleFatChange = (text) => {
         setFat(text);
     }
 }
-    return (
-        <View style={styles.screenContainer}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Create Recipe</Text>
-                <Pressable onPress={handleAddRecipe}><Image source={SaveRecipe} style={styles.saveButton}></Image></Pressable>
-            </View>
-            <ScrollView vertical style={styles.shadow}>
-                <View style={styles.addRecipeContainer}>
-                    <TextInput
-                        style={styles.recipeInput}
-                        placeholder={"Recipe Name"}
-                        value={recipeName}
-                        onChangeText={setRecipeName}>
-                    </TextInput>
-                    <TextInput
-                        style={styles.recipeInput}
-                        placeholder="Rating"
-                        value={rating}
-                        onChangeText={setRating}
-                    />
-                    <TextInput
-                        style={styles.recipeInput}
-                        placeholder="Serving Size"
-                        value={servingSize}
-                        onChangeText={handleServingSizeChange}
-                    />
-                    <TextInput
-                        style={styles.recipeInput}
-                        placeholder="Duration"
-                        value={duration}
-                        onChangeText={handleDurationChange}
-                    />
-                    <TextInput
-                        style={styles.recipeInput}
-                        placeholder={"Calories"}
-                        value={calories}
-                        onChangeText={handleCaloriesChange}>
-                    </TextInput>
-                    <TextInput
-                        style={styles.recipeInput}
-                        placeholder={"Protein"}
-                        value={protein}
-                        onChangeText={handleProteinChange}>
-                    </TextInput>
-                    <TextInput
-                        style={styles.recipeInput}
-                        placeholder={"Fat"}
-                        value={fat}
-                        onChangeText={handleFatChange}>
-                    </TextInput>
-                    <View>
-    <Pressable onPress={handleAddImage}>
-        {imageUrl ? (
-            <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
-        ) : (
-            <Image
+return (
+    <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1, }}>
+            <ScrollView>
+    <View style={styles.screenContainer}>
+    <View style={styles.header}>
+        <Text style={styles.title}>Create Recipe</Text>
+        <Pressable onPress={handleAddRecipe}><Image source={SaveRecipe} style={styles.saveButton}></Image></Pressable>
+      </View>
+      <View style={styles.addRecipeContainer}>
+        <TextInput
+          style={styles.recipeInput}
+          placeholder={"Recipe Name"}
+          value={recipeName}
+          onChangeText={setRecipeName}>
+        </TextInput>
+        <TextInput
+          style={styles.recipeInput}
+          placeholder="Rating"
+          value={rating}
+          onChangeText={setRating}
+        />
+        <TextInput
+          style={styles.recipeInput}
+          placeholder="Serving Size"
+          value={servingSize}
+          onChangeText={handleServingSizeChange}
+        />
+        <TextInput
+          style={styles.recipeInput}
+          placeholder="Duration"
+          value={duration}
+          onChangeText={handleDurationChange}
+        />
+        <TextInput
+          style={styles.recipeInput}
+          placeholder={"Calories"}
+          value={calories}
+          onChangeText={handleCaloriesChange}>
+        </TextInput>
+        <TextInput
+          style={styles.recipeInput}
+          placeholder={"Carbs"}
+          value={calories}
+          onChangeText={handleCarbsChange}>
+        </TextInput>
+        <TextInput
+          style={styles.recipeInput}
+          placeholder={"Protein"}
+          value={protein}
+          onChangeText={handleProteinChange}>
+        </TextInput>
+        <TextInput
+          style={styles.recipeInput}
+          placeholder={"Fat"}
+          value={fat}
+          onChangeText={handleFatChange}>
+        </TextInput>
+        <View>
+          <Pressable onPress={handleAddImage}>
+            {imageUrl ? (
+              <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
+            ) : (
+              <Image
                 style={styles.recipeImage}
                 source={AddImage}
-            />
-        )}
-    </Pressable>
-</View>
-                </View>
-                <View style={styles.ingredientsContainer}>
-                    <View>
-                <Pressable onPress={handleAddPantry}>
-                        <Image source={addPantry} style={styles.addPantry} />
-                        </Pressable>
-                        </View>
-                        <View>
-                <Pressable onPress={handleAddIngredients}>
-                        <Image source={AddIngredient} style={styles.addIngredient} />
-                        </Pressable>
-                        {renderIngredientInputs()}
-                        </View>
-                    </View>
-                <View>
-                <View style={styles.directionsContainer}>
-                  <Pressable onPress={handleAddDirection}>
-                        <Image source={AddIngredient} style={styles.addIngredient} />
-                        </Pressable>
-                        {renderDirectionInputs()}
-                    </View>
-                    <View style={styles.privateMode}>
-                        <Text style={styles.privateText}>Private Mode</Text>
-                        <Switch
-                            trackColor={{ false: '#E9E9EA', true: '#47A695' }}
-                            thumbColor={isEnabled ? 'white' : 'white'}
-                            onValueChange={toggleSwitch}
-                            value={isEnabled}
-                            style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
-                        />
-                    </View>
-                    <AddIngredientModal
-                        isModalVisible={isModalVisible}
-                        setIsModalVisible={setIsModalVisible}
-                        onSaveToPantry={handleSaveToPantry}
-                    />
-                </View>
-            </ScrollView>
+              />
+            )}
+          </Pressable>
         </View>
-    );
+      </View>
+      <View style={styles.ingredientsContainer}>
+        <View style={styles.buttonsContainer}>
+        <View style={styles.pantryButtonWrapper}>
+    <Pressable onPress={addToPantry}>
+      <Image source={addPantry} style={styles.addPantry} />
+    </Pressable>
+  </View>
+  <View style={styles.addIngredientButtonWrapper}>
+    <Pressable onPress={addIngredientInput}>
+      <Image source={AddIngredient} style={styles.addIngredient} />
+    </Pressable>
+  </View>
+          </View>
+        {renderIngredientInputs()}
+      </View>
+      <View style={styles.directionsContainer}>
+      <View style={styles.buttonsContainer}>
+      <View style={styles.addDirectionButtonWrapper}>
+        <Pressable onPress={handleAddDirection}>
+          <Image source={AddIngredient} style={styles.addIngredient} />
+        </Pressable>
+        </View>
+        </View>
+        {renderDirectionInputs()}
+      </View>
+      <View style={styles.privateMode}>
+        <Text style={styles.privateText}>Private Mode</Text>
+        <Switch
+          trackColor={{ false: '#E9E9EA', true: '#47A695' }}
+          thumbColor={isEnabled ? 'white' : 'white'}
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+          style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+        />
+      </View>
+      <AddIngredientModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        onSaveToPantry={handleSaveToPantry}
+      />
+      </View>
+    </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -395,7 +406,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         paddingTop: 25,
         flex: 1,
-        alignItems: "center",
+        flexGrow: 1,
+    alignItems: "center",
         paddingBottom: 110
       },
     header: {
@@ -430,11 +442,24 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         boxShadow: '0px 5px 10px rgba(30, 75, 67, 0.2)',
     },
+    buttonsContainer: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'flex-start', 
+        paddingBottom: 10
+    },
+    pantryButtonWrapper: {
+        right: 85, 
+      },
+      addIngredientButtonWrapper:{
+        left: 85
+      },
+      addDirectionButtonWrapper:{
+        left: 154
+      },
     addPantry: {
-        width: 135, 
-        height: 36,
-        marginRight: 200,   
-        marginBottom: -25
+        width: 136, 
+        height: 39,
     },
     directionsContainer: {
         backgroundColor: 'white',
@@ -541,8 +566,6 @@ const styles = StyleSheet.create({
     addIngredient: {
         width: 24,
         height: 24,
-        marginLeft: 320,   
-        marginBottom: 20
     },
     calories: {
         display: "flex",
@@ -578,5 +601,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.3,
         shadowRadius: 3,
+      },
+      removeButton: {
+        marginBottom: 10
       }
   });

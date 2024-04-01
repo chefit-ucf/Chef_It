@@ -1,56 +1,84 @@
-import React from 'react';
-import { View, Text, Image, Pressable, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../API/firebase.config';
 
 // For navigation
 const Stack = createStackNavigator();
 
-// Define Box component
-const Box = ({ source }) => {
-  return (
-    <View style={styles.box}>
-      <Image source={source} style={styles.boxImage} />
-    </View>
-  );
-};
-
-// Data for boxes
-const boxData = [
-  require('../assets/cooksonas/pancakes_withbackground.png'),
-  require('../assets/cooksonas/waffles_withBackground.png'),
-  require('../assets/cooksonas/sandwich_withBackground.png'),
-  require('../assets/cooksonas/spaghetti_withBackground.png'),
-  require('../assets/cooksonas/salad_withBackground.png'),
-  require('../assets/cooksonas/ramen_withBackground.png'),
-  require('../assets/cooksonas/pizza_withBackground.png'),
-  require('../assets/cooksonas/fries_withBackground.png'),
-  require('../assets/cooksonas/burger_withBackground.png'),
-];
-
 export default function DisplayCooksonas() {
+  const [people, setPeople] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const usersQuery = collection(db, "recipes");
+    onSnapshot(usersQuery, (snapshot) => {
+      let usersList = [];
+      snapshot.docs.map((doc) => usersList.push({ ...doc.data(), id: doc.id }));
+      setPeople(usersList);
+      setLoading(false);
+    });
+  }, []);
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={{ marginTop: 10 }}>
+        <Text>{item.username}</Text>
+      </View>
+    );
+  };
+
+  const Box = ({ source }) => {
+    return (
+      <View style={styles.box}>
+        <Image source={source} style={styles.boxImage} />
+      </View>
+    );
+  };
+
+  const boxData = [
+    require('../assets/Cooksonas/pancakes_withbackground.png'),
+    require('../assets/Cooksonas/waffles_withBackground.png'),
+    require('../assets/Cooksonas/sandwich_withBackground.png'),
+    require('../assets/Cooksonas/spaghetti_withBackground.png'),
+    require('../assets/Cooksonas/salad_withBackground.png'),
+    require('../assets/Cooksonas/ramen_withBackground.png'),
+    require('../assets/Cooksonas/pizza_withBackground.png'),
+    require('../assets/Cooksonas/fries_withBackground.png'),
+    require('../assets/Cooksonas/burger_withBackground.png'),
+  ];
+
   const handleCooksonaChange = () => {
     // handle backend changing of avatars
   };
 
   return (
     <SafeAreaView style={styles.container}>
-    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.profileImageContainer}>
-            <Image
-              source={require('../assets/cooksonas/pancakes.png')}
-              style={styles.profileImage}
-            />
-          </View> 
-      <Text style={styles.headingText}>Select Your Cooksona</Text>
+          <Image
+            source={require('../assets/Cooksonas/pancakes.png')}
+            style={styles.profileImage}
+          />
+        </View>
+        <Text style={styles.headingText}>Select Your Cooksona</Text>
         <View style={styles.gridContainer}>
           {boxData.map((item, index) => (
             <Box key={index} source={item} />
           ))}
         </View>
         <Pressable onPress={handleCooksonaChange} style={styles.button}>
-            <Text style={styles.buttonText}>Confirm</Text>
+          <Text style={styles.buttonText}>Confirm</Text>
         </Pressable>
+
+        <FlatList
+          data={people}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -87,30 +115,23 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 100,
-    height: 38,
+    height: 32,
     backgroundColor: '#47A695',
     justifyContent: 'center',
     alignSelf: 'center',
     borderRadius: 20,
-    marginTop: 18,
-    shadowColor: 'black',
-    shadowOffset: {
-        width: 0,
-        height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
+    marginTop: 30,
   },
   buttonText: {
-    fontSize:16,
+    fontSize: 16,
     color: '#FEF3CD',
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  headingText:{
+  headingText: {
     fontWeight: 'bold',
     fontSize: 24,
-    margin: 15
+    marginBottom: 15
   },
   profileImageContainer: {
     backgroundColor: '#F9B59E',

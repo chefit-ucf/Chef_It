@@ -7,6 +7,7 @@ import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { collection, doc, getDoc } from "firebase/firestore"
 import { db } from "../API/firebase.config.js";
+import StarRating from '../components/rating.js'
 import {
   ref,
   listAll,
@@ -17,19 +18,19 @@ import { storage } from "../API/firebase.config.js";
 export default function RecipeScreen({ route, navigation }) {
   const { currentRecipe } = route.params;
   const [imageUrls, setImageUrls] = useState([]);
-  const [recipe, setRecipe] = useState(null);
+  const [recipe, setRecipe] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
 
   const [showDirections, setShowDirections] = useState(false);
   const [selectedButton, setSelectedButton] = useState('directions');
- //const [timer, setTimer] = useState(null);
+  const [timer, setTimer] = useState(null);
   const [initialDuration, setInitialDuration] = useState(null);
   const [isTimerVisible, setIsTimerVisible] = useState(false);
   const [startTimerOnPress, setStartTimerOnPress] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
- const [newServingSize, setNewServingSize] = useState();
+  const [newServingSize, setNewServingSize] = useState(null);
   const [areTimerButtonsVisible, setAreTimerButtonsVisible] = useState(false);
   const [isCongratulationModalVisible, setIsCongratulationModalVisible] = useState(false);
   const [currentTime, setCurrentTime] = useState(null);
@@ -37,9 +38,10 @@ export default function RecipeScreen({ route, navigation }) {
   const [isContainerVisible, setIsContainerVisible] = useState(true);
   const [isCookAlongInitiated, setIsCookAlongInitiated] = useState(false); 
 
-
   const imagesListRef = ref(storage, "images/");
-
+  useEffect(() => {
+    console.log("Completed Steps:", completedSteps);
+  }, [completedSteps]);
   useEffect(() => {
     listAll(imagesListRef)
       .then((response) => {
@@ -73,15 +75,23 @@ export default function RecipeScreen({ route, navigation }) {
     fetchRecipe();
   }, [currentRecipe]);
   
-/*
   useEffect(() => {
-    setInitialDuration(recipe && recipe.timer ? recipe.timer.duration * 60 : 0);
+    console.log("Recipe data:", recipe);
+    if (recipe && recipe.servingSize) {
+      setNewServingSize(recipe.servingSize.serving);
+    }
   }, [recipe]);
+
+  useEffect(() => {
+    if (recipe && recipe.timer && typeof recipe.timer.duration === 'number') {
+      setInitialDuration(recipe.timer.duration * 60);
+    }
+  }, [recipe]);
+  
 //Timer
 const timerIntervalRef = useRef(null);
 
 useEffect(() => {
-  
   if (startTimerOnPress && timer === null) {
     setTimer(initialDuration);
     setIsTimerVisible(true);
@@ -103,19 +113,11 @@ useEffect(() => {
       });
       setCurrentTime((prevTime) => prevTime + 1000); 
     }, 1000);
-
-    // Ensure recipe and its properties are defined before accessing them
-    {recipe && recipe.directions && Array.isArray(recipe.directions) && (
-      recipe.directions.forEach((step, index) => {
-        if (timer <= initialDuration - step.checkpoint && !completedSteps.includes(index)) {
-          setCompletedSteps((prevSteps) => [...prevSteps, index]);
-        }
-      })
-    )}
   }
 
-  return () => clearInterval(timerInterval);
-}, [startTimerOnPress, timer, isPaused, initialDuration, completedSteps, recipe]);
+  return () => clearInterval(timerInterval); 
+}, [startTimerOnPress, timer, isPaused, initialDuration, currentTime]); 
+
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
@@ -148,17 +150,20 @@ useEffect(() => {
       setIsCongratulationModalVisible(true);
     }
   
-    setCompletedSteps([]);
-  
     setTimer(null);
     setIsTimerVisible(true);
     setIsPaused(false);
-  };
+
+  setCompletedSteps([]);
+
+  console.log("Completed Steps after reset:", completedSteps);   
+};
 
   useEffect(() => {
-    setInitialDuration(recipe.timer.duration * 60);
-  }, [recipe.timer.duration]);
-*/
+    if (recipe && recipe.timer && typeof recipe.timer.duration === 'number') {
+      setInitialDuration(recipe.timer.duration * 60);
+    }
+  }, [recipe]);
 const handleButtonPress = (button) => {
   setSelectedButton(button);
   setShowDirections(button === 'directions');
@@ -184,7 +189,6 @@ const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
     return <Text>Loading...</Text>;
   }
   const toggleModal = (visible) => {
-    console.log('Setting isModalVisible to:', visible);
     setIsModalVisible(visible);
   };
   return (
@@ -200,7 +204,6 @@ const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
         </TouchableOpacity>
       </View>
         <View style={styles.rightButtonsContainer}>
-          <Image source={shareImage} style={styles.topButtons} />
           <Image source={saveImage} style={styles.topButtons} />
         </View>
         <View style={styles.whiteContainer}>
@@ -210,7 +213,7 @@ const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
     </View>      
       <View style={styles.container}>
       <Text style={styles.username}>By: {recipe.username}</Text>
-        <Text style={styles.rating}>{recipe.rating}</Text>
+      <StarRating recipeId={currentRecipe} />
         {recipe && recipe.timer && isTimerVisible && (
   <Text style={styles.timerText}>
     Timer: {formatTime(timer)}
@@ -237,51 +240,54 @@ const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
       </View>
   )}
   <View>
-  <View style={[styles.servingSizeContainer, { display: isContainerVisible ? 'flex' : 'none' }]}>
-      <View style={styles.servingItem}>
-      <Pressable onPress={() => toggleModal(true)}>
-      <Text style={styles.servingValue}>{recipe.servingSize.serving}</Text>
-      <Text style={styles.servingLabel}>Serves</Text>
-      </Pressable>
-      </View>
-      <View style={styles.servingItem}>
-      <Text style={styles.servingValue}>{recipe.timer.duration}</Text>
-      <Text style={styles.servingLabel}>Mins</Text>    
-      </View>
-      <View style={styles.LastServingItem}>
-    <Text style={styles.servingValue}>
-      {Object.keys(recipe.ingredients).length}
-    </Text>
-      <Text style={styles.servingLabel}>Ingredients</Text>
-      </View>
-    </View>
-    <View style={[{paddingTop: 15}, { display: isContainerVisible ? 'flex' : 'none' }]}>
-    <Text style={styles.nutritionText}>Nutrition Per Serving</Text>
-    <View style={styles.nutritionContainer}>
-  <View style={styles.nutritionItem}>
+ <View style={[styles.servingSizeContainer, { display: isContainerVisible ? 'flex' : 'none' }]}>
+  {recipe && recipe.servingSize && (
     <>
-      <Text style={styles.servingValue}>{recipe.servingSize.nutrition.calories}</Text>
-      </>   
-      <Text style={styles.nutritionLabel}>Calories</Text>
-
-  </View>
-  <View style={styles.nutritionItem}>
-  <>
-      <Text style={styles.servingValue}>{recipe.servingSize.nutrition.carbs}g</Text>
-      </>       
-      <Text style={styles.nutritionLabel}>Carbs</Text>
-
-  </View>
-  <View style={styles.nutritionItem}>
-      <Text style={styles.servingValue}>{recipe.servingSize.nutrition.protein}g</Text>
-      <Text style={styles.nutritionLabel}>Protein</Text>
-
-  </View>
-  <View style={styles.lastNutritionItem}>
-      <Text style={styles.servingValue}>{recipe.servingSize.nutrition.fat}g</Text>
-      <Text style={styles.nutritionLabel}>Fat</Text>
-  </View>
-  </View>
+      <View style={styles.servingItem}>
+        <Pressable onPress={() => toggleModal(true)}>
+          <Text style={styles.servingValue}>{recipe.servingSize.serving}</Text>
+          <Text style={styles.servingLabel}>Serves</Text>
+        </Pressable>
+      </View>
+      <View style={styles.servingItem}>
+        <Text style={styles.servingValue}>{recipe.timer && recipe.timer.duration}</Text>
+        <Text style={styles.servingLabel}>Mins</Text>    
+      </View>
+    </>
+  )}
+  {recipe && recipe.ingredients && (
+    <View style={styles.LastServingItem}>
+      <Text style={styles.servingValue}>
+        {Object.keys(recipe.ingredients).length}
+      </Text>
+      <Text style={styles.servingLabel}>Ingredients</Text>
+    </View>
+  )}
+</View>
+<View style={[{paddingTop: 15}, { display: isContainerVisible ? 'flex' : 'none' }]}>
+  {recipe && recipe.servingSize && recipe.servingSize.nutrition && (
+    <>
+      <Text style={styles.nutritionText}>Nutrition Per Serving</Text>
+      <View style={styles.nutritionContainer}>
+        <View style={styles.nutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.calories}</Text>
+          <Text style={styles.nutritionLabel}>Calories</Text>
+        </View>
+        <View style={styles.nutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.carbs}g</Text>
+          <Text style={styles.nutritionLabel}>Carbs</Text>
+        </View>
+        <View style={styles.nutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.protein}g</Text>
+          <Text style={styles.nutritionLabel}>Protein</Text>
+        </View>
+        <View style={styles.lastNutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.fat}g</Text>
+          <Text style={styles.nutritionLabel}>Fat</Text>
+        </View>
+      </View>
+    </>
+  )}
 </View>
       </View>
       <View style={styles.buttonContainer}>
@@ -307,36 +313,44 @@ const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
   </Pressable>
 </View>
 <View style={styles.content}>
-  {selectedButton === 'directions' ? (
-       <View>
-       {Object.keys(recipe.directions)
-         .sort((a, b) => parseInt(a.replace('step', '')) - parseInt(b.replace('step', '')))
-         .map((directionKey, stepIndex) => {
-           const { text, checkpoint } = recipe.directions[directionKey];
-           return (
-             <View key={`step-${stepIndex}`} style={styles.stepContainer}>
-               <View style={styles.direction}>
-                 <Text style={styles.directionsNum}>{`${stepIndex + 1}.`}</Text>
-                 <Text style={styles.directions}>{`${text}`}</Text>
-               </View>
-            <TouchableOpacity
-              style={{ marginTop: 10, marginLeft: 5 }}
-              onPress={() => {
-                if (completedSteps.includes(stepIndex)) {
-                  setCompletedSteps(completedSteps.filter((i) => i !== stepIndex));
-                } else {
-                  setCompletedSteps([...completedSteps, stepIndex]);
-                }
-              }}
-            >
-              <Image
-                source={completedSteps.includes(stepIndex) ? checkboxImageCheckedSource : checkboxImageSource}
-                style={[{ width: 25, height: 25, marginTop: 10, marginLeft: 5 }, { display: isContainerVisible ? 'none' : 'flex' }]}
-              />
-            </TouchableOpacity>
-          </View>
-        );
-      })}
+  {selectedButton === 'directions' && recipe.directions ? (
+    <View>
+     {Object.keys(recipe.directions)
+  .sort((a, b) => parseInt(a.replace('step', '')) - parseInt(b.replace('step', '')))
+  .map((directionKey, stepIndex) => {
+    const step = recipe.directions[directionKey];
+    if (!step || typeof step.text !== 'string' ) {
+      console.error(`Invalid step object at key ${directionKey}`);
+      return null;
+    }
+    const { text } = step;
+
+
+    return (
+      <View key={`step-${stepIndex}`} style={styles.stepContainer}>
+        <View style={styles.direction}>
+          <Text style={styles.directionsNum}>{`${stepIndex + 1}.`}</Text>
+          <Text style={styles.directions}>{`${text}`}</Text>
+        </View>
+        <TouchableOpacity
+          style={{ marginTop: 10, marginLeft: 5 }}
+          onPress={() => {
+            if (completedSteps.includes(text)) {
+              setCompletedSteps((prevCompletedSteps) => prevCompletedSteps.filter((step) => step !== text));
+            } else {
+              setCompletedSteps((prevCompletedSteps) => [...prevCompletedSteps, text]);
+            }
+            console.log("After Toggle - Completed Steps:", completedSteps);
+          }}
+        > 
+          <Image
+            source={completedSteps.includes(text) ? checkboxImageCheckedSource : checkboxImageSource}
+            style={[{ width: 25, height: 25, marginTop: 10, marginLeft: 5 }, { display: isContainerVisible ? 'none' : 'flex' }]}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  })}
     </View>
   ) : (
     <View style={{ width: '100%' }}>
@@ -370,13 +384,15 @@ Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Te
   <Image source={cookAlongImage} style={styles.cookAlong}></Image>
   </Pressable>
 </View>
-<ServingModal
-  isModalVisible={isModalVisible}
-  setIsModalVisible={setIsModalVisible}
-  recipeDetails={recipe}
-  setRecipe={setRecipe}
-  currentServingSize={newServingSize} // Pass current serving size as prop
-/>
+{recipe && (
+  <ServingModal
+    isModalVisible={isModalVisible}
+    setIsModalVisible={setIsModalVisible}
+    recipeDetails={recipe}
+    setRecipe={setRecipe}
+    currentServingSize={newServingSize}
+  />
+)}
   <AchievementsModal
         isCongratulationModalVisible={isCongratulationModalVisible}
         setIsCongratulationModalVisible={setIsCongratulationModalVisible}

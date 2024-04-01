@@ -25,9 +25,8 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
     const [ingredientFat, setIngredientFat] = useState('');
     const [ingredientType, setIngredientType] = useState('');
     const [imageUrl, setImageUrl] = useState('');
-    const [username, setUsername] = useState('adminUser01'); // Set the default username
+    const [username, setUsername] = useState('adminUser01'); 
 
-    // Mapping between displayed values and database values
     const typeMapping = {
         "Alcohol & Beverages": "alcoholBevs",
         "Baking": "baking",
@@ -48,7 +47,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
         if (ingredientName && ingredientCalories && ingredientCarbs && ingredientProtein && ingredientFat && ingredientType && imageUrl) {
             try {
                 const ingredientData = {
-                    [v4()]: { // Generate unique ID for the ingredient
+                    [v4()]: { 
                         title: ingredientName,
                         type: typeMapping[ingredientType],
                         src: imageUrl,
@@ -61,35 +60,27 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                     }
                 };
     
-                // Reference to the user's document
                 const userDocRef = doc(db, 'users', username);
     
-                // Get the user's document snapshot
                 const userDocSnapshot = await getDoc(userDocRef);
     
-                // Check if the user's document exists
                 if (userDocSnapshot.exists()) {
                     const userData = userDocSnapshot.data();
     
                     const updatedUserIngredients = userData.userIngredients || {};
     
-                    // Ensure the ingredient type exists in userIngredients
                     if (!updatedUserIngredients.hasOwnProperty(typeMapping[ingredientType])) {
-                        // If the type doesn't exist, initialize it as an empty object
                         updatedUserIngredients[typeMapping[ingredientType]] = {};
                     }
     
-                    // Merge the new ingredientData with the existing userIngredients
                     updatedUserIngredients[typeMapping[ingredientType]] = {
                         ...updatedUserIngredients[typeMapping[ingredientType]],
                         ...ingredientData
                     };
     
-                    // Update the user's document with the new userIngredients
                     await setDoc(userDocRef, { userIngredients: updatedUserIngredients }, { merge: true });
                 }
     
-                // Clear input fields after saving
                 setIngredientName('');
                 setIngredientCalories('');
                 setIngredientCarbs('');
@@ -138,7 +129,6 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                 await uploadBytes(storageRef, blob);
                 const url = await getDownloadURL(storageRef);
                 
-                // Set imageUrl to the uploaded image URL
                 setImageUrl(url);
             }
         } catch (error) {
@@ -147,10 +137,8 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
         }
     };
     
-    // Add a default image URL
     const defaultImageUrl = 'https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2Fingredients%2FAddImage.png?alt=media&token=e06caca4-552e-4108-9ad1-669a499b4399';
     
-    // Check if imageUrl is empty, if yes, set it to defaultImageUrl
     if (!imageUrl) {
         setImageUrl(defaultImageUrl);
     }
@@ -180,7 +168,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                             data={countries}
                             defaultButtonText="Type"
                             onSelect={(selectedItem, index) => {
-                                setIngredientType(selectedItem); // Update the ingredientType state
+                                setIngredientType(selectedItem); 
                             }}
                             buttonTextAfterSelection={(selectedItem, index) => {
                                 return selectedItem
@@ -188,7 +176,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                             rowTextForSelection={(item, index) => {
                                 return item
                             }}
-                            dropdownStyle={styles.dropdown} // Apply same style as dropdown
+                            dropdownStyle={styles.dropdown} 
                         />
                         </View>
                         <TextInput
@@ -196,12 +184,11 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                         placeholder="Calories"
                         value={ingredientCalories}
                         onChangeText={text => {
-                            // Allow only numeric input
                             if (/^\d+$/.test(text) || text === '') {
                                 setIngredientCalories(text);
                             }
                         }}
-                        keyboardType="numeric" // This will open a numeric keyboard
+                        keyboardType="numeric" 
                     />
                         <Pressable
                             style={styles.uploadButton}
@@ -217,12 +204,11 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                     placeholder="5g"
                                     value={ingredientCarbs}
                                     onChangeText={text => {
-                                        // Allow only numeric input
                                         if (/^\d+$/.test(text) || text === '') {
                                             setIngredientCarbs(text);
                                         }
                                     }}
-                                    keyboardType="numeric" // This will open a numeric keyboard
+                                    keyboardType="numeric" 
                                 />
                             </View>
                             <View style={styles.detailContainer}>
@@ -232,12 +218,11 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                     placeholder="0.8g"
                                     value={ingredientProtein}
                                     onChangeText={text => {
-                                        // Allow only numeric input
                                         if (/^\d+$/.test(text) || text === '') {
                                             setIngredientProtein(text);
                                         }
                                     }}
-                                    keyboardType="numeric" // This will open a numeric keyboard
+                                    keyboardType="numeric"
                                 />
                             </View>
                             <View style={styles.detailContainer}>
@@ -247,12 +232,11 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                     placeholder="0.2g"
                                     value={ingredientFat}
                                     onChangeText={text => {
-                                        // Allow only numeric input
                                         if (/^\d+$/.test(text) || text === '') {
                                             setIngredientFat(text);
                                         }
                                     }}
-                                    keyboardType="numeric" // This will open a numeric keyboard
+                                    keyboardType="numeric"
                                 />
 
                             </View>
@@ -346,7 +330,7 @@ const styles = StyleSheet.create({
     },
     modalSmallInput: {
         width: 99,
-        height: 44, // Adjust the height as needed
+        height: 44, 
         padding: 12,
         borderRadius: 8,
         backgroundColor: "#F2F2F2",
@@ -360,18 +344,18 @@ const styles = StyleSheet.create({
     dropdownContainer: {
         width: 341,
         height: 44,
-        borderRadius: 8, // Apply rounded borders
+        borderRadius: 8, 
         backgroundColor: "#F2F2F2",
         marginBottom: 10,
         justifyContent: "center",
-        overflow: 'hidden', // Ensure that the dropdown content doesn't overflow the rounded borders
+        overflow: 'hidden', 
     },
     dropdown: {
         padding: 12,
         fontSize: 16,
         fontWeight: '600',
         letterSpacing: -0.56,
-        textAlign: 'left', // Align text to the left
+        textAlign: 'left', 
         textAlignVertical: 'center',
     },
     uploadButton: {
