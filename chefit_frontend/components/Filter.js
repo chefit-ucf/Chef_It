@@ -51,22 +51,22 @@ const Item = ({title}) =>{
 
   const handlePress = () => {
     setPressed(!pressed);
+    console.log(pressed)
   };
 
 
   return  <Pressable 
   
-  style={({pressed: isPressed}) => [
+  style={() => [
     {
-      backgroundColor: isPressed ? '#48A696' : 'white',
+      backgroundColor: pressed ? '#48A696' : 'white',
+      color: pressed ? '#48A696' : 'white',
     },
-    styles.item,
+    styles.item, 
   ]}
   onPress={handlePress}
   >
-    <Text 
-      style={{...styles.pressable}}
-    >{title}</Text>
+    <Text style={{...styles.pressable}}>{title}</Text>
   </Pressable>
 
 }
@@ -123,12 +123,11 @@ const styles = StyleSheet.create({
     borderColor: "#8F8F8F"
   },
   title:{
-    color: "#8F8F8F",
+    
   },
 
   pressable:{
     fontSize: 12,
-    color: "#8F8F8F",
 
   },
 
