@@ -1,13 +1,8 @@
 import { View, StyleSheet, Text, FlatList, Pressable} from 'react-native';
 import React, { useEffect, useState, } from 'react';
 import { DATA, DATA2, DATA3} from "../assets/data/fakeData.js"
-export default function Filter(items, searchItems) {
+export default function Filter({selected, setSelected}) {
 
-  const [selected, setSelected] = useState([])
-  useEffect(()=>{
-    console.log(selected)
-    
-  },[things])
 
   return (
     <View style={styles.box}>
@@ -24,7 +19,7 @@ export default function Filter(items, searchItems) {
           <Text >Meal Type</Text>
           <FlatList
             data={DATA}
-            renderItem={({item}) => <Item title={item.title} things={things} setThings={setThings}/>}
+            renderItem={({item}) => <Item title={item.title} selected={selected} setSelected={setSelected}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -33,7 +28,7 @@ export default function Filter(items, searchItems) {
           <Text >Ingredients</Text>
           <FlatList
             data={DATA2}
-            renderItem={({item}) => <Item title={item.title} things={things} setThings={setThings} />}
+            renderItem={({item}) => <Item title={item.title} selected={selected} setSelected={setSelected}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -42,7 +37,7 @@ export default function Filter(items, searchItems) {
           <Text >Cuisine</Text>
           <FlatList
             data={DATA3}
-            renderItem={({item}) => <Item title={item.title} things={things} setThings={setThings}/>}
+            renderItem={({item}) => <Item title={item.title} selected={selected} setSelected={setSelected}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -62,7 +57,7 @@ const Item = ({title, selected, setSelected}) =>{
 
   useEffect(()=>{
     const newSelected = pressed 
-      ? setSelected([...things, title]) 
+      ? setSelected([...selected, title]) 
       : setSelected(selected.filter((item) => item !== title));
 
     console.log(newSelected)

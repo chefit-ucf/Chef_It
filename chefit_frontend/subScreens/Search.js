@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { StyleSheet, Text, SafeAreaView, ScrollView, View, Dimensions, StatusBar } from 'react-native';
 import Svg, { Path } from "react-native-svg"
@@ -10,11 +10,13 @@ import { searchItems } from '../assets/data/fakeData';
 export default function Search({navigation}) {
 
   const [items, setItems] = useState(searchItems)
+  const [selected, setSelected] = useState([])
 
   useEffect(()=>{
-    console.log(things)
-    searchItems
-  },[things])
+    console.log(selected)
+    // create a filtered array (items) that displays items based on what type (property) is within the selected array
+    console.log(Object.entries(items))
+  },[selected])
 
 
   const styles = StyleSheet.create({
@@ -59,6 +61,8 @@ export default function Search({navigation}) {
         <Filter
           items={items}
           setItems={setItems}
+          selected={selected}
+          setSelected={setSelected}
         />
 
         <ScrollView style={{width: "100%", paddingHorizontal: 8, }}>
