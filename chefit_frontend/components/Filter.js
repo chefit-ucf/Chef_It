@@ -1,7 +1,14 @@
 import { View, StyleSheet, Text, FlatList, Pressable} from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState, } from 'react';
 import { DATA, DATA2, DATA3} from "../assets/data/fakeData.js"
-export default function Filter() {
+export default function Filter(items, searchItems) {
+
+  const [selected, setSelected] = useState([])
+  useEffect(()=>{
+    console.log(selected)
+    
+  },[things])
+
   return (
     <View style={styles.box}>
       <View style={styles.top}>
@@ -17,7 +24,7 @@ export default function Filter() {
           <Text >Meal Type</Text>
           <FlatList
             data={DATA}
-            renderItem={({item}) => <Item title={item.title} />}
+            renderItem={({item}) => <Item title={item.title} things={things} setThings={setThings}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -26,7 +33,7 @@ export default function Filter() {
           <Text >Ingredients</Text>
           <FlatList
             data={DATA2}
-            renderItem={({item}) => <Item title={item.title} />}
+            renderItem={({item}) => <Item title={item.title} things={things} setThings={setThings} />}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -35,7 +42,7 @@ export default function Filter() {
           <Text >Cuisine</Text>
           <FlatList
             data={DATA3}
-            renderItem={({item}) => <Item title={item.title} />}
+            renderItem={({item}) => <Item title={item.title} things={things} setThings={setThings}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -46,27 +53,38 @@ export default function Filter() {
 }
 
 
-const Item = ({title}) =>{
+const Item = ({title, selected, setSelected}) =>{
   const [pressed, setPressed] = useState(false)
 
   const handlePress = () => {
     setPressed(!pressed);
-    console.log(pressed)
   };
 
+  useEffect(()=>{
+    const newSelected = pressed 
+      ? setSelected([...things, title]) 
+      : setSelected(selected.filter((item) => item !== title));
+
+    console.log(newSelected)
+  }, [pressed])
+
+  const onChangeStyles = StyleSheet.create({
+    text: {
+      color: pressed ? 'white' : 'black',
+    },
+  });
 
   return  <Pressable 
   
   style={() => [
     {
       backgroundColor: pressed ? '#48A696' : 'white',
-      color: pressed ? '#48A696' : 'white',
     },
     styles.item, 
   ]}
   onPress={handlePress}
   >
-    <Text style={{...styles.pressable}}>{title}</Text>
+    <Text style={{...styles.pressable, ...onChangeStyles.text}}>{title}</Text>
   </Pressable>
 
 }
@@ -128,7 +146,6 @@ const styles = StyleSheet.create({
 
   pressable:{
     fontSize: 12,
-
   },
 
 

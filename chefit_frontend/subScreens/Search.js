@@ -8,6 +8,15 @@ import SearchItem from '../components/SearchItem';
 import { searchItems } from '../assets/data/fakeData';
 
 export default function Search({navigation}) {
+
+  const [items, setItems] = useState(searchItems)
+
+  useEffect(()=>{
+    console.log(things)
+    searchItems
+  },[things])
+
+
   const styles = StyleSheet.create({
     safe:{
       display: "flex",
@@ -47,12 +56,15 @@ export default function Search({navigation}) {
             </View>
           </View>
         </View>
-        <Filter/>
+        <Filter
+          items={items}
+          setItems={setItems}
+        />
 
         <ScrollView style={{width: "100%", paddingHorizontal: 8, }}>
 
         <View style={styles.flex}>
-          {searchItems.map((source)=>(
+          {items.map((source)=>(
             <SearchItem
               key={source}
               image={source.image}
