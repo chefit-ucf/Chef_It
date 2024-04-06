@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { StyleSheet, Text, SafeAreaView, ScrollView, View, Dimensions, StatusBar } from 'react-native';
 import Svg, { Path } from "react-native-svg"
@@ -12,10 +12,20 @@ export default function Search({navigation}) {
   const [items, setItems] = useState(searchItems)
   const [selected, setSelected] = useState([])
 
+  const [filteredItems, setFilteredItems] = useState(searchItems)
   useEffect(()=>{
-    console.log(selected)
+
     // create a filtered array (items) that displays items based on what type (property) is within the selected array
-    console.log(Object.entries(items))
+    if(selected.length == 0){
+      setFilteredItems(searchItems)
+    }else{
+      setFilteredItems(searchItems.filter(item => 
+        selected.includes(item.type) || 
+        selected.includes(item.ingredient) || 
+        selected.includes(item.cuisine)
+      ))
+    }
+
   },[selected])
 
 
@@ -64,22 +74,20 @@ export default function Search({navigation}) {
           selected={selected}
           setSelected={setSelected}
         />
-
         <ScrollView style={{width: "100%", paddingHorizontal: 8, }}>
-
-        <View style={styles.flex}>
-          {items.map((source)=>(
-            <SearchItem
-              key={source}
-              image={source.image}
-              author={source.author}
-              title={source.title}
-              time={source.time}
-              rating={source.rating}
-            />
-          ))}
-        </View>
-
+          <View style={styles.flex}>
+            {filteredItems.map((source)=>(
+              <SearchItem
+              navigation={navigation}
+                key={source}
+                image={source.image}
+                author={source.author}
+                title={source.title}
+                time={source.time}
+                rating={source.rating}
+              />
+            ))}
+          </View>
         </ScrollView>
   </SafeAreaView>
 }

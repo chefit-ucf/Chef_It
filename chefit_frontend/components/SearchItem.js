@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react'
-import { StyleSheet,  View, ScrollView, Text, Image, Dimensions } from 'react-native';
+import { StyleSheet,  View, ScrollView, Text, Image, Dimensions, Pressable } from 'react-native';
 import Svg, { Path } from "react-native-svg"
 
 
-export default function SearchItem({image, author, title, time, rating}) {
+export default function SearchItem({navigation, image, author, title, time, rating}) {
+
+  const source = {image, author, title, title, time, rating}
+  const handleItemPress = (item) => {
+    // Navigate to the desired screen, passing necessary parameters if needed
+    console.log(item)
+    navigation.navigate('AddRecipe', { item });
+  };
 
 
   const styles = StyleSheet.create({
@@ -41,7 +48,9 @@ export default function SearchItem({image, author, title, time, rating}) {
   });
 
 
-return <View style={styles.item}>
+return <Pressable style={styles.item}
+        onPress={()=>{handleItemPress(source)}}
+    >
     <View style={styles.box}>
       <View>
         <Image style={{ ...styles.picture, width: '100%' }} source={image} />
@@ -69,6 +78,6 @@ return <View style={styles.item}>
         </View>
       </View>
     </View>
-    </View>
+    </Pressable>
 
 }

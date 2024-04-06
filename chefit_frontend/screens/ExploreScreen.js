@@ -49,7 +49,7 @@ return  (
 )
 }
 
-export function Explore({navigation}) {
+export function Explore({navigation, data}) {
 
 
   return <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1 }}>
@@ -74,23 +74,27 @@ export function Explore({navigation}) {
       </View>
       
       <Swiper 
+        navigation={navigation}
         items={swiper}
         width={width}
         height={height}
       />
       <Slider 
+        navigation={navigation}
         title={"Trending Recipes"}
         items={slider1}
         width={width}
         height={height}
       />
       <DetailedSlider
+        navigation={navigation}
         title={"For You Recipes"}
         items={slider2}
         width={width /1.1}
         height={height}
       />
       <Slider 
+        navigation={navigation}
         title={"Seasonal Recipes"}
         items={slider3}
         width={width}

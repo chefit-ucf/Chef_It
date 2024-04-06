@@ -1,7 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, Text, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, Image, Pressable, Dimensions } from 'react-native';
 
-export default function Slider({ title, items, width, height }) {
+export default function Slider({ navigation, title, items, width, height }) {
+
+
+  const handleItemPress = (item) => {
+    // Navigate to the desired screen, passing necessary parameters if needed
+    console.log(item)
+    navigation.navigate('AddRecipe', { item });
+  };
+
 
   const styles = StyleSheet.create({
     
@@ -66,12 +74,14 @@ export default function Slider({ title, items, width, height }) {
         <View style={{ width: '100%'}}>
           <View style={{ padding: 8, flexDirection: 'row',  gap: 12}}>
             {items.map((source) => (
-              <View key={source} style={styles.picture}>
+              <Pressable key={source} style={styles.picture}
+                onPress={() => handleItemPress(source)}
+              >
                 <Image style={{ ...styles.picture }} source={source.image} />
                 <View style={styles.textOverlay}>
                   <Text style={styles.text}>{source.title}</Text>
                 </View>
-              </View>
+              </Pressable>
             ))}
           </View>
         </View>
@@ -81,7 +91,15 @@ export default function Slider({ title, items, width, height }) {
 }
 
 
-export  function DetailedSlider({title, items, width, height}) {
+export  function DetailedSlider({navigation ,title, items, width, height}) {
+
+
+  const handleItemPress = (item) => {
+    // Navigate to the desired screen, passing necessary parameters if needed
+    console.log(item)
+    navigation.navigate('AddRecipe', { item });
+  };
+
 
   const styles = StyleSheet.create({
     container: {
@@ -137,7 +155,9 @@ export  function DetailedSlider({title, items, width, height}) {
       >
         <View style={styles.flex}>
           {items.map((source) => (
-          <View key={source} style={styles.picture}>
+          <Pressable key={source} style={styles.picture}
+            onPress={()=> handleItemPress(source)}
+          >
             <View style={styles.box}>
               <View>
                 <Image style={{ ...styles.picture, width: '100%' }} source={source.image} />
@@ -152,7 +172,7 @@ export  function DetailedSlider({title, items, width, height}) {
 
               </View>
             </View>
-          </View>
+          </Pressable>
           ))}
         </View>
     </ScrollView>

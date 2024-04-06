@@ -164,6 +164,7 @@ export const searchItems = [
     author: "Author",
     time: 60,
     rating: 3,
+    type: "Dinner"
   },
   {
     image: require("../../assets/food/search_item2.jpg"),
@@ -171,6 +172,9 @@ export const searchItems = [
     author: "Author",
     time: 60,
     rating: 3,
+    type: "Lunch",
+    ingredient: "Red Meat",
+    cuisine:"American",
 
   },
   {
@@ -179,6 +183,9 @@ export const searchItems = [
     author: "Author",
     time: 60,
     rating: 3,
+    type: "Breakfast",
+    ingredient: "Poultry",
+    cuisine:"American",
   },
   {
     image: require("../../assets/food/search_item4.jpg"),
@@ -186,6 +193,9 @@ export const searchItems = [
     author: "Author",
     time: 60,
     rating: 3,
+    type: "Lunch",
+    ingredient: "Vegetables",
+    cuisine:"American",
   },
   {
     image: require("../../assets/food/search_item5.jpg"),
@@ -193,6 +203,9 @@ export const searchItems = [
     author: "Author",
     time: 60,
     rating: 3,
+    type: "Dinner",
+    ingredient: "Carb",
+    cuisine:"Italian",
   },
 
 ];

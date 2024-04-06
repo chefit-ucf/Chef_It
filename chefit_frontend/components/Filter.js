@@ -60,7 +60,6 @@ const Item = ({title, selected, setSelected}) =>{
       ? setSelected([...selected, title]) 
       : setSelected(selected.filter((item) => item !== title));
 
-    console.log(newSelected)
   }, [pressed])
 
   const onChangeStyles = StyleSheet.create({
