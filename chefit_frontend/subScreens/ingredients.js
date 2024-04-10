@@ -1,89 +1,105 @@
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { categories } from '../components/ingredientsBar.js'
-import { testuserInfo } from '../API/data.js';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { categories } from '../components/ingredientsBar.js';
 import { db } from "../config/firebase.js";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, doc, getDoc } from "firebase/firestore";
 
-const RenderIngredients = ( {index} ) => {
-    const [ings, setIngs] = useState([]);
-    const ingredientsCollection = collection(db, "users");
-    let category;
+const RenderIngredients = ({ index }) => {
+  const [ings, setIngs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  let category;
 
-    if (index === 0) {
-        category = "fruits";
-    }
-    else if (index === 1) {
-        category = "vegetables";
-    }
-    else if (index === 2) {
-        category = "dairyEggs";
-    }
-    else if (index === 3) {
-        category = "pastaGrains";
-    }
-    else if (index === 4) {
-        category = "bread";
-    }
-    else if (index === 5) {
-        category = "condiments";
-    }
-    else if (index === 6) {
-        category = "baking";
-    }
-    else if (index === 7) {
-        category = "oilsDressing";
-    }
-    else if (index === 8) {
-        category = "spicesSeasonings";
-    }
-    else if (index === 9) {
-        category = "meatsProteins";
-    }
-    else if (index === 10) {
-        category = "alcoholBevs";
-    }
+  if (index === 0) {
+    category = "fruits";
+}
+else if (index === 1) {
+    category = "vegetables";
+}
+else if (index === 2) {
+    category = "dairyEggs";
+}
+else if (index === 3) {
+    category = "pastaGrains";
+}
+else if (index === 4) {
+    category = "bread";
+}
+else if (index === 5) {
+    category = "condiments";
+}
+else if (index === 6) {
+    category = "baking";
+}
+else if (index === 7) {
+    category = "oilsDressing";
+}
+else if (index === 8) {
+    category = "spicesSeasonings";
+}
+else if (index === 9) {
+    category = "meatsProteins";
+}
+else if (index === 10) {
+    category = "alcoholBevs";
+}
+ 
 
-    useEffect(() => {
-        const render = onSnapshot(ingredientsCollection, (snapshot) => {
-            setIngs([]);
-          snapshot.docs.forEach((doc) => {
-            const userIngredients = doc.data().userIngredients;
-            const ingredients = userIngredients[category];
-            const mappedIngredients = Object.values(ingredients).map((ingredient) => ({
-              id: doc.id,
-              viewing: false,
-              ...ingredient,
-              src: { uri: ingredient.src },
-            }));
-            setIngs((prevIngs) => [...prevIngs, ...mappedIngredients]);
-          });
-        });
-    
-        return () => render();
-      }, [index]);
-    
-      const listOfIngredients = ings;
-   
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      try {
+        const userId = "adminUser001"; 
+        const userDocRef = doc(db, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userIngredients = userDocSnap.data().userIngredients;
+          const ingredients = userIngredients[category];
+          const mappedIngredients = Object.values(ingredients).map((ingredient) => ({
+            id: userId, 
+            viewing: false,
+            ...ingredient,
+            src: { uri: ingredient.src },
+          }));
+          setIngs(mappedIngredients);
+        } else {
+          console.log("User data not found");
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching ingredients:", error);
+      }
+    };
+
+    fetchIngredients();
+  }, [index]);
+
+  if (!ings || ings.length === 0) {
     return (
-        <View style={{flex: 1, paddingBottom: 100, backgroundColor: "#F8FAF8"}}>
-            <ScrollView vertical>
-                {listOfIngredients.map((item, i) => (
-                    <View style={styles.ingredientsContainer}>
-                        <Text style={styles.ingredientTitle}>{item.title}</Text>
-                        <View style={styles.nutritionContainer}>
-                            <Image source={item.src} resizeMode='cover'
-                            style={{width: 100, height: 100, ...styles.shadow}} />
-                            <Text style={styles.ingredientInfo}>Calories:{"\n"}Fats:{"\n"}Carbs:{"\n"}Protein:</Text>
-                            <Text style={styles.ingredientInfo}>{item.nutrition.calories}{"\n"}{item.nutrition.fats}{"\n"}{item.nutrition.carbs}{"\n"}{item.nutrition.protein}</Text>
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-        </View>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingBottom: 50, backgroundColor: "#F8FAF8" }}>
+        <Text style={styles.ingredientTitle}>No Saved Ingredients</Text>
+      </View>
     );
-};
+  }
+
+  else {
+  return (
+    <View style={{ flex: 1, paddingBottom: 100, backgroundColor: "#F8FAF8" }}>
+      <ScrollView vertical>
+        {ings.map((item, i) => (
+          <View style={styles.ingredientsContainer} key={i}>
+            <Text style={styles.ingredientTitle}>{item.title}</Text>
+            <View style={styles.nutritionContainer}>
+              <Image source={item.src} resizeMode='cover'
+                style={{ width: 100, height: 100, ...styles.shadow }} />
+              <Text style={styles.ingredientInfo}>Calories:{"\n"}Fats:{"\n"}Carbs:{"\n"}Protein:</Text>
+              <Text style={styles.ingredientInfo}>{item.nutrition.calories}{"\n"}{item.nutrition.fats}{"\n"}{item.nutrition.carbs}{"\n"}{item.nutrition.protein}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+}};
 
 const IngredientsHeader = () => {
     const [activeIndex, setActiveIndex] = useState(0);
