@@ -36,7 +36,7 @@ export default function AddRecipeScreen() {
     const [fat, setFat] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [imageUpload, setImageUpload] = useState(null);
-    const [username, setUsername] = useState('adminUser01'); 
+    const [username, setUsername] = useState('adminUser001'); 
     const [directions, setDirections] = useState([{ text: ''}]);
     const [ingredients, setIngredients] = useState([{ name: '', quantity: '' , unit: '' }]);
     const [privateMode, setPrivateMode] = useState(false); 

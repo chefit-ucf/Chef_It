@@ -17,7 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 const windowWidth = Dimensions.get('window').width;
-//
+
 const TabComponent = ({navigation}) => {
   const [recipes, setRecipes] = useState([]);
   const [savedRecipeIds, setSavedRecipeIds] = useState([]);
@@ -32,7 +32,7 @@ const Star = ({ filled }) => (
   useEffect(() => {
     const fetchSavedRecipes = async () => {
       try {
-        const userId = "adminUser01"; // User ID to fetch recipes for
+        const userId = "adminUser001"; // User ID to fetch recipes for
         const userDocRef = doc(db, "users", userId);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
@@ -62,7 +62,7 @@ const Star = ({ filled }) => (
 
   const handleSavePress = async (recipeId) => {
     try {
-      const userId = "adminUser01"; // User ID
+      const userId = "adminUser001"; // User ID
       const userDocRef = doc(db, "users", userId);
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists()) {

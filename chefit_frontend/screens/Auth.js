@@ -57,7 +57,7 @@ function HomeScreen() {
         >
             <Tab.Screen name="Explore" component={ExploreScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
                   <Image source={require('../assets/navIcons/search.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -67,7 +67,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Pantry" component={PantryScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
                   <Image source={require('../assets/navIcons/pantry.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -76,28 +76,18 @@ function HomeScreen() {
               )
             }} />
             <Tab.Screen name="AddRecipe" component={AddRecipeScreen} options={{
-              tabBarIcon: ({focuses}) => (
-                <Image source={require('../assets/navIcons/addRecipes.png')}
-                resizeMode='contain'
-                style={{width:40, height:40, tintColor: "white"}}/>
-              ),
-              tabBarButton: (props) => (
-                <CustomTabBarButton {...props} />
-              )
-            }}/>
-            <Tab.Screen name="MealPrep" component={MealPrepScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image source={require('../assets/navIcons/calendar.png')}
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
+                  <Image source={require('../assets/navIcons/addRecipes.png')}
                   resizeMode='contain'
-                  style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
-                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 7}}>Meal Prep</Text>
+                  style={{width: 38, height: 38, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
+                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14}}>Add Recipe</Text>
                 </View>
               )
             }}/>
             <Tab.Screen name="Profile" component={ProfileScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
                   <Image source={require('../assets/navIcons/profile.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>

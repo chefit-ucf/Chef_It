@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Svg, { Path } from "react-native-svg";
 import { StyleSheet, View, ScrollView, Text, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
+import { collection, onSnapshot, doc, getDocs } from "firebase/firestore";
+import { db } from "../API/firebase.config.js";
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
-
 
 const { width, height } = Dimensions.get("window");
 
@@ -15,8 +16,23 @@ const Star = ({ filled }) => (
   </View>
 );
 
-export default function Swiper({ items, currentRecipe }) {
+export default function Swiper() {
   const navigation = useNavigation(); // Initialize navigation hook
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'recipes'));
+        const fetchedRecipes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setRecipes(fetchedRecipes);
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    };
+
+    fetchRecipes();
+  }, []);
 
   let [fontsLoaded] = useFonts({
     Montserrat_300Light,
@@ -57,16 +73,13 @@ export default function Swiper({ items, currentRecipe }) {
     description: {
       fontFamily: 'Montserrat_400Regular',
       fontSize: 12
+    },
+    rateText: {
+      fontSize: 14,
+      fontFamily: 'Montserrat_600SemiBold',
     }
 
   });
-
-  // Function to get the rating of the current recipe
-  const getRecipeRating = () => {
-    // Find the current recipe in the items array
-    const currentRecipeItem = items.find(item => item.id === currentRecipe);
-    return currentRecipeItem ? currentRecipeItem.rating : 5; 
-  };
 
   return (
     <ScrollView
@@ -76,23 +89,23 @@ export default function Swiper({ items, currentRecipe }) {
       decelerationRate={"fast"}
       horizontal
     >
-      {items.map((source, index) => (
-        <TouchableOpacity key={index} onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: source.id })}>
+      {recipes.map((recipe, index) => (
+        <TouchableOpacity key={index} onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
           <View style={styles.pictureContainer}>
             <View style={styles.picture}>
               <View style={{ borderTopWidth: 0, borderWidth: 2, borderRadius: 8, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderColor: '#ECECEC' }}>
-              <View style={{ width: '100%', marginBottom: 8 }}>
-                <Image style={styles.image} source={{ uri: source.src }} />
-              </View>
-                <View style={{ padding: 5 }}>
-                  <Text style={styles.title}>{source.title}</Text>
+                <View style={{ width: '100%', marginBottom: 8 }}>
+                  <Image style={styles.image} source={{ uri: recipe.imageUrl }} />
                 </View>
                 <View style={{ padding: 5 }}>
-                  <Text style={styles.description}>{source.description}</Text>
+                  <Text style={styles.title}>{recipe.title}</Text>
+                </View>
+                <View style={{ padding: 5 }}>
+                  <Text style={styles.description}>{recipe.description}</Text>
                 </View>
                 <View style={{ padding: 5, flexDirection: 'row', gap: 1 }}>
                   {[...Array(5)].map((_, starIndex) => (
-                    <Star key={starIndex} filled={starIndex < getRecipeRating()} />
+                    <Star key={starIndex} filled={starIndex < recipe.rating} />
                   ))}
                 </View>
               </View>

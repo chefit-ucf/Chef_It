@@ -21,7 +21,7 @@ export default function SavedRecipesScreen() {
     useEffect(() => {
         const fetchSavedRecipes = async () => {
             try {
-                const userId = "adminUser01"; 
+                const userId = "adminUser001"; 
                 const userDocRef = doc(db, "users", userId);
                 const userDocSnap = await getDoc(userDocRef);
                 if (userDocSnap.exists()) {
@@ -47,7 +47,7 @@ export default function SavedRecipesScreen() {
 
     const handleRemoveFromSaved = async (recipeId) => {
         try {
-            const userId = "adminUser01"; 
+            const userId = "adminUser001"; 
             const userDocRef = doc(db, "users", userId);
             await updateDoc(userDocRef, {
                 savedRecipes: arrayRemove(recipeId)
