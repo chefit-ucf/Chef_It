@@ -2,21 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../config/firebase'; // Import Firebase Auth and Firestore
-import { collection, setDoc, doc } from 'firebase/firestore'; // Import Firestore methods
+import { collection, setDoc, doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
+
 
 
 export default function SignUpScreen({ navigation }) {
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmpassword, setConfirmpassword] = useState('');
     const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
+   
 
     // Validation states
-    const [checkFName, setCheckFName] = useState(false);
-    const [checkLName, setCheckLName] = useState(false);
     const [checkUpper, setCheckUpper] = useState(false);
     const [checkLower, setCheckLower] = useState(false);
     const [checkNum, setCheckNum] = useState(false);
@@ -24,26 +21,9 @@ export default function SignUpScreen({ navigation }) {
     const [checkConfirmPass, setCheckConfirmPass] = useState(false);
     const [checkEmail, setCheckEmail] = useState(false);
     const [reg, checkReg] = useState(true)
+    const [Emailerror, setEmailError] = useState(false); //email already used
+    const [Usererror, setUserError] = useState(false); // user already used
 
-    const handleFName = (e) => {
-      let regex = /^[^\d=?\\/@#%^&*()]+$/;
-      setFirstname(e);
-      if (regex.test(e)) {
-          setCheckFName(false);
-      } else {
-          setCheckFName(true);
-      }
-  };
-
-  const handleLName = (e) => {
-      let regex = /^[^\d=?\\/@#%^&*()]+$/;
-      setLastname(e);
-      if (regex.test(e)) {
-          setCheckLName(false);
-      } else {
-          setCheckLName(true);
-      }
-  };
 
   const handlePassword = (e) => {
         const containsUppercase = /^(?=.*[A-Z]).*$/
@@ -105,52 +85,76 @@ export default function SignUpScreen({ navigation }) {
 
 
   const handleRegistration = async () => {
-    if (!reg && !checkFName && !checkLName && !checkUpper && !checkLower && !checkNum && !checkNonAlphaNum && !checkConfirmPass && !checkEmail) {
+    
+
+    if (!reg  && !checkUpper && !checkLower && !checkNum && !checkNonAlphaNum && !checkConfirmPass && !checkEmail) {
         try {
+            const userDocRef = doc(db, 'users', username);
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            if (userDocSnapshot.exists()) {
+                console.error('Username already exists');
+                setUserError(true);
+                return;
+            } else{
+                setUserError(false);
+            }
+
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            const usersCollectionRef = collection(db, 'users');
-            await setDoc(doc(usersCollectionRef, username), {
-                name: firstname + ' ' + lastname,
-                username: username,
-                UID: user.uid,
-                achievements: [{
-                  "achievementID": "achieve001",
-                  "title": "Recipe Pioneer",
-                  "UnlockedDescription": "Create your first Recipe!",
-                  "LockedDescription": "Hint: Try adding a Recipe!",
-                  "trigger": false,
-                  "UnlockedImage" : "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffirstrecipe_logo.png?alt=media&token=24333059-8360-4271-961f-e80bb4ec6eae",
-                  "LockedImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement.png?alt=media&token=d5861753-3343-4d85-b658-cbd09d513e03",
-                  "lockedReward": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement_image.png?alt=media&token=450f75f1-a3c8-4134-82d8-d3abf963834c",
-                  "rewardImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffirstrecipe_rewardImage.png?alt=media&token=7e064dce-9222-4c82-8cf1-22830b340235",
-                  "timeTriggered": "",
-                }, {
-                  
-                    "LockedDescription": "Hint: Go check out our Cooksonas!",
-                    "LockedImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement.png?alt=media&token=d5861753-3343-4d85-b658-cbd09d513e03",
-                    "UnlockedDescription": "Changed your Cooksona for the first time!",
-                    "UnlockedImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffacelift_logo.png?alt=media&token=ea226e05-2e4e-48c9-87dd-a51dbd5374d7",
-                    "achievementID": "achieve002",
-                    "lockedReward": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement_image.png?alt=media&token=450f75f1-a3c8-4134-82d8-d3abf963834c",
-                    "rewardImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffacelift_rewardImage.png?alt=media&token=3fc6dc73-f683-4a3a-92a8-05f7b4fe519c",
-                    "title": "Flavorful Facelift",
-                    "trigger": false,
-                    "timeTriggered": "",
-                }],
-                recipes:[],
-                savedRecipes:[],
-                userAvatar:"https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FCooksonas%2Fpancakes_withbackground.png?alt=media&token=38d2e61e-f2f5-42e5-b061-0e310b3ea17c",
-                userIngredients:[],
-            });
-
-            navigation.navigate('Home');
-        } catch (error) {
-            setError(error.message);
+            if (!user) {
+                console.error('Failed to create user');
+                setUserError(true);
+                return;
+            }      
+            // Add user data to Firestore
+            await setDoc(doc(db, 'users', username), {
+            username: username,
+            UID: user.uid,
+            achievements: [{
+              "achievementID": "achieve001",
+              "title": "Recipe Pioneer",
+              "UnlockedDescription": "Create your first Recipe!",
+              "LockedDescription": "Hint: Try adding a Recipe!",
+              "trigger": false,
+              "UnlockedImage" : "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffirstrecipe_logo.png?alt=media&token=24333059-8360-4271-961f-e80bb4ec6eae",
+              "LockedImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement.png?alt=media&token=d5861753-3343-4d85-b658-cbd09d513e03",
+              "lockedReward": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement_image.png?alt=media&token=450f75f1-a3c8-4134-82d8-d3abf963834c",
+              "rewardImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffirstrecipe_rewardImage.png?alt=media&token=7e064dce-9222-4c82-8cf1-22830b340235",
+              "timeTriggered": "",
+            }, {
+              
+                "LockedDescription": "Hint: Go check out our Cooksonas!",
+                "LockedImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement.png?alt=media&token=d5861753-3343-4d85-b658-cbd09d513e03",
+                "UnlockedDescription": "Changed your Cooksona for the first time!",
+                "UnlockedImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffacelift_logo.png?alt=media&token=ea226e05-2e4e-48c9-87dd-a51dbd5374d7",
+                "achievementID": "achieve002",
+                "lockedReward": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2FlockedAchievement_image.png?alt=media&token=450f75f1-a3c8-4134-82d8-d3abf963834c",
+                "rewardImage": "https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FachievementImages%2Ffacelift_rewardImage.png?alt=media&token=3fc6dc73-f683-4a3a-92a8-05f7b4fe519c",
+                "title": "Flavorful Facelift",
+                "trigger": false,
+                "timeTriggered": "",
+            }],
+            recipes:[],
+            savedRecipes:[],
+            userAvatar:"https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FCooksonas%2Fpancakes_withbackground.png?alt=media&token=38d2e61e-f2f5-42e5-b061-0e310b3ea17c",
+            userIngredients:[],
+        });
+            navigation.navigate('Home'); // take back to homescreen
+        }    
+        catch (error) {
+            console.error('Registration error:', error.message);
+            if (error.code == 'auth/email-already-in-use') { // check if email is already in firebase auth database
+                console.error('email already exists');
+                setEmailError(true)
+            } else {
+                console.error(error);
+              }
         }
     }
 };
+
 
     return (
        <View style={styles.container}>
@@ -163,14 +167,6 @@ export default function SignUpScreen({ navigation }) {
       <Text style={styles.titleText}>Sign Up Now</Text>
       <Text style={styles.introText}>Please Fill Out Entire Form to Continue</Text>
       <View style={styles.loginContainer}>
-          <TextInput style={styles.input} testID="firstname" placeholder='First Name' value={firstname} onChangeText={text=>handleFName(text)}/>
-      {checkFName? (
-        <Text style={styles.errorText}>Error: Can only include letters & symbols, no numbers</Text> ) : ( <Text></Text>)
-      }
-          <TextInput style={styles.input} testID="lastname" placeholder='Last Name' value={lastname} onChangeText={text=>handleLName(text)}/>
-      {checkLName? (
-        <Text style={styles.errorText}>Error: Can only include letters & symbols, no numbers</Text> ) : ( <Text></Text>)
-      }
           <TextInput style={styles.input} testID="email" placeholder='Email' value={email} onChangeText={text=>handleEmail(text)}/>
       {checkEmail? (
         <Text style={styles.errorText}>Error: Email must contain @ and '.'</Text> ) : ( <Text></Text>)
@@ -195,6 +191,12 @@ export default function SignUpScreen({ navigation }) {
       }
       {checkConfirmPass? (
         <Text style={styles.errorText}>Does not match password entered</Text> ) : ( <Text></Text>)
+      }
+      {Usererror? (
+        <Text style={styles.errorText}>Username already in use</Text> ) : ( <Text></Text>)
+      }
+      {Emailerror? (
+        <Text style={styles.errorText}>Email already in use</Text> ) : ( <Text></Text>)
       }
       <TouchableOpacity style={styles.button} onPress={() => handleRegistration()}>
         <Text style={styles.buttonText}>SIGN UP</Text>
