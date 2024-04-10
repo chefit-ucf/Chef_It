@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -15,7 +15,6 @@ import SignUpScreen from "./signUp.js"
 import ExploreScreen from './explore.js';
 import PantryScreen from './pantry.js';
 import AddRecipeScreen from './addRecipe.js';
-import MealPrepScreen from './mealPrep.js';
 import ProfileScreen from './profile.js';
 import RecipeScreen from '../subScreens/recipe.js';
 
@@ -38,6 +37,8 @@ const CustomTabBarButton = ({children, onPress}) => (
 );
 
 function HomeScreen() {
+
+    let windowHeight = Dimensions.get('window').height;
     return (
         <Tab.Navigator 
           tabBarOptions={{showLabel: false}}
@@ -48,7 +49,7 @@ function HomeScreen() {
               bottom: 30,
               left: 20,
               right: 20,
-              height: 70,
+              height: windowHeight * 0.08,
               borderRadius: 20,
               ...styles.shadow
             }
@@ -57,7 +58,7 @@ function HomeScreen() {
         >
             <Tab.Screen name="Explore" component={ExploreScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 25}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
                   <Image source={require('../assets/navIcons/search.png')}
                   resizeMode='contain'
                   style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -67,7 +68,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Pantry" component={PantryScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 25}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
                   <Image source={require('../assets/navIcons/pantry.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -77,7 +78,7 @@ function HomeScreen() {
             }} />
             <Tab.Screen name="AddRecipe" component={AddRecipeScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 28}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
                   <Image source={require('../assets/navIcons/addRecipes.png')}
                   resizeMode='contain'
                   style={{width: 38, height: 38, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
@@ -87,7 +88,7 @@ function HomeScreen() {
             }}/>
             <Tab.Screen name="Profile" component={ProfileScreen} options={{
               tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 25}}>
+                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
                   <Image source={require('../assets/navIcons/profile.png')}
                   resizeMode='contain'
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
