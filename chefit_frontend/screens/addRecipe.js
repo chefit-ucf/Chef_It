@@ -28,7 +28,6 @@ export default function AddRecipeScreen() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [savedToPantry, setSavedToPantry] = useState(false);
     const [recipeName, setRecipeName] = useState('');
-    const [rating, setRating] = useState('');
     const [servingSize, setServingSize] = useState('');
     const [duration, setDuration] = useState('');
     const [calories, setCalories] = useState('');
@@ -37,12 +36,10 @@ export default function AddRecipeScreen() {
     const [fat, setFat] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [imageUpload, setImageUpload] = useState(null);
-    const [username, setUsername] = useState('adminUuser01'); 
-    const [directions, setDirections] = useState([{ text: '', checkpoint: 0 }]);
+    const [username, setUsername] = useState('adminUser01'); 
+    const [directions, setDirections] = useState([{ text: ''}]);
     const [ingredients, setIngredients] = useState([{ name: '', quantity: '' , unit: '' }]);
     const [privateMode, setPrivateMode] = useState(false); 
-
-
 
 
     const renderIngredientInputs = () => {
@@ -66,10 +63,12 @@ export default function AddRecipeScreen() {
                   value={ingredient.unit}
                   onChangeText={(unit) => handleIngredientChange(ingredient.name, unit, ingredient.quantity, index)}
               />
-             
+                           {ingredients.length > 1 && (
                   <Pressable onPress={() => handleRemoveIngredient(index)}>
                       <Image source={removeButton} style={styles.removeButton}></Image>
                   </Pressable>
+                                )}
+
           </View>
       ));
   };
@@ -140,7 +139,6 @@ const handleAddRecipe = async () => {
     const docRef = await addDoc(collection(db, 'recipes'), {
         savedid: unsavedId, // Assign the unsaved ID
         title: recipeName,
-        rating: rating,
         ingredients: ingredients,
         directions: directions,
         timer: { duration: duration, unit: 'minutes' },
@@ -159,12 +157,19 @@ const handleAddRecipe = async () => {
         privateMode: privateMode
     });
 
+  
+
       const userDocRef = doc(db, 'users', username);
+      const swiperDocRef = doc(db, 'swiper', 'swiperSlides');
       const userDocSnapshot = await getDoc(userDocRef);
       if (userDocSnapshot.exists()) {
           const userData = userDocSnapshot.data();
           const updatedSavedRecipes = [...userData.recipes, docRef.id];
-          await setDoc(userDocRef, { recipes: updatedSavedRecipes }, { merge: true });
+          const updatedSwiperRecipes = [...db.swiper, swiperDocRef.id];
+          await setDoc(userDocRef, {
+            recipes: updatedSavedRecipes,
+            swiper: updatedSwiperRecipes
+        }, { merge: true });
       } else {
           console.error('User data not found for username: ', username);
       }
@@ -172,7 +177,6 @@ const handleAddRecipe = async () => {
 
       // Clear input fields after saving
       setRecipeName('');
-      setRating('');
       setServingSize('');
       setDuration('');
       setCalories('');
@@ -287,7 +291,7 @@ const handleFatChange = (text) => {
 }
 return (
     <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1, }}>
-            <ScrollView>
+     <ScrollView>
     <View style={styles.screenContainer}>
     <View style={styles.header}>
         <Text style={styles.title}>Create Recipe</Text>
@@ -300,12 +304,7 @@ return (
           value={recipeName}
           onChangeText={setRecipeName}>
         </TextInput>
-        <TextInput
-          style={styles.recipeInput}
-          placeholder="Rating"
-          value={rating}
-          onChangeText={setRating}
-        />
+     
         <TextInput
           style={styles.recipeInput}
           placeholder="Serving Size"
@@ -327,7 +326,7 @@ return (
         <TextInput
           style={styles.recipeInput}
           placeholder={"Carbs"}
-          value={calories}
+          value={carbs}
           onChangeText={handleCarbsChange}>
         </TextInput>
         <TextInput

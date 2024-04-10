@@ -12,6 +12,8 @@ import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600Sem
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { db } from "../API/firebase.config.js";
 import { doc, collection, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const Stack = createStackNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -21,6 +23,11 @@ const TabComponent = ({navigation}) => {
   const [savedRecipeIds, setSavedRecipeIds] = useState([]);
   const [index, setIndex] = useState(0);
 
+const Star = ({ filled }) => (
+    <View style={{ display: filled ? 'flex' : 'none', marginRight: 2 }}>
+      <Ionicons name="ios-star" size={15} color="#ffc107" />
+    </View>
+  );
 
   useEffect(() => {
     const fetchSavedRecipes = async () => {
@@ -66,8 +73,9 @@ const TabComponent = ({navigation}) => {
         } else {
           updatedSavedRecipeIds = updatedSavedRecipeIds.filter(id => id !== recipeId);
         }
-        await updateDoc(userDocRef, { savedRecipes: updatedSavedRecipeIds });
+        // Update savedRecipeIds before updating it in Firestore
         setSavedRecipeIds(updatedSavedRecipeIds);
+        await updateDoc(userDocRef, { savedRecipes: updatedSavedRecipeIds });
       }
     } catch (error) {
       console.error("Error updating saved recipes:", error);
@@ -86,13 +94,16 @@ const TabComponent = ({navigation}) => {
             <Text style={styles.titleText}>{recipe.title}</Text>
             <Text style={styles.userText}>By: {recipe.username}</Text>
             <View style={styles.timeContainer}>
-              <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
-              <Image source={require('../assets/icons/timer.png')} style={{ width: 18, height: 18, marginTop: 5, marginLeft: 7 }} />
+            <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
+                <Image source={require('../assets/icons/timer.png')} style={{width: 18, height: 18, marginTop: 5, marginLeft: 7}} />
             </View>
-            <View style={styles.bottomContainer}>
-              <Text style={styles.rating}>{recipe.rating}</Text>
+            <View style={[styles.bottomContainer, { marginLeft: 10 }]}>
+              {[...Array(5)].map((_, starIndex) => (
+                <Star key={starIndex} filled={starIndex < recipe.rating} />
+              ))}
+
               <TouchableOpacity onPress={() => handleSavePress(recipe.id)} style={styles.saveButton}>
-                <Image source={savedRecipeIds.includes(recipe.id) ? savedImage : unSavedImage} style={styles.savedIcon} />
+                <Image source={savedRecipeIds.includes(recipe.id) ? unSavedImage : savedImage} style={styles.savedIcon} />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -386,13 +397,6 @@ savedIcon: {
       },
       shadowOpacity: 0.2,
       shadowRadius: 5,
-  },
-  timeContainer:{
-    flex: 1,
-    flexDirection: 'row',
-    width: 'auto',
-    height: 16,
-    alignItems: 'center'
   },
   rating: {
     marginLeft: 5,

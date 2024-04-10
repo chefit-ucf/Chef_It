@@ -70,7 +70,7 @@ const RenderIngredients = ( {index} ) => {
         <View style={{flex: 1, paddingBottom: 100, backgroundColor: "#F8FAF8"}}>
             <ScrollView vertical>
                 {listOfIngredients.map((item, i) => (
-                    <View style={styles.ingredientsContainer}>
+                        <View key={i} style={styles.ingredientsContainer}>
                         <Text style={styles.ingredientTitle}>{item.title}</Text>
                         <View style={styles.nutritionContainer}>
                             <Image source={item.src} resizeMode='cover'

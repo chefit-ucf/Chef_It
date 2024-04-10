@@ -177,17 +177,17 @@ const startImage = require('../assets/buttons/startButton.png')
 const shareImage = require('../assets/buttons/share.png')
 const saveImage = require('../assets/buttons/save.png')
 const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
-  let [fontsLoaded] = useFonts({
-    Montserrat_300Light,
-    Montserrat_400Regular,
-    Montserrat_500Medium,
-    Montserrat_600SemiBold,
-    Coiny_400Regular
-  });
+let [fontsLoaded] = useFonts({
+  Montserrat_300Light,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Coiny_400Regular
+});
 
-  if (!fontsLoaded || !recipe) {
-    return <Text>Loading...</Text>;
-  }
+if (!fontsLoaded || !recipe) {
+  return <Text>Loading...</Text>;
+}
   const toggleModal = (visible) => {
     setIsModalVisible(visible);
   };
@@ -203,9 +203,6 @@ const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
           <Image source={backImage} style={styles.backButton} />
         </TouchableOpacity>
       </View>
-        <View style={styles.rightButtonsContainer}>
-          <Image source={saveImage} style={styles.topButtons} />
-        </View>
         <View style={styles.whiteContainer}>
       <Text style={styles.title}>{recipe.title}</Text>
         </View>

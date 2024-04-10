@@ -6,7 +6,6 @@ import { collection, onSnapshot, doc, addDoc, deleteDoc } from "firebase/firesto
 import { db } from "../API/firebase.config.js"
 
 
-// Toggle Serving Modal
 const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationModalVisible, currentTime, startTime}) => {
 
   const handleVisitAchievements = () => {

@@ -177,6 +177,8 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                 return item
                             }}
                             dropdownStyle={styles.dropdown} 
+                            dropdownTextStyle={styles.dropdownText} // Set your desired text color here
+
                         />
                         </View>
                         <TextInput
@@ -201,7 +203,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                 <Text style={styles.ingredientDetailsLabel}>Carbs</Text>
                                 <TextInput
                                     style={styles.modalSmallInput}
-                                    placeholder="5g"
+                                    placeholder="g"
                                     value={ingredientCarbs}
                                     onChangeText={text => {
                                         if (/^\d+$/.test(text) || text === '') {
@@ -215,7 +217,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                 <Text style={styles.ingredientDetailsLabel}>Protein</Text>
                                 <TextInput
                                     style={styles.modalSmallInput}
-                                    placeholder="0.8g"
+                                    placeholder="g"
                                     value={ingredientProtein}
                                     onChangeText={text => {
                                         if (/^\d+$/.test(text) || text === '') {
@@ -229,7 +231,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                                 <Text style={styles.ingredientDetailsLabel}>Fat</Text>
                                 <TextInput
                                     style={styles.modalSmallInput}
-                                    placeholder="0.2g"
+                                    placeholder="g"
                                     value={ingredientFat}
                                     onChangeText={text => {
                                         if (/^\d+$/.test(text) || text === '') {
@@ -349,6 +351,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         justifyContent: "center",
         overflow: 'hidden', 
+        color: 'red'
     },
     dropdown: {
         padding: 12,
@@ -357,6 +360,9 @@ const styles = StyleSheet.create({
         letterSpacing: -0.56,
         textAlign: 'left', 
         textAlignVertical: 'center',
+    },
+    dropdownText: {
+        color: 'red', // Change the color to your desired color
     },
     uploadButton: {
         width: 341,

@@ -52,9 +52,9 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
               <TextInput
                   style={styles.modalInput}
                   inputMode="numeric"
-                  value={newServingSize}
-                  onChangeText={(text) => setNewServingSize(text)}
-                />
+                  value={newServingSize.toString()} // Ensure that the value is converted to a string
+                  onChangeText={(text) => setNewServingSize(parseInt(text))} // Convert text to a number
+              />
               </View>
               <View>
                 <Pressable style={styles.modalButton} onPress={handleServesButtonPress}>

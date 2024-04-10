@@ -47,7 +47,7 @@ export default function SavedRecipesScreen() {
 
     const handleRemoveFromSaved = async (recipeId) => {
         try {
-            const userId = "user001"; 
+            const userId = "adminUser01"; 
             const userDocRef = doc(db, "users", userId);
             await updateDoc(userDocRef, {
                 savedRecipes: arrayRemove(recipeId)
@@ -81,10 +81,10 @@ export default function SavedRecipesScreen() {
                                 {[...Array(5)].map((_, starIndex) => (
                                     <Star key={starIndex} filled={starIndex < recipe.rating} />
                                 ))}
-                            <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
+                                <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
                                 <Image source={require('../assets/buttons/saveButton.png')} style={styles.savedIcon} />
-                            </TouchableOpacity>                                
-                            <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
+                                 </TouchableOpacity>                                
+                                <TouchableOpacity onPress={() => handleSavePress(index, recipe.id)} style={styles.saveButton}>
                                     <Image source={require('../assets/buttons/saveButton.png')} style={styles.savedIcon} />
                                 </TouchableOpacity>
                             </View>
