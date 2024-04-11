@@ -80,80 +80,80 @@ export const slider3 = [
 export const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'Breakfast',
+    type: 'Breakfast',
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Lunch',
+    type: 'Lunch',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Dinner',
+    id: '58694a0f-3dl1-471f-bd96-145571e29d72',
+    type: 'Dinner',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Dessert',
+    id: '58694a0f-3dm1-471f-bd96-145571e29d72',
+    type: 'Dessert',
   },
 ];
 export const DATA2 = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'Poultry',
+    ingredient: 'Poultry',
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Red Meat',
+    ingredient: 'Red Meat',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Seafood',
+    id: '58694a0f-3dc1-471f-bd96-145571e29d72',
+    ingredient: 'Seafood',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Fruits',
+    id: '58694a0f-3dx1-471f-bd96-145571e29d72',
+    ingredient: 'Fruits',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Vegetables',
+    id: '58694a0f-3db1-471f-bd96-145571e29d72',
+    ingredient: 'Vegetables',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Dairy',
+    id: '58694a0f-3da1-471f-b6-145571e29d72',
+    ingredient: 'Dairy',
   },
 ];
 
 export const DATA3 = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'American',
+    cuisine: 'American',
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Mexican',
+    cuisine: 'Mexican',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Indian',
+    id: '58694a0f-3da1-471f-bd6-145571e29d72',
+    cuisine: 'Indian',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Italian',
+    id: '58694a0f-6da1-471f-bd96-145571e29d72',
+    cuisine: 'Italian',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'French',
+    id: '58694a0f-1da1-471f-bd96-145571e29d72',
+    cuisine: 'French',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Japanese',
+    id: '58694a0f-3aa1-471f-bd96-145571e29d72',
+    cuisine: 'Japanese',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Thai',
+    id: '58694a0f-3dx1-471f-bd96-145571e29d72',
+    cuisine: 'Thai',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Caribbean',
+    id: '58694a0f-3da2-471f-bd96-145571e29d72',
+    cuisine: 'Caribbean',
   },
 ];
 
@@ -164,7 +164,9 @@ export const searchItems = [
     author: "Author",
     time: 60,
     rating: 3,
-    type: "Dinner"
+    type: "Dinner",
+    cuisine:"French",
+
   },
   {
     image: require("../../assets/food/search_item2.jpg"),

@@ -19,7 +19,7 @@ export default function Filter({selected, setSelected}) {
           <Text >Meal Type</Text>
           <FlatList
             data={DATA}
-            renderItem={({item}) => <Item title={item.title} selected={selected} setSelected={setSelected}/>}
+            renderItem={({item}) => <Item itemKey={Object.keys(item).find(key=> item[key] === item.type)} value={item.type} selected={selected} setSelected={setSelected}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -28,7 +28,7 @@ export default function Filter({selected, setSelected}) {
           <Text >Ingredients</Text>
           <FlatList
             data={DATA2}
-            renderItem={({item}) => <Item title={item.title} selected={selected} setSelected={setSelected}/>}
+            renderItem={({item}) => <Item itemKey={Object.keys(item).find(key=> item[key] === item.ingredient)} value={item.ingredient} selected={selected} setSelected={setSelected}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -37,7 +37,7 @@ export default function Filter({selected, setSelected}) {
           <Text >Cuisine</Text>
           <FlatList
             data={DATA3}
-            renderItem={({item}) => <Item title={item.title} selected={selected} setSelected={setSelected}/>}
+            renderItem={({item}) => <Item itemKey={Object.keys(item).find(key=> item[key] === item.cuisine)} value={item.cuisine} selected={selected} setSelected={setSelected}/>}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatList}
           />
@@ -48,7 +48,7 @@ export default function Filter({selected, setSelected}) {
 }
 
 
-const Item = ({title, selected, setSelected}) =>{
+const Item = ({itemKey, value, selected, setSelected}) =>{
   const [pressed, setPressed] = useState(false)
 
   const handlePress = () => {
@@ -57,8 +57,8 @@ const Item = ({title, selected, setSelected}) =>{
 
   useEffect(()=>{
     const newSelected = pressed 
-      ? setSelected([...selected, title]) 
-      : setSelected(selected.filter((item) => item !== title));
+      ? setSelected({[itemKey] : [...itemKey, value]}) 
+      : setSelected(selected.filter((item) => item[itemKey] !== value));
 
   }, [pressed])
 
@@ -78,7 +78,7 @@ const Item = ({title, selected, setSelected}) =>{
   ]}
   onPress={handlePress}
   >
-    <Text style={{...styles.pressable, ...onChangeStyles.text}}>{title}</Text>
+    <Text style={{...styles.pressable, ...onChangeStyles.text}}>{value}</Text>
   </Pressable>
 
 }

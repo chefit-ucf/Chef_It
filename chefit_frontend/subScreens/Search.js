@@ -10,38 +10,37 @@ import { searchItems } from '../assets/data/fakeData';
 export default function Search({navigation}) {
 
   const [items, setItems] = useState(searchItems)
-  const [selected, setSelected] = useState([])
+  const [selected, setSelected] = useState({
+    type: [],
+    ingredient: [],
+    cuisine: [],
+  })
   const [filter, setFilter] = useState(false)
   const [filteredItems, setFilteredItems] = useState(searchItems)
+  const arrayFilter = useRef(searchItems)
 
   const [text, onChangeText] = useState('');
 
+  const pipe = (...functions) => input => {
+    return functions.reduce((acc, fn) => fn(acc), input);
+  };
+
   useEffect(()=>{
-
-    // create a filtered array (items) that displays items based on what type (property) is within the selected array
-    if(selected.length == 0){
-      setFilteredItems(searchItems)
-    }else{
-      setFilteredItems(searchItems.filter(item => 
-        selected.includes(item.type) 
-        // || 
-        // selected.includes(item.ingredient) || 
-        // selected.includes(item.cuisine)
-      ))
-    }
-
-
+    console.log(selected)
   },[selected])
 
 
-  useEffect(()=>{
-    if(text.length == 0)
-      setFilteredItems(filteredItems)
-    else{
-      setFilteredItems(filteredItems.filter(item => item.title.includes(text)))
-    }
 
-  },[text, selected])
+  function type(){
+    return 
+  }
+  function ingredient(){
+    return arrayFilter.current.filter((item)=> selected.includes(item.ingredient))
+  }
+
+
+
+
 
   function handlePress(){
     setFilter(!filter)
