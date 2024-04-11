@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Pressable, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../config/firebase.js";
+import { db } from "../API/firebase.config.js";
 
 const StarRating = ({ recipeId }) => {
     const [rating, setRating] = useState(null);

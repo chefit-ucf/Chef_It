@@ -172,7 +172,7 @@ export const testuserInfo = {
         ],
         "bread" : [
             {
-                "itemID": "in001BR",
+                "itemID": "in002BR",
                 "src" : require('../assets/ingredients/wholeWheat.png'),
                 "title": "Whole Wheat Bread",
                 "nutrition": {
@@ -194,7 +194,7 @@ export const testuserInfo = {
                 }
             },
             {
-                "itemID": "in001BR",
+                "itemID": "in003BR",
                 "src" : require('../assets/ingredients/croissant.png'),
                 "title": "Croissant",
                 "nutrition": {

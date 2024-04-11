@@ -38,7 +38,8 @@ export default function PantryScreen({navigation}) {
                                               buttonStyle={(active) => ({borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5})} />
                 <Tab.Item title="Saved Recipes" titleStyle={(active) => ({height: 35, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}   
                                                 buttonStyle={(active) => ({borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5})} />
-
+                <Tab.Item title="Recipe Ideas" titleStyle={(active) => ({height: 35, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}  
+                                               buttonStyle={(active) => ({borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5})} />
             </Tab>
             <TabView value={index} onChange={setIndex} animationType="timing" disableSwipe={true}>
                 <TabView.Item style={{width: "100%"}}>
@@ -46,6 +47,9 @@ export default function PantryScreen({navigation}) {
                 </TabView.Item>
                 <TabView.Item style={{width: "100%"}}>
                     <SavedRecipesScreen></SavedRecipesScreen>
+                </TabView.Item>
+                <TabView.Item style={{width: "100%"}}>
+                    <RecipeIdeasScreen></RecipeIdeasScreen>
                 </TabView.Item>
             </TabView>
          </View>

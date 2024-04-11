@@ -8,7 +8,7 @@ import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600Sem
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 // backend additions
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { auth } from '../API/firebase.config';
 
 
 export default function LoginScreen({navigation}) {
