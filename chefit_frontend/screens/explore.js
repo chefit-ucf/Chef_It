@@ -4,6 +4,8 @@ import { SafeAreaView, ScrollView, View, Text, TextInput , Dimensions, StyleShee
 import Svg, { Path } from "react-native-svg"
 import Swiper from "../components/Swiper.js"
 import Slider, { DetailedSlider, SliderSeasonal } from "../components/Slider.js"
+import { createStackNavigator } from '@react-navigation/stack';
+import BackButton from '../components/BackButton.js';
 
 
 import { swiper, slider1, slider2, slider3 } from "../API/sliderData.js"
@@ -11,8 +13,47 @@ const { width, height } =  Dimensions.get("window")
 
 import { db } from "../API/firebase.config.js";
 import { collection, onSnapshot } from "firebase/firestore";
+import Search from '../subScreens/Search.js';
+const Stack = createStackNavigator();
+
+
 
 export default function ExploreScreen({navigation}) {
+
+return  (
+  <Stack.Navigator
+  screenOptions={{
+    headerBackTitleVisible: false,
+    headerTitleAlign: 'center',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    headerStyle: {
+      backgroundColor: 'transparent',
+      elevation: 0, 
+      shadowOpacity: 0, 
+      borderBottomWidth: 0,
+    },
+    headerBackImage: () => (
+      <BackButton />
+    ),
+  }}
+  >
+
+    <Stack.Screen
+      name='Explore Screen'
+      component={Explore}
+    />
+    <Stack.Screen
+      name='Search'
+      component={Search}
+    />
+
+</Stack.Navigator>
+)
+}
+
+ function Explore({navigation}) {
 
   const [swiperData, setSwiperData] = useState([])
   const [sliderData, setSliderData] = useState([])
@@ -42,26 +83,7 @@ useEffect(() => {
   });
 }, []);
 
-// data request for swiper
-useEffect(() => {
-  const swiperQuery = collection(db, "slider");
-  onSnapshot(swiperQuery, (snapshot) => {
-    setSliderData([]);
 
-    snapshot.docs.forEach((doc) => {
-      const slides = doc.data();
-      
-      const maps = slides["slides"]
-      const mappedIngredients = Object.values(maps).map((slide) => ({
-        ...slide,
-      }));
-      setSliderData([...mappedIngredients]);
-    });
-
-    // Console log swiperData here
-    console.log("Slider Data:", sliderData);
-  });
-}, []);
 
 // data request for slider2
 useEffect(() => {

@@ -19,7 +19,6 @@ import AddRecipeScreen from '../screens/AddRecipeScreen.js';
 import MealPrepScreen from '../screens/MealPrepScreen.js';
 import ProfileScreen from '../screens/ProfileScreen.js';
 import { SearchScreen } from '../subScreens/Search.js' 
-========
 import WelcomeScreen from "./welcome.js"
 import LoginScreen from "./login.js"
 import SignUpScreen from "./signUp.js"
@@ -28,7 +27,6 @@ import PantryScreen from './pantry.js';
 import AddRecipeScreen from './addRecipe.js';
 import ProfileScreen from './profile.js';
 import RecipeScreen from '../subScreens/recipe.js';
->>>>>>>> b3179dfdcaf7cfd4ee06c96ee25775ebe19c44c9:chefit_frontend/screens/Auth.js
 
 const CustomTabBarButton = ({children, onPress}) => (
   <TouchableOpacity

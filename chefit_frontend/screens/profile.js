@@ -239,11 +239,11 @@ function Profile({ navigation }) {
             </Pressable>
           </View>
           <View style={styles.profileImageContainer}>
-            <Image
+          {/* <Image
               source={require('../assets/cooksonas/pancakes.png')}
               style={styles.profileImage}
-            />
-          </View>
+            />           */}
+            </View>
         </View>
         <Text style={styles.username}>Username01</Text>
         <View style={styles.tabContainer}>
