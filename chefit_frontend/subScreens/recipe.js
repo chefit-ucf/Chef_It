@@ -1,16 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, Text, ScrollView, Pressable, StyleSheet, TouchableOpacity} from 'react-native';
-import AchievementsModal from '../subScreens/achievementModal.js';
-import ServingModal from '../subScreens/servingModal.js'
+import React, { useRef, useEffect, useState } from 'react';
+import { View, Image, Text, ScrollView, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import AchievementsModal from './achievementModal.js';
+import ServingModal from './servingModal.js'
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { recipeData } from '../API/recipeData';
+import { collection, doc, getDoc } from "firebase/firestore"
+import { db } from "../API/firebase.config.js";
+import StarRating from '../components/rating.js'
+import {
+  ref,
+  listAll,
+  getDownloadURL,
+} from "firebase/storage";
+import { storage } from "../API/firebase.config.js";
 
-export default function RecipeScreen ({ route, navigation }) {
+export default function RecipeScreen({ route, navigation }) {
   const { currentRecipe } = route.params;
+  const [imageUrls, setImageUrls] = useState([]);
+  const [recipe, setRecipe] = useState();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const Stack = createNativeStackNavigator();
+
   const [showDirections, setShowDirections] = useState(false);
   const [selectedButton, setSelectedButton] = useState('directions');
   const [timer, setTimer] = useState(null);
@@ -19,9 +30,7 @@ export default function RecipeScreen ({ route, navigation }) {
   const [startTimerOnPress, setStartTimerOnPress] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
-  const [recipe, setRecipe] = useState(recipeData.recipeId[currentRecipe]);
-  const [newServingSize, setNewServingSize] = useState(recipe.servingSize.servings);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newServingSize, setNewServingSize] = useState(null);
   const [areTimerButtonsVisible, setAreTimerButtonsVisible] = useState(false);
   const [isCongratulationModalVisible, setIsCongratulationModalVisible] = useState(false);
   const [currentTime, setCurrentTime] = useState(null);
@@ -29,69 +38,85 @@ export default function RecipeScreen ({ route, navigation }) {
   const [isContainerVisible, setIsContainerVisible] = useState(true);
   const [isCookAlongInitiated, setIsCookAlongInitiated] = useState(false); 
 
+  const imagesListRef = ref(storage, "images/");
+  useEffect(() => {
+    console.log("Completed Steps:", completedSteps);
+  }, [completedSteps]);
+  useEffect(() => {
+    listAll(imagesListRef)
+      .then((response) => {
+        response.items.forEach((item) => {
+          getDownloadURL(item).then((url) => {
+            setImageUrls((prev) => [...prev, url]);
+          });
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching images:", error);
+      });
+  }, []);
 
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const recipeDocRef = doc(db, "recipes", currentRecipe);
+        const recipeSnapshot = await getDoc(recipeDocRef);
+        if (recipeSnapshot.exists()) {
+          const data = recipeSnapshot.data();
+          setRecipe(data);
+        } else {
+          console.log("No such recipe document!");
+        }
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+      }
+    };
 
+    fetchRecipe();
+  }, [currentRecipe]);
+  
+  useEffect(() => {
+    console.log("Recipe data:", recipe);
+    if (recipe && recipe.servingSize) {
+      setNewServingSize(recipe.servingSize.serving);
+    }
+  }, [recipe]);
+
+  useEffect(() => {
+    if (recipe && recipe.timer && typeof recipe.timer.duration === 'number') {
+      setInitialDuration(recipe.timer.duration * 60);
+    }
+  }, [recipe]);
+  
 //Timer
 const timerIntervalRef = useRef(null);
 
-  useEffect(() => {
-
-    let timerInterval;
-
-    if (timer !== null && !isPaused) {
-      timerInterval = setInterval(() => {
-        // ... (previous code)
-      }, 1000);
-
-      timerIntervalRef.current = timerInterval; 
-
-    if (startTimerOnPress && timer === null) {
-      setTimer(initialDuration);
-      setIsTimerVisible(true);
-      setStartTimerOnPress(false);
-      setIsPaused(false);
-      
-    }
+useEffect(() => {
+  if (startTimerOnPress && timer === null) {
+    setTimer(initialDuration);
+    setIsTimerVisible(true);
+    setStartTimerOnPress(false);
+    setIsPaused(false);
   }
-  return () => {
-    clearInterval(timerIntervalRef.current); 
-  };
-}, [startTimerOnPress, timer, isPaused, initialDuration, completedSteps]);
 
-
-  useEffect(() => {
-    if (startTimerOnPress && timer === null) {
-      setTimer(initialDuration);
-      setIsTimerVisible(true);
-      setStartTimerOnPress(false);
-      setIsPaused(false);
-    }
-  
-    let timerInterval;
-    if (timer !== null && !isPaused) {
-      timerInterval = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer > 0) {
-            return prevTimer - 1;
-          } else {
-            clearInterval(timerInterval);
-            setIsTimerVisible(true);
-            return null;
-          }
-        });
-        setCurrentTime((prevTime) => prevTime + 1000); 
-      }, 1000);
-  
-      recipe.directions.forEach((step, index) => {
-        if (timer <= recipe.timer.duration * 60 - step.checkpoint && !completedSteps.includes(index)) {
-          setCompletedSteps((prevSteps) => [...prevSteps, index]);
+  let timerInterval;
+  if (timer !== null && !isPaused) {
+    timerInterval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) {
+          return prevTimer - 1;
+        } else {
+          clearInterval(timerInterval);
+          setIsTimerVisible(true);
+          return null;
         }
       });
-    }
-  
-    return () => clearInterval(timerInterval);
-  }, [startTimerOnPress, timer, isPaused, initialDuration, completedSteps]);
+      setCurrentTime((prevTime) => prevTime + 1000); 
+    }, 1000);
+  }
 
+  return () => clearInterval(timerInterval); 
+}, [startTimerOnPress, timer, isPaused, initialDuration, currentTime]); 
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -125,22 +150,25 @@ const timerIntervalRef = useRef(null);
       setIsCongratulationModalVisible(true);
     }
   
-    setCompletedSteps([]);
-  
     setTimer(null);
     setIsTimerVisible(true);
     setIsPaused(false);
-  };
+
+  setCompletedSteps([]);
+
+  console.log("Completed Steps after reset:", completedSteps);   
+};
 
   useEffect(() => {
-    setInitialDuration(recipe.timer.duration * 60);
-  }, [recipe.timer.duration]);
+    if (recipe && recipe.timer && typeof recipe.timer.duration === 'number') {
+      setInitialDuration(recipe.timer.duration * 60);
+    }
+  }, [recipe]);
+const handleButtonPress = (button) => {
+  setSelectedButton(button);
+  setShowDirections(button === 'directions');
+};
 
-  // Filter between Directions and Ingredients
-  const handleButtonPress = (button) => {
-    setSelectedButton(button);
-    setShowDirections(button === 'directions');
-  };
 //Images
 const checkboxImageSource = require('../assets/buttons/unchecked_button.png')
 const cookAlongImage = require('../assets/buttons/CookAlong.png')
@@ -149,48 +177,45 @@ const startImage = require('../assets/buttons/startButton.png')
 const shareImage = require('../assets/buttons/share.png')
 const saveImage = require('../assets/buttons/save.png')
 const checkboxImageCheckedSource = require('../assets/buttons/item_checked.png')
-
-const toggleModal = (visible) => {
-  console.log('Setting isModalVisible to:', visible);
-  setIsModalVisible(visible);
-};
 let [fontsLoaded] = useFonts({
   Montserrat_300Light,
   Montserrat_400Regular,
   Montserrat_500Medium,
   Montserrat_600SemiBold,
   Coiny_400Regular
-})
-if (!fontsLoaded) {
-  return <Text>Loading...</Text>
+});
+
+if (!fontsLoaded || !recipe) {
+  return <Text>Loading...</Text>;
 }
+  const toggleModal = (visible) => {
+    setIsModalVisible(visible);
+  };
   return (
   <ScrollView style={{backgroundColor: "white"}}>
     <View style={styles.imageContainer}>
-      <Image source={recipe.src} style={styles.image} />
+    {recipe && recipe.imageUrl && (
+  <Image source={{ uri: recipe.imageUrl }} style={styles.image} />
+)}
       <View style={styles.topButtonsContainer}>
       <View style={styles.backContainer}>
         <TouchableOpacity style={styles.backButton} onPress={()=> navigation.goBack()}>
           <Image source={backImage} style={styles.backButton} />
         </TouchableOpacity>
       </View>
-        <View style={styles.rightButtonsContainer}>
-          <Image source={shareImage} style={styles.topButtons} />
-          <Image source={saveImage} style={styles.topButtons} />
+        <View style={styles.whiteContainer}>
+      <Text style={styles.title}>{recipe.title}</Text>
         </View>
-      <View style={styles.whiteContainer}>
-        <Text style={styles.title}>{recipe.title}</Text>
-      </View>
       </View>
     </View>      
       <View style={styles.container}>
       <Text style={styles.username}>By: {recipe.username}</Text>
-        <Text style={styles.rating}>{recipe.rating}</Text>
-        {isTimerVisible && (
-            <Text style={styles.timerText}>
-              Timer: {formatTime(timer)}
-            </Text>
-        )}
+      <StarRating recipeId={currentRecipe} />
+        {recipe && recipe.timer && isTimerVisible && (
+  <Text style={styles.timerText}>
+    Timer: {formatTime(timer)}
+  </Text>
+)}
          {areTimerButtonsVisible && (
         <View>
   <View style={styles.buttonContainer}>
@@ -212,48 +237,57 @@ if (!fontsLoaded) {
       </View>
   )}
   <View>
-  <View style={[styles.servingSizeContainer, { display: isContainerVisible ? 'flex' : 'none' }]}>
+ <View style={[styles.servingSizeContainer, { display: isContainerVisible ? 'flex' : 'none' }]}>
+  {recipe && recipe.servingSize && (
+    <>
       <View style={styles.servingItem}>
-      <Pressable onPress={() => toggleModal(true)}>
-        <Text style={styles.servingValue}>{newServingSize}</Text>
-        <Text style={styles.servingLabel}>Serves</Text>
-      </Pressable>
+        <Pressable onPress={() => toggleModal(true)}>
+          <Text style={styles.servingValue}>{recipe.servingSize.serving}</Text>
+          <Text style={styles.servingLabel}>Serves</Text>
+        </Pressable>
       </View>
       <View style={styles.servingItem}>
-      <Text style={styles.servingValue}>{recipe.timer.duration}</Text>
-      <Text style={styles.servingLabel}>Mins</Text>
+        <Text style={styles.servingValue}>{recipe.timer && recipe.timer.duration}</Text>
+        <Text style={styles.servingLabel}>Mins</Text>    
       </View>
-      <View style={styles.LastServingItem}>
-      <Text style={styles.servingValue}>{recipe.ingredients.length}</Text>
+    </>
+  )}
+  {recipe && recipe.ingredients && (
+    <View style={styles.LastServingItem}>
+      <Text style={styles.servingValue}>
+        {Object.keys(recipe.ingredients).length}
+      </Text>
       <Text style={styles.servingLabel}>Ingredients</Text>
-      </View>
     </View>
-    <View style={[{paddingTop: 15}, { display: isContainerVisible ? 'flex' : 'none' }]}>
-    <Text style={styles.nutritionText}>Nutrition Per Serving</Text>
-    <View style={styles.nutritionContainer}>
-  <View style={styles.nutritionItem}>
-    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.calories}</Text>
-    <Text style={styles.nutritionLabel}>Calories</Text>
-
-  </View>
-  <View style={styles.nutritionItem}>
-    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.carbs}g</Text>
-    <Text style={styles.nutritionLabel}>Carbs</Text>
-
-  </View>
-  <View style={styles.nutritionItem}>
-    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.protein}g</Text>
-    <Text style={styles.nutritionLabel}>Protein</Text>
-
-  </View>
-  <View style={styles.lastNutritionItem}>
-    <Text style={styles.servingValue}>{recipe.servingSize.nutrition.fat}g</Text>
-    <Text style={styles.nutritionLabel}>Fat</Text>
-  </View>
-  </View>
+  )}
+</View>
+<View style={[{paddingTop: 15}, { display: isContainerVisible ? 'flex' : 'none' }]}>
+  {recipe && recipe.servingSize && recipe.servingSize.nutrition && (
+    <>
+      <Text style={styles.nutritionText}>Nutrition Per Serving</Text>
+      <View style={styles.nutritionContainer}>
+        <View style={styles.nutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.calories}</Text>
+          <Text style={styles.nutritionLabel}>Calories</Text>
+        </View>
+        <View style={styles.nutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.carbs}g</Text>
+          <Text style={styles.nutritionLabel}>Carbs</Text>
+        </View>
+        <View style={styles.nutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.protein}g</Text>
+          <Text style={styles.nutritionLabel}>Protein</Text>
+        </View>
+        <View style={styles.lastNutritionItem}>
+          <Text style={styles.servingValue}>{recipe.servingSize.nutrition.fat}g</Text>
+          <Text style={styles.nutritionLabel}>Fat</Text>
+        </View>
+      </View>
+    </>
+  )}
 </View>
       </View>
-<View style={styles.buttonContainer}>
+      <View style={styles.buttonContainer}>
   <Pressable
     style={[
       styles.button,
@@ -275,48 +309,57 @@ if (!fontsLoaded) {
     <Text style={[styles.buttonText, selectedButton === 'ingredients' && styles.selectedButtonText]}>Ingredients</Text>
   </Pressable>
 </View>
+<View style={styles.content}>
+  {selectedButton === 'directions' && recipe.directions ? (
+    <View>
+     {Object.keys(recipe.directions)
+  .sort((a, b) => parseInt(a.replace('step', '')) - parseInt(b.replace('step', '')))
+  .map((directionKey, stepIndex) => {
+    const step = recipe.directions[directionKey];
+    if (!step || typeof step.text !== 'string' ) {
+      console.error(`Invalid step object at key ${directionKey}`);
+      return null;
+    }
+    const { text } = step;
 
-        <View style={styles.content}>
-        {selectedButton === 'directions' ? (
-  <View>
-    {recipe.directions.map((step, index) => (
-      <View key={index} style={styles.stepContainer}>
+
+    return (
+      <View key={`step-${stepIndex}`} style={styles.stepContainer}>
         <View style={styles.direction}>
-  <Text style={styles.directionsNum}>{`${index + 1}.`}</Text>
-  <Text style={styles.directions}>{`${step.text}`}</Text>
-  {step.imageSource && (
-    <Image
-      source={step.imageSource}
-      style={styles.directionImage}
-    />
-  )}
-</View>
-<TouchableOpacity
-      style={{marginTop: 10, marginLeft: 5}}
-      onPress={() => {
-        if (completedSteps.includes(index)) {
-          setCompletedSteps(completedSteps.filter(i => i !== index));
-        } else {
-          setCompletedSteps([...completedSteps, index]);
-        }
-      }}
-    >
-    <Image
-    source={completedSteps.includes(index) ? checkboxImageCheckedSource : checkboxImageSource}
-    style={[{width: 25, height: 25, marginTop: 10, marginLeft: 5}, {display: isContainerVisible ? 'none' : 'flex'}]}
-    />
-    </TouchableOpacity>
-      </View>
-    ))}
-  </View>
-  ) : (
-    <View style={{width: '100%'}}>
-      {recipe.ingredients.map((item, index) => (
-        <View style={{flexDirection: 'row', flex: 1, justifyContent: "flex-start", gap: 30, alignItems: 'center'}}>
-          <Text style={styles.recipeQuantity} key={index}>{`${item.quantity}  ${item.unit}`}</Text>
-          <Text style={styles.recipe} key={index}>{`  ${item.name}`}</Text>
+          <Text style={styles.directionsNum}>{`${stepIndex + 1}.`}</Text>
+          <Text style={styles.directions}>{`${text}`}</Text>
         </View>
-      ))}
+        <TouchableOpacity
+          style={{ marginTop: 10, marginLeft: 5 }}
+          onPress={() => {
+            if (completedSteps.includes(text)) {
+              setCompletedSteps((prevCompletedSteps) => prevCompletedSteps.filter((step) => step !== text));
+            } else {
+              setCompletedSteps((prevCompletedSteps) => [...prevCompletedSteps, text]);
+            }
+            console.log("After Toggle - Completed Steps:", completedSteps);
+          }}
+        > 
+          <Image
+            source={completedSteps.includes(text) ? checkboxImageCheckedSource : checkboxImageSource}
+            style={[{ width: 25, height: 25, marginTop: 10, marginLeft: 5 }, { display: isContainerVisible ? 'none' : 'flex' }]}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  })}
+    </View>
+  ) : (
+    <View style={{ width: '100%' }}>
+      {Object.keys(recipe.ingredients).map((ingredientKey, index) => {
+        const { name, unit, quantity } = recipe.ingredients[ingredientKey];
+        return (
+          <View key={`ingredient-${index}`} style={{ flexDirection: 'row', flex: 1, justifyContent: "flex-start", gap: 30, alignItems: 'center' }}>
+            <Text style={styles.recipeQuantity} key={`quantity-${index}`}>{`${quantity} ${unit}`}</Text>
+            <Text style={styles.recipe} key={`name-${index}`}>{` ${name}`}</Text>
+          </View>
+        );
+      })}
     </View>
   )}
 </View>
@@ -334,24 +377,25 @@ Ready to Cook? Start a Cook Along to complete achievements and earn rewards!</Te
       setIsCookAlongInitiated(true)
     }}
     
-  >
-    <Text>
-      <Image source={cookAlongImage} style={styles.cookAlong}></Image>
-    </Text>
+  >      
+  <Image source={cookAlongImage} style={styles.cookAlong}></Image>
   </Pressable>
 </View>
-<ServingModal
+{recipe && (
+  <ServingModal
     isModalVisible={isModalVisible}
     setIsModalVisible={setIsModalVisible}
     recipeDetails={recipe}
     setRecipe={setRecipe}
+    currentServingSize={newServingSize}
   />
+)}
   <AchievementsModal
         isCongratulationModalVisible={isCongratulationModalVisible}
         setIsCongratulationModalVisible={setIsCongratulationModalVisible}
         currentTime={currentTime}
         startTime={startTime} 
-         setTimer={setTimer}
+         setTimer={''}
       />
       </ScrollView>
   );
@@ -367,6 +411,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingLeft: 20,
     paddingRight: 20,
+    flex: 1,
+    marginTop: 10
   },
   title: {
     color: '#000',
@@ -407,7 +453,7 @@ const styles = StyleSheet.create({
     margin: 0,
     borderBottomWidth: 2,
     borderColor: '#000',
-    width: 205, // Adjust the width as needed
+    width: 205, 
   },
 
   buttonText: {
@@ -419,13 +465,11 @@ const styles = StyleSheet.create({
   buttonWithBorder: {
     borderBottomWidth: 3,
     borderColor: '#E2E2E2',
-    width: 205, // Adjust the width as needed
+    width: 205,
   },
-
   selectedButton: {
-    borderBottomColor: '#47A695',
+    borderColor: '#47A695',
   },
-
   selectedButtonText: {
     color: '#47A695',
   },
@@ -481,8 +525,8 @@ centeredButtonContainer: {
   marginBottom: 32,
 },
   startButton: {
-    width: 101,
-    height: 41,
+    width: 100,
+    height: 45,
     marginTop: 5,
     alignSelf: 'center',
   },
@@ -653,16 +697,14 @@ centeredButtonContainer: {
     paddingHorizontal: 20
   },
   whiteContainer: {
+    flex: 1,
     position: 'absolute',
     top: 190,
     left: 0,
     right: 0,
-    height: 50,
     backgroundColor: 'white',
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     textAlign: 'center',
-    padding: 10,
-    paddingBottom: 0
   },
 });

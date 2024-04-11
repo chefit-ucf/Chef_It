@@ -5,6 +5,9 @@ import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiB
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { BlurView } from 'expo-blur';
 
+
+
+
 const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRecipe }) => {
   const [newServingSize, setNewServingSize] = useState(0);
 
@@ -21,12 +24,12 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
     Montserrat_300Light,
     Montserrat_400Regular,
     Montserrat_500Medium,
-    Montserrat_600SemiBold,
-    Coiny_400Regular
+    Montserrat_600SemiBold
   })
   if (!fontsLoaded) {
     return <Text>Loading...</Text>
   }
+
   return (
     <Modal visible={isModalVisible} transparent>
       <BlurView
@@ -34,39 +37,37 @@ const ServingModal = ({ isModalVisible, setIsModalVisible, recipeDetails, setRec
         tint="default"
         intensity={5}
       >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <View style={styles.topRow}>
-            <Pressable onPress={() => toggleModal(false)} style={styles.closeButton}>
-              <Image source={require('../assets/addRecipeButtons/x.png')} style={styles.backButton} />
-            </Pressable>
-            <View style={styles.serveTextContainer}>
-              <Text style={styles.serveText}>Input how many people this recipe will serve</Text>
-            </View>
-          </View>
-          <View style={styles.servingBox}>
-            <View>
-              <TextInput
-                style={styles.modalInput}
-                inputMode="numeric"
-                placeholder="New serving size"
-                value={newServingSize.toString()}
-                onChangeText={(text) => setNewServingSize(parseInt(text) || 0)}
-              />
-            </View>
-            <View>
-              <Pressable style={styles.modalButton} onPress={handleServesButtonPress}>
-                <Text style={styles.servingText}>Serves</Text>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.topRow}>
+              <Pressable onPress={() => toggleModal(false)} style={styles.closeButton}>
+                <Image source={require('../assets/addRecipeButtons/x.png')} style={styles.backButton} />
               </Pressable>
+              <View style={styles.serveTextContainer}>
+                <Text style={styles.serveText}>Input how many people this recipe will serve</Text>
+              </View>
+            </View>
+            <View style={styles.servingBox}>
+              <View>
+              <TextInput
+                  style={styles.modalInput}
+                  inputMode="numeric"
+                  value={newServingSize.toString()} // Ensure that the value is converted to a string
+                  onChangeText={(text) => setNewServingSize(parseInt(text))} // Convert text to a number
+              />
+              </View>
+              <View>
+                <Pressable style={styles.modalButton} onPress={handleServesButtonPress}>
+                  <Text style={styles.servingText}>Serves</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </View>
-      </View>
       </BlurView>
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   blurEffect: {
     flex: 1,

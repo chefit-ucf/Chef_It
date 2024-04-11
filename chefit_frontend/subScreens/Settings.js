@@ -1,14 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-import { Button, View, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-// For navigation
-const Stack = createNativeStackNavigator()
-
-=======
 import { Button, View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -18,11 +8,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import SwitchToggle from '../components/switch.js';
 
-import ResetEmail from './ResetEmail';
-import ResetPassword from './ResetPassword';
-import ResetUsername from './ResetUsername';
+import ResetEmail from './ResetEmail.js';
+import ResetPassword from './ResetPassword.js';
+import ResetUsername from './ResetUsername.js';
 
-import BackButton from '../components/BackButton';
+import BackButton from '../components/BackButton.js';
 
 // For navigation
 const Stack = createStackNavigator()
@@ -244,4 +234,3 @@ export default function SettingsScreen() {
         fontSize: 18,
     }
 });
->>>>>>> b3179dfdcaf7cfd4ee06c96ee25775ebe19c44c9

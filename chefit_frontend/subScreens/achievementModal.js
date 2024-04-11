@@ -2,8 +2,10 @@ import { View, Image, Text, Pressable, StyleSheet, Modal} from 'react-native';
 import { useFonts, Montserrat_300Light,Montserrat_400Regular,Montserrat_600SemiBold,Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { BlurView } from 'expo-blur';
+import { collection, onSnapshot, doc, addDoc, deleteDoc } from "firebase/firestore"
+import { db } from "../API/firebase.config.js"
 
-// Toggle Serving Modal
+
 const AchievementsModal = ({ isCongratulationModalVisible, setIsCongratulationModalVisible, currentTime, startTime}) => {
 
   const handleVisitAchievements = () => {
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
   },
   congratText: {
     fontSize: 32,
-    fontFamily: 'Coiny',
+    fontFamily: 'Coiny_400Regular',
   },
   timerText: {
     fontSize: 20,
