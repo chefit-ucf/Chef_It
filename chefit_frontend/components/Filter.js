@@ -9,7 +9,6 @@ export default function Filter({selected, setSelected}) {
       <View style={styles.top}>
         <View style={{...styles.flex, padding: 8,}}>
           <Text style={styles.text}>Recipes</Text>
-          <Text style={styles.text}>Videos</Text>
           {/* Add more Text components as needed */}
         </View>
       </View>

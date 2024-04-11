@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { StyleSheet, Text, TextInput, SafeAreaView, ScrollView, View, Dimensions, StatusBar, Pressable } from 'react-native';
-import Svg, { Path } from "react-native-svg"
+import Svg, { Path, Line } from "react-native-svg"
 
 import Filter from '../components/Filter';
 import SearchItem from '../components/SearchItem';
@@ -54,7 +54,7 @@ export default function Search({navigation}) {
     if(text.length == 0)
       return items
 
-    return items.filter(item => item.title.includes(text));
+    return items.filter(item => item.title.toLowerCase().includes(text.toLowerCase()));
   };
 
   function handlePress(){
@@ -102,10 +102,14 @@ export default function Search({navigation}) {
               /> 
             </View>
             <Pressable 
-              style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 2, backgroundColor: '#FEF3CD', paddingHorizontal: 8,paddingVertical: 8 }}
+              style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 2, backgroundColor: '#48A696', borderRadius: 4, paddingHorizontal: 8,paddingVertical: 8 }}
               onPress={() => handlePress()}
             >
-              
+              <Svg width="34" height="22" viewBox="0 0 34 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <Line x1="1.5" y1="2.36035" x2="31.5" y2="2.36035" stroke="#060606" strokeWidth="3" strokeLinecap="round"/>
+                <Line x1="10.5" y1="11.291" x2="31.8749" y2="11.291" stroke="#060606" strokeWidth="3" strokeLinecap="round"/>
+                <Line x1="19.5" y1="20.2207" x2="31.4999" y2="20.2207" stroke="#060606" strokeWidth="3" strokeLinecap="round"/>
+              </Svg>
             </Pressable>
           </View>
         </View>
