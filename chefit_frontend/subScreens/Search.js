@@ -17,18 +17,38 @@ export default function Search({navigation}) {
   })
   const [filter, setFilter] = useState(false)
   const [filteredItems, setFilteredItems] = useState(searchItems)
-
+  const pipeArray = useRef(searchItems)
   const [text, onChangeText] = useState('');
 
   useEffect(()=>{
   
-    console.log(selected)
-
+    const pipeArray = pipe(type, ingredient, cuisine)(searchItems); // Invoke pipe with initial value (searchItems)
+    setFilteredItems(pipeArray); 
+    console.log(filteredItems)
   },[selected])
 
 
   const pipe = (...functions) => input => {
     return functions.reduce((acc, fn) => fn(acc), input);
+  };
+
+  const type = (items) => {
+    if(selected.type.length == 0)
+      return items
+
+    return items.filter(item => selected.type.includes(item.type));
+  };
+  const ingredient = (items) => {
+    if(selected.ingredient.length == 0)
+      return items
+    
+    return items.filter(item => selected.ingredient.includes(item.ingredient));
+  };
+  const cuisine = (items) => {
+    if(selected.cuisine.length == 0)
+      return items
+
+    return items.filter(item => selected.cuisine.includes(item.cuisine));
   };
 
   function handlePress(){

@@ -58,12 +58,12 @@ const Item = ({itemKey, value, selected, setSelected}) =>{
   useEffect(()=>{
     const newSelected = pressed 
       ? setSelected(prevState => ({
-        ...prevState, // Copy the existing state
-        [itemKey]: [...selected[itemKey], value] // Update the specified property
+        ...prevState, // copy the existing arrays
+        [itemKey]: [...selected[itemKey], value] // update the specified property
       }))
       : setSelected(prevState => ({
-        ...prevState, // Copy the existing state
-        [itemKey]: selected[itemKey].filter((item) => item !== value)
+        ...prevState, // copy the existing arrays
+        [itemKey]: selected[itemKey].filter((item) => item !== value) // filter the specified property
       })) 
 
   }, [pressed])
