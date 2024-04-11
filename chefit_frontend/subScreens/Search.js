@@ -21,11 +21,10 @@ export default function Search({navigation}) {
   const [text, onChangeText] = useState('');
 
   useEffect(()=>{
-  
-    const pipeArray = pipe(type, ingredient, cuisine)(searchItems); // Invoke pipe with initial value (searchItems)
+    const pipeArray = pipe(type, ingredient, cuisine, search)(searchItems); // invoke pipe with initial value (searchItems)
     setFilteredItems(pipeArray); 
-    console.log(filteredItems)
-  },[selected])
+
+  },[selected, text])
 
 
   const pipe = (...functions) => input => {
@@ -49,6 +48,13 @@ export default function Search({navigation}) {
       return items
 
     return items.filter(item => selected.cuisine.includes(item.cuisine));
+  };
+
+  const search = (items) => {
+    if(text.length == 0)
+      return items
+
+    return items.filter(item => item.title.includes(text));
   };
 
   function handlePress(){
@@ -115,7 +121,7 @@ export default function Search({navigation}) {
 
         <ScrollView style={{width: "100%", paddingHorizontal: 8, }}>
           <View style={styles.flex}>
-            {filteredItems.map((source)=>(
+            {(filteredItems == []) ? null : filteredItems.map((source)=>(
               <SearchItem
               navigation={navigation}
                 key={source}
