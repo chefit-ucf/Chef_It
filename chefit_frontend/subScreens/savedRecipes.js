@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { collection, onSnapshot, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
-import { db } from "../config/firebase.js";
+import { collection, onSnapshot, doc, getDocs, updateDoc, arrayRemove, query, where } from "firebase/firestore";
+import { db, auth } from "../config/firebase.js";
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -21,30 +21,32 @@ export default function SavedRecipesScreen() {
     useEffect(() => {
         const fetchSavedRecipes = async () => {
             try {
-                const userId = "adminUser001";
-                const userDocRef = doc(db, "users", userId);
-                const userDocSnap = await getDoc(userDocRef);
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    const savedRecipeIds = userData.savedRecipes || [];
-                    const recipesCollectionRef = collection(db, "recipes");
-                    const snapshot = await onSnapshot(recipesCollectionRef, (snapshot) => {
+                const user = auth.currentUser;
+                if (user) {
+                    const currentUserUID = user.uid;
+                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+                    const querySnapshot = await getDocs(usersQuery);
+                    const userData = querySnapshot.docs.map(doc => doc.data());
+                    if (userData.length > 0 && userData[0].savedRecipes) {
+                        const savedRecipeIds = userData[0].savedRecipes;
+                        const recipesCollectionRef = collection(db, "recipes");
+                        const snapshot = onSnapshot(recipesCollectionRef, (snapshot) => {
                         const fetchedRecipes = snapshot.docs
                             .filter(doc => savedRecipeIds.includes(doc.id))
                             .map(doc => ({ id: doc.id, ...doc.data() }));
                         setRecipes(fetchedRecipes);
-                    });
-                } else {
-                    console.log("User data not found");
+                        });
+                    } else {
+                        console.log("User data not found");
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching saved recipes:", error);
             }
         };
-
-        fetchSavedRecipes();
+    fetchSavedRecipes();
     }, []);
-
+            
     const handleRemoveFromSaved = async (recipeId) => {
         try {
             const userId = "user001"; 

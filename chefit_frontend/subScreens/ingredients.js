@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'rea
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { categories } from '../components/ingredientsBar.js';
-import { db } from "../config/firebase.js";
-import { collection, onSnapshot, doc, getDoc } from "firebase/firestore";
+import { db, auth } from "../config/firebase.js";
+import { collection, onSnapshot, doc, getDocs, query, where } from "firebase/firestore";
 
 const RenderIngredients = ({ index }) => {
   const [ings, setIngs] = useState([]);
@@ -43,35 +43,41 @@ else if (index === 9) {
 else if (index === 10) {
     category = "alcoholBevs";
 }
- 
-
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        const userId = "adminUser001"; 
-        const userDocRef = doc(db, "users", userId);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          const userIngredients = userDocSnap.data().userIngredients;
+useEffect(() => {
+  const fetchIngredients = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const currentUserUID = user.uid;
+        const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+        const querySnapshot = await getDocs(usersQuery);
+        const userData = querySnapshot.docs.map(doc => doc.data());
+        if (userData.length > 0 && userData[0].userIngredients) {
+          const userIngredients = userData[0].userIngredients;
           const ingredients = userIngredients[category];
-          const mappedIngredients = Object.values(ingredients).map((ingredient) => ({
-            id: userId, 
-            viewing: false,
-            ...ingredient,
-            src: { uri: ingredient.src },
-          }));
-          setIngs(mappedIngredients);
+          if (ingredients) {
+            const mappedIngredients = Object.values(ingredients).map((ingredient) => ({
+              id: ingredient.id, 
+              viewing: false,
+              ...ingredient,
+              src: { uri: ingredient.src },
+            }));
+            setIngs(mappedIngredients);
+          } else {
+            console.log("No ingredients found for category:", category);
+            setIngs([]);
+          }
         } else {
           console.log("User data not found");
-          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching ingredients:", error);
-      }
-    };
+      }  
+    } catch (error) {
+      console.error("Error fetching ingredients:", error);
+    }
+  };
 
-    fetchIngredients();
-  }, [index]);
+  fetchIngredients();
+}, [category]);
 
   if (!ings || ings.length === 0) {
     return (

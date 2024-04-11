@@ -1,9 +1,8 @@
 import React, {useEffect , useState} from 'react';
-
 import { SafeAreaView, ScrollView, View, Text, TextInput , Dimensions, StyleSheet, Pressable} from 'react-native';
 import Svg, { Path } from "react-native-svg"
 import Swiper from "../components/Swiper.js"
-import Slider, { DetailedSlider } from "../components/Slider.js"
+import Slider, { DetailedSlider, SliderSeasonal } from "../components/Slider.js"
 
 
 import { swiper, slider1, slider2, slider3 } from "../API/sliderData.js"
@@ -16,6 +15,10 @@ export default function ExploreScreen({navigation}) {
 
   const [swiperData, setSwiperData] = useState([])
   const [sliderData, setSliderData] = useState([])
+  const [sliderCategoriesData, setSliderCategoriesData] = useState([])
+  const [sliderSeasonalData, setSliderSeasonalData] = useState([])
+
+
 
 // data request for swiper
 useEffect(() => {
@@ -23,31 +26,84 @@ useEffect(() => {
   onSnapshot(swiperQuery, (snapshot) => {
     setSwiperData([]);
 
-  snapshot.docs.forEach((doc) => {
-    const slides = doc.data();
-    
-    const maps = slides["slides"]
-    const mappedIngredients = Object.values(maps).map((slide) => ({
-      ...slide,
-      src: {uri: slide.src}
-    }));
-    setSwiperData([...mappedIngredients]);
-  });
-});
+    snapshot.docs.forEach((doc) => {
+      const slides = doc.data();
+      
+      const maps = slides["slides"]
+      const mappedIngredients = Object.values(maps).map((slide) => ({
+        ...slide,
+      }));
+      setSwiperData([...mappedIngredients]);
+    });
 
+    // Console log swiperData here
+    console.log("Swiper Data:", swiperData);
+  });
 }, []);
 
-  // data request for slider 
-  useEffect(()=>{
-    const sliderQuery = collection(db, "slider")
-    onSnapshot(sliderQuery, (snapshot) => {
-      let sliderList = []
-      snapshot.docs.map((doc)=> sliderList.push({...doc.data(), id: doc.id}))
-      setSliderData(sliderList)
-    })
-    console.log(sliderData)
-  }, [])
+// data request for swiper
+useEffect(() => {
+  const swiperQuery = collection(db, "slider");
+  onSnapshot(swiperQuery, (snapshot) => {
+    setSliderData([]);
 
+    snapshot.docs.forEach((doc) => {
+      const slides = doc.data();
+      
+      const maps = slides["slides"]
+      const mappedIngredients = Object.values(maps).map((slide) => ({
+        ...slide,
+      }));
+      setSliderData([...mappedIngredients]);
+    });
+
+    // Console log swiperData here
+    console.log("Slider Data:", sliderData);
+  });
+}, []);
+
+// data request for slider2
+useEffect(() => {
+  const swiperQuery = collection(db, "slider");
+  onSnapshot(swiperQuery, (snapshot) => {
+    setSliderCategoriesData([]);
+
+    snapshot.docs.forEach((doc) => {
+      const slides = doc.data();
+      
+      const maps = slides["sliderCategories"]
+      const mappedIngredients = Object.values(maps).map((slide) => ({
+        ...slide,
+      }));
+      setSliderCategoriesData([...mappedIngredients]);
+    });
+
+    // Console log swiperData here
+    console.log("Slider Data:", sliderCategoriesData);
+  });
+}, []);
+
+
+// data request for Seasonal Recipes slider
+useEffect(() => {
+  const swiperQuery = collection(db, "slider");
+  onSnapshot(swiperQuery, (snapshot) => {
+    setSliderSeasonalData([]);
+
+    snapshot.docs.forEach((doc) => {
+      const slides = doc.data();
+      
+      const maps = slides["seasonalSlider"]
+      const mappedIngredients = Object.values(maps).map((slide) => ({
+        ...slide,
+      }));
+      setSliderSeasonalData([...mappedIngredients]);
+    });
+
+    // Console log swiperData here
+    console.log("Slider Data:", sliderSeasonalData);
+  });
+}, []);
 
   return <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1 }}>
     <ScrollView style={{marginBottom: 62}}>
@@ -71,39 +127,52 @@ useEffect(() => {
       </View>
       
       <Swiper 
-        items={swiperData}
-        swiper={swiper}
-        width={width}
-        height={height}
-      />
-      <Slider 
-        title={"Trending Recipes"}
-        items={slider1}
-        slider={sliderData}
-        width={width}
-        height={height}
-      />
+  items={swiperData}
+  swiper={swiper}
+  width={width} 
+  height={height}
+  navigation={navigation}
+/>
       <DetailedSlider
-        title={"For You Recipes"}
-        items={slider2}
-        width={width /1.1}
-        height={height}
-      />
-      <Slider 
-        title={"Seasonal Recipes"}
-        items={slider3}
-        width={width}
-        height={height}
-      />
+  key={"trending"}
+  title={"Trending Recipes"}
+  items={sliderCategoriesData}
+  width={width /1.1}
+  height={height}
+/>
+
+<DetailedSlider
+  key={"for_you"} 
+  title={"For You Recipes"}
+  items={sliderData}
+  width={width /1.1}
+  height={height}
+/>
+
+<DetailedSlider
+  key={"seasonal"}
+  title={"Seasonal Recipes"}
+  items={sliderSeasonalData}
+  width={width}
+  height={height}
+/>
       
     </ScrollView>
 </SafeAreaView>
   
 }
 const styles = StyleSheet.create({
-  base:{
+  base: {
+    width: '100%',
     paddingHorizontal: 16,
+    marginBottom: 16, 
     display: "flex",
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
-  
 });
