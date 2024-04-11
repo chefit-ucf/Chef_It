@@ -23,11 +23,19 @@ export default function Dropdown({ icon, food }) {
           onPress={handlePress}>
           {!extend
             ? <Image
+<<<<<<< HEAD
               source={require('../assets/actionIcons/add.png')}
               style={styles.pic}
             />
             : <Image
               source={require('../assets/actionIcons/minus.png')}
+=======
+              source={require('../assets/buttons/add.png')}
+              style={styles.pic}
+            />
+            : <Image
+              source={require('../assets/buttons/minus.png')}
+>>>>>>> b3179dfdcaf7cfd4ee06c96ee25775ebe19c44c9
               style={styles.pic}
             />
           }
@@ -49,7 +57,11 @@ export default function Dropdown({ icon, food }) {
             <View style={{ ...styles.flex, gap: 12}}>
               <Text>450 cal </Text>
               <Image
+<<<<<<< HEAD
                 source={require('../assets/actionIcons/x.png')}  // Assuming icon is the correct source for the image
+=======
+                source={require('../assets/addRecipeButtons/x.png')}  // Assuming icon is the correct source for the image
+>>>>>>> b3179dfdcaf7cfd4ee06c96ee25775ebe19c44c9
                 style={styles.pic}
               />
             </View>
@@ -75,7 +87,18 @@ const styles = StyleSheet.create({
   box: {
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 12,
+<<<<<<< HEAD
     borderRadius: 12
+=======
+    borderRadius: 12,
+    shadowColor: "#494949",
+    shadowOffset: {
+        width: 0,
+        height: 5,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 3
+>>>>>>> b3179dfdcaf7cfd4ee06c96ee25775ebe19c44c9
   },
   flex: {
     flexDirection: 'row',
@@ -99,4 +122,8 @@ const styles = StyleSheet.create({
 
   },
   pic: {},
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> b3179dfdcaf7cfd4ee06c96ee25775ebe19c44c9

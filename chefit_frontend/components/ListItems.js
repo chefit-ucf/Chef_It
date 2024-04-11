@@ -26,4 +26,8 @@ export default function ListItems({title, list}) {
         </ListItem>
       ))}
     </ListItem.Accordion>
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b3179dfdcaf7cfd4ee06c96ee25775ebe19c44c9
