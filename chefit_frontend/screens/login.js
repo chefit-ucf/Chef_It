@@ -6,40 +6,41 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+// backend additions
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../API/firebase.config';
 
-// Just for testing purposes, back-end will be applied later
-const loginData = ([
-    {username: "Test", password: "Test1@"},
-])
 
 export default function LoginScreen({navigation}) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [loginMsg, setLoginMsg] = useState(false)
 
-    const checkLogin = (username,password) => {
-    const userInput = loginData.map(item => {
-      if (item.username === username && item.password === password) {
-        setLoginMsg(false)
-        navigation.navigate("Home")
-      } else {
-        setLoginMsg(true)
-      }
-    })
-  }
+
+  const handleSignIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, username, password);
+      console.log('User signed in successfully:', userCredential.user);
+      setLoginMsg(false)
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Sign in failed:', error);
+      setLoginMsg(true)
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.backContainer}>
         <TouchableOpacity style={styles.backButton} onPress={()=> navigation.goBack()}>
-          <Image source={require('../assets/buttons/backButton.png')} style={styles.backButton} />
+          <Image source={require('../assets/actionIcons/backButton.png')} style={styles.backButton} />
         </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>
       <Text style={styles.titleText}>Login</Text>
       <Text style={styles.introText}>Welcome back you've been missed!</Text>
       <View style={styles.loginContainer}>
-          <TextInput style={styles.input} placeholder='Username/Email' value={username} onChangeText={text=>setUsername(text)}/>
+          <TextInput style={styles.input} placeholder='Email Address' value={username} onChangeText={text=>setUsername(text)}/>
       </View>
       <View style={styles.loginContainer}>
           <TextInput style={styles.input} placeholder='Password' value={password} secureTextEntry onChangeText={text=>setPassword(text)}/>
@@ -47,7 +48,7 @@ export default function LoginScreen({navigation}) {
       {loginMsg? (
         <Text style={styles.errorText}>Invalid Username or Password. Try Again</Text> ) : ( <Text></Text>)
       }
-      <TouchableOpacity style={styles.button} onPress={() => checkLogin(username,password)}>
+      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
                 <Text style={styles.buttonText}>LOGIN</Text>
       </TouchableOpacity>
       <Text style={styles.accountText}>Don't have an account?</Text>

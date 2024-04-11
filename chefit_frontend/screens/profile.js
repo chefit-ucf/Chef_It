@@ -10,8 +10,8 @@ import DisplayAchievements from '../subScreens/DisplayAchievements';
 import SettingsScreen from '../subScreens/Settings';
 import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
 import { Coiny_400Regular } from '@expo-google-fonts/coiny';
-import { db } from "../API/firebase.config.js";
-import { doc, collection, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { db, auth } from "../API/firebase.config.js";
+import { doc, collection, getDoc, onSnapshot, updateDoc, query, where, getDocs } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -82,9 +82,43 @@ const Star = ({ filled }) => (
     }
   };
 
-  const MyRecipes = () => (
+  function MyRecipes({navigation}){
+    
+    const [recipes, setRecipes] = useState([]);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const user = auth.currentUser;
+                if (user) {
+                    const currentUserUID = user.uid;
+                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+                    const querySnapshot = await getDocs(usersQuery);
+                    const userData = querySnapshot.docs.map(doc => doc.data());
+                    if (userData.length > 0 && userData[0].username) {
+                        const username = userData[0].username; // Get the username from the user data
+                        const recipesQuery = query(collection(db, 'recipes'), where('username', '==', username));
+                        const recipesSnapshot = await getDocs(recipesQuery);
+                        const userRecipes = recipesSnapshot.docs.map(doc => doc.data());
+                        if (userRecipes.length > 0) {
+                            setRecipes(userRecipes);
+                        } else {
+                            console.log('User recipes not found.');
+                        }
+                    } else {
+                        console.log('Username not found in user data.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+    
+        fetchUserData();
+    }, []);
+    return (
     <View style={styles.container}>
-      {recipes.map((recipe) => (
+            {recipes.map((recipe, index) => (
         <View key={recipe.id} style={styles.recipeContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
             <Image
@@ -110,22 +144,53 @@ const Star = ({ filled }) => (
         </View>
       ))}
       </View>
-  );
-  const MyAchievements = () => (
+    );
+  }
+  function MyAchievements({ navigation }) {
+    const [achievements, setAchievements] = useState([]);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const user = auth.currentUser;
+                if (user) {
+                    const currentUserUID = user.uid;
+                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+                    const querySnapshot = await getDocs(usersQuery);
+                    const userData = querySnapshot.docs.map(doc => doc.data());
+                    if (userData.length > 0 && userData[0].achievements) {
+                        setAchievements(userData[0].achievements);
+                    } else {
+                        console.log('User data or achievements not found.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    return (
         <View style={styles.Achievementcontainer}>
-              {testuserInfo.userAchievements.map((achievement, index) => (
-                <AchievementsButton
-                  key={index}
-                  title={achievement.trigger ? achievement.title : "Locked Achievement"}
-                  description={achievement.trigger ? achievement.UnlockedDescription : achievement.LockedDescription}
-                  unlockedImage={achievement.trigger ? achievement.UnlockedImage : achievement.LockedImage}
-                  navigation={navigation}
-                  timeTriggered={achievement.timeTriggered}
-                  rewardImage={achievement.trigger ? achievement.rewardImage : achievement.lockedReward}
-                />
-              ))}
+            {achievements.map((achievement, index) => {
+                return (
+                    <AchievementsButton
+                        key={index}
+                        title={achievement.trigger ? achievement.title : "Locked Achievement"}
+                        description={achievement.trigger ? achievement.UnlockedDescription : achievement.LockedDescription}
+                        unlockedImage={achievement.trigger ? achievement.UnlockedImage : achievement.LockedImage}
+                        navigation={navigation}
+                        timeTriggered={achievement.timeTriggered}
+                        rewardImage={achievement.trigger ? achievement.rewardImage : achievement.lockedReward}
+                    />
+                );
+            })}
         </View>
-  );
+    );
+}
+
 
     return (
         <View>
@@ -153,8 +218,8 @@ const Star = ({ filled }) => (
               <MyRecipes />
             </TabView.Item>
             <TabView.Item>
-              <MyAchievements />
-            </TabView.Item>
+          <MyAchievements navigation={navigation}/>
+        </TabView.Item>
           </TabView>
         </View>
     );

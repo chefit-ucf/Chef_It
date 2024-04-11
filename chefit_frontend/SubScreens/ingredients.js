@@ -3,12 +3,12 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { categories } from '../components/ingredientsBar.js'
 import { testuserInfo } from '../API/data.js';
-import { db } from "../API/firebase.config.js";
-import { collection, onSnapshot } from "firebase/firestore";
+import { db, auth } from "../API/firebase.config.js";
+import { doc, collection, getDoc, onSnapshot, updateDoc, query, where, getDocs } from 'firebase/firestore';
 
 const RenderIngredients = ( {index} ) => {
     const [ings, setIngs] = useState([]);
-    const ingredientsCollection = collection(db, "users");
+
     let category;
 
     if (index === 0) {
@@ -46,35 +46,41 @@ const RenderIngredients = ( {index} ) => {
     }
 
     useEffect(() => {
-        const render = onSnapshot(ingredientsCollection, (snapshot) => {
-            setIngs([]);
-          snapshot.docs.forEach((doc) => {
-            const userIngredients = doc.data().userIngredients;
-            const ingredients = userIngredients[category];
-            const mappedIngredients = Object.values(ingredients).map((ingredient) => ({
-              id: doc.id,
-              viewing: false,
-              ...ingredient,
-              src: { uri: ingredient.src },
-            }));
-            setIngs((prevIngs) => [...prevIngs, ...mappedIngredients]);
-          });
-        });
-    
-        return () => render();
-      }, [index]);
-    
+        const fetchIngredients = async () => {
+            try {
+                const currentUser = auth.currentUser;
+                if (currentUser) {
+                    const userId = currentUser.uid;
+                    const ingredientsCollection = collection(db, "users");
+                    const ingredientsQuery = query(ingredientsCollection, where("UID", "==", userId));
+                    const unsubscribe = onSnapshot(ingredientsQuery, (snapshot) => {
+                        const userIngredients = snapshot.docs[0].data().userIngredients; // Assuming there's only one user document
+                        const ingredientsForCategory = userIngredients[category] || []; // Get ingredients for the selected category
+                        const ingredients = Object.values(ingredientsForCategory).map((ingredient) => ({
+                            id: ingredient.id,
+                            category: category,
+                            ...ingredient,
+                        }));
+                        setIngs(ingredients);
+                    });
+                    return () => unsubscribe();
+                }
+            } catch (error) {
+                console.error('Error fetching ingredients:', error);
+            }
+        };
+        fetchIngredients();
+    }, [category]); // Update useEffect dependency to category
       const listOfIngredients = ings;
    
     return (
         <View style={{flex: 1, paddingBottom: 100, backgroundColor: "#F8FAF8"}}>
             <ScrollView vertical>
-                {listOfIngredients.map((item, i) => (
+            {listOfIngredients.map((item, i) => (
                         <View key={i} style={styles.ingredientsContainer}>
                         <Text style={styles.ingredientTitle}>{item.title}</Text>
                         <View style={styles.nutritionContainer}>
-                            <Image source={item.src} resizeMode='cover'
-                            style={{width: 100, height: 100, ...styles.shadow}} />
+                        <Image source={{ uri: item.src }} resizeMode='cover' style={{ width: 100, height: 100, ...styles.shadow }} />
                             <Text style={styles.ingredientInfo}>Calories:{"\n"}Fats:{"\n"}Carbs:{"\n"}Protein:</Text>
                             <Text style={styles.ingredientInfo}>{item.nutrition.calories}{"\n"}{item.nutrition.fats}{"\n"}{item.nutrition.carbs}{"\n"}{item.nutrition.protein}</Text>
                         </View>

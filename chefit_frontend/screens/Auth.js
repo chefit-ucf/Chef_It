@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -38,71 +38,72 @@ const CustomTabBarButton = ({children, onPress}) => (
 );
 
 function HomeScreen() {
-    return (
-        <Tab.Navigator 
-          tabBarOptions={{showLabel: false}}
-          screenOptions={{
-            headerShown: false,
-            tabBarStyle: {
-              position: 'absolute',
-              bottom: 30,
-              left: 20,
-              right: 20,
-              height: 70,
-              borderRadius: 20,
-              ...styles.shadow
-            }
-          }}
-          initialRouteName='Explore' 
-        >
-            <Tab.Screen name="Explore" component={ExploreScreen} options={{
-              tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
-                  <Image source={require('../assets/navIcons/search.png')}
-                  resizeMode='contain'
-                  style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
-                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 6}}>Explore</Text>
-                </View>
-              )
-            }}/>
-            <Tab.Screen name="Pantry" component={PantryScreen} options={{
-              tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
-                  <Image source={require('../assets/navIcons/pantry.png')}
-                  resizeMode='contain'
-                  style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
-                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 4}}>Pantry</Text>
-                </View>
-              )
-            }} />
-            <Tab.Screen name="AddRecipe" component={AddRecipeScreen} options={{
-              tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
-                  <Image source={require('../assets/navIcons/addRecipes.png')}
-                  resizeMode='contain'
-                  style={{width: 38, height: 38, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
-                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14}}>Add Recipe</Text>
-                </View>
-              )
-            }}/>
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{
-              tabBarIcon: ({focused}) => (
-                <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
-                  <Image source={require('../assets/navIcons/profile.png')}
-                  resizeMode='contain'
-                  style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
-                  <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 5}}>Profile</Text>
-                </View>
-              )
-            }}/>
-        </Tab.Navigator>
-    );
+  let windowHeight = Dimensions.get('window').height;
+  return (
+      <Tab.Navigator 
+        tabBarOptions={{showLabel: false}}
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            position: 'absolute',
+            bottom: 30,
+            left: 20,
+            right: 20,
+            height: windowHeight * 0.08,
+            borderRadius: 20,
+            ...styles.shadow
+          }
+        }}
+        initialRouteName='Explore' 
+      >
+          <Tab.Screen name="Explore" component={ExploreScreen} options={{
+            tabBarIcon: ({focused}) => (
+              <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
+                <Image source={require('../assets/navIcons/search.png')}
+                resizeMode='contain'
+                style={{width: 25, height: 25, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
+                <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 6}}>Explore</Text>
+              </View>
+            )
+          }}/>
+          <Tab.Screen name="Pantry" component={PantryScreen} options={{
+            tabBarIcon: ({focused}) => (
+              <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
+                <Image source={require('../assets/navIcons/pantry.png')}
+                resizeMode='contain'
+                style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
+                <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 4}}>Pantry</Text>
+              </View>
+            )
+          }} />
+          <Tab.Screen name="AddRecipe" component={AddRecipeScreen} options={{
+            tabBarIcon: ({focused}) => (
+              <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
+                <Image source={require('../assets/navIcons/addRecipes.png')}
+                resizeMode='contain'
+                style={{width: 38, height: 38, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
+                <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14}}>Add Recipe</Text>
+              </View>
+            )
+          }}/>
+          <Tab.Screen name="Profile" component={ProfileScreen} options={{
+            tabBarIcon: ({focused}) => (
+              <View style={{alignItems: 'center', justifyContent: 'center', paddingTop: 25}}>
+                <Image source={require('../assets/navIcons/profile.png')}
+                resizeMode='contain'
+                style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
+                <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 5}}>Profile</Text>
+              </View>
+            )
+          }}/>
+      </Tab.Navigator>
+  );
 }
 
 export default function Auth(props) {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Home">
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
