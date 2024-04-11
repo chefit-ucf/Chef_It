@@ -17,30 +17,19 @@ export default function Search({navigation}) {
   })
   const [filter, setFilter] = useState(false)
   const [filteredItems, setFilteredItems] = useState(searchItems)
-  const arrayFilter = useRef(searchItems)
 
   const [text, onChangeText] = useState('');
+
+  useEffect(()=>{
+  
+    console.log(selected)
+
+  },[selected])
+
 
   const pipe = (...functions) => input => {
     return functions.reduce((acc, fn) => fn(acc), input);
   };
-
-  useEffect(()=>{
-    console.log(selected)
-  },[selected])
-
-
-
-  function type(){
-    return 
-  }
-  function ingredient(){
-    return arrayFilter.current.filter((item)=> selected.includes(item.ingredient))
-  }
-
-
-
-
 
   function handlePress(){
     setFilter(!filter)
