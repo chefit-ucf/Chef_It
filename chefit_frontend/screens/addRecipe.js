@@ -12,9 +12,12 @@ import {
     addDoc,
     deleteDoc,
     getDoc,
-    setDoc
+    setDoc,
+    getDocs,
+    query, 
+    where
 } from "firebase/firestore";
-import { db } from "../API/firebase.config.js";
+import { db, auth } from "../API/firebase.config.js";
 import { storage } from "../API/firebase.config.js";
 import { v4 } from "uuid"
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -28,6 +31,7 @@ export default function AddRecipeScreen() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [savedToPantry, setSavedToPantry] = useState(false);
     const [recipeName, setRecipeName] = useState('');
+    const [rating, setRating] = useState('');
     const [servingSize, setServingSize] = useState('');
     const [duration, setDuration] = useState('');
     const [calories, setCalories] = useState('');
@@ -36,11 +40,9 @@ export default function AddRecipeScreen() {
     const [fat, setFat] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [imageUpload, setImageUpload] = useState(null);
-    const [username, setUsername] = useState('adminUser001'); 
-    const [directions, setDirections] = useState([{ text: ''}]);
+    const [username, setUsername] = useState(null); 
+    const [directions, setDirections] = useState([{ text: '', checkpoint: 0 }]);
     const [ingredients, setIngredients] = useState([{ name: '', quantity: '' , unit: '' }]);
-    const [privateMode, setPrivateMode] = useState(false); 
-
 
     const renderIngredientInputs = () => {
       return ingredients.map((ingredient, index) => (
@@ -63,12 +65,10 @@ export default function AddRecipeScreen() {
                   value={ingredient.unit}
                   onChangeText={(unit) => handleIngredientChange(ingredient.name, unit, ingredient.quantity, index)}
               />
-                           {ingredients.length > 1 && (
+             
                   <Pressable onPress={() => handleRemoveIngredient(index)}>
                       <Image source={removeButton} style={styles.removeButton}></Image>
                   </Pressable>
-                                )}
-
           </View>
       ));
   };
@@ -123,72 +123,78 @@ const addIngredientInput = () => {
 };
   
 const handleAddRecipe = async () => {
-    try {
-        // Add recipe image to Firebase Storage
-        const imageResponse = await fetch(imageUrl);
-        const imageBlob = await imageResponse.blob();
-        const imageRef = ref(storage, `images/${v4()}`);
-        await uploadBytes(imageRef, imageBlob);
-        const imageURL = await getDownloadURL(imageRef);
-    
-        // Generate unique unsaved ID for the recipe
-        const unsavedId = v4();
-    
+  try {
+    // Add recipe image to Firebase Storage
+    const imageResponse = await fetch(imageUrl);
+    const imageBlob = await imageResponse.blob();
+    const imageRef = ref(storage, `images/${v4()}`);
+    await uploadBytes(imageRef, imageBlob);
+    const imageURL = await getDownloadURL(imageRef);
 
-    // Add recipe to Firestore
-    const docRef = await addDoc(collection(db, 'recipes'), {
-        savedid: unsavedId, // Assign the unsaved ID
-        title: recipeName,
-        ingredients: ingredients,
-        directions: directions,
-        timer: { duration: duration, unit: 'minutes' },
-        servingSize: {
+    // Generate unique unsaved ID for the recipe
+    const unsavedId = v4();
+    const user = auth.currentUser;
+
+    if (user) {
+      const currentUserUID = user.uid;
+      const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+      const querySnapshot = await getDocs(usersQuery);
+      const userData = querySnapshot.docs.map(doc => doc.data());
+      if (userData.length > 0 && userData[0].username) {
+        const currentUserDisplayName = userData[0].username; // Get the username from the user data
+        setUsername(currentUserDisplayName || 'Guest'); // Set username to displayName if available, otherwise set to 'Guest'
+
+        // Add recipe to Firestore
+        const docRef = await addDoc(collection(db, 'recipes'), {
+          savedid: unsavedId, // Assign the unsaved ID
+          title: recipeName,
+          rating: rating,
+          ingredients: ingredients,
+          directions: directions,
+          timer: { duration: duration, unit: 'minutes' },
+          servingSize: {
             servings: servingSize,
             ingredients: ingredients.length,
             nutrition: {
-                calories: calories,
-                carbs: carbs,
-                protein: protein,
-                fat: fat
+              calories: calories,
+              carbs: carbs,
+              protein: protein,
+              fat: fat
             }
-        },
-        imageUrl: imageURL,
-        username: username,
-        privateMode: privateMode
-    });
+          },
+          imageUrl: imageURL,
+          username: currentUserDisplayName, // Use currentUserDisplayName as username
+        });
 
-  
-
-      const userDocRef = doc(db, 'users', username);
-      const swiperDocRef = doc(db, 'swiper', 'swiperSlides');
-      const userDocSnapshot = await getDoc(userDocRef);
-      if (userDocSnapshot.exists()) {
+        // Update user document with saved recipe
+        const userDocRef = doc(db, 'users', currentUserDisplayName);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
           const userData = userDocSnapshot.data();
           const updatedSavedRecipes = [...userData.recipes, docRef.id];
-          const updatedSwiperRecipes = [...db.swiper, swiperDocRef.id];
-          await setDoc(userDocRef, {
-            recipes: updatedSavedRecipes,
-            swiper: updatedSwiperRecipes
-        }, { merge: true });
-      } else {
-          console.error('User data not found for username: ', username);
-      }
-      console.log('Recipe added with ID: ', docRef.id);
+          await setDoc(userDocRef, { recipes: updatedSavedRecipes }, { merge: true });
+        } else {
+          console.error('User data not found for username: ',currentUserDisplayName);
+        }
 
-      // Clear input fields after saving
-      setRecipeName('');
-      setServingSize('');
-      setDuration('');
-      setCalories('');
-      setCarbs('');
-      setProtein('');
-      setFat('');
-      setImageUrl('');
-      setDirections([]);
-      setIngredients([]);
-      setPrivateMode()
+        console.log('Recipe added with ID: ', docRef.id);
+
+        // Clear input fields after saving
+        setRecipeName('');
+        setRating('');
+        setServingSize('');
+        setDuration('');
+        setCalories('');
+        setCarbs('');
+        setProtein('');
+        setFat('');
+        setImageUrl('');
+        setDirections([]);
+        setIngredients([]);
+      }
+    }
   } catch (error) {
-      console.error('Error adding recipe: ', error);
+    console.error('Error adding recipe: ', error);
   }
 };
     let [fontsLoaded] = useFonts({
@@ -291,7 +297,7 @@ const handleFatChange = (text) => {
 }
 return (
     <SafeAreaView style={{ backgroundColor: '#FDFEFC', flex: 1, }}>
-     <ScrollView>
+            <ScrollView>
     <View style={styles.screenContainer}>
     <View style={styles.header}>
         <Text style={styles.title}>Create Recipe</Text>
@@ -304,7 +310,12 @@ return (
           value={recipeName}
           onChangeText={setRecipeName}>
         </TextInput>
-     
+        <TextInput
+          style={styles.recipeInput}
+          placeholder="Rating"
+          value={rating}
+          onChangeText={setRating}
+        />
         <TextInput
           style={styles.recipeInput}
           placeholder="Serving Size"
@@ -378,16 +389,6 @@ return (
         </View>
         </View>
         {renderDirectionInputs()}
-      </View>
-      <View style={styles.privateMode}>
-        <Text style={styles.privateText}>Private Mode</Text>
-        <Switch
-          trackColor={{ false: '#E9E9EA', true: '#47A695' }}
-          thumbColor={isEnabled ? 'white' : 'white'}
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-          style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
-        />
       </View>
       <AddIngredientModal
         isModalVisible={isModalVisible}

@@ -25,9 +25,8 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
     const [ingredientFat, setIngredientFat] = useState('');
     const [ingredientType, setIngredientType] = useState('');
     const [imageUrl, setImageUrl] = useState('');
-    const [username, setUsername] = useState('adminUser001'); // Set the default username
+    const [username, setUsername] = useState('adminUser001'); 
 
-    // Mapping between displayed values and database values
     const typeMapping = {
         "Alcohol & Beverages": "alcoholBevs",
         "Baking": "baking",
@@ -48,7 +47,7 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
         if (ingredientName && ingredientCalories && ingredientCarbs && ingredientProtein && ingredientFat && ingredientType && imageUrl) {
             try {
                 const ingredientData = {
-                    [v4()]: { // Generate unique ID for the ingredient
+                    [v4()]: { 
                         title: ingredientName,
                         type: typeMapping[ingredientType],
                         src: imageUrl,
@@ -61,35 +60,27 @@ const AddIngredientModal = ({ isModalVisible, setIsModalVisible, onSaveToPantry 
                     }
                 };
     
-                // Reference to the user's document
                 const userDocRef = doc(db, 'users', username);
     
-                // Get the user's document snapshot
                 const userDocSnapshot = await getDoc(userDocRef);
     
-                // Check if the user's document exists
                 if (userDocSnapshot.exists()) {
                     const userData = userDocSnapshot.data();
     
                     const updatedUserIngredients = userData.userIngredients || {};
     
-                    // Ensure the ingredient type exists in userIngredients
                     if (!updatedUserIngredients.hasOwnProperty(typeMapping[ingredientType])) {
-                        // If the type doesn't exist, initialize it as an empty object
                         updatedUserIngredients[typeMapping[ingredientType]] = {};
                     }
     
-                    // Merge the new ingredientData with the existing userIngredients
                     updatedUserIngredients[typeMapping[ingredientType]] = {
                         ...updatedUserIngredients[typeMapping[ingredientType]],
                         ...ingredientData
                     };
     
-                    // Update the user's document with the new userIngredients
                     await setDoc(userDocRef, { userIngredients: updatedUserIngredients }, { merge: true });
                 }
     
-                // Clear input fields after saving
                 setIngredientName('');
                 setIngredientCalories('');
                 setIngredientCarbs('');
