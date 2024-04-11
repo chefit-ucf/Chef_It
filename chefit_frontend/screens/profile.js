@@ -29,141 +29,117 @@ const Star = ({ filled }) => (
     </View>
   );
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+  function MyRecipes({ navigation }) {
+    const [recipes, setRecipes] = useState([]);
+    const [savedRecipeIds, setSavedRecipeIds] = useState([]);
+  
+    useEffect(() => {
+      const fetchUserData = async () => {
         try {
-            const user = auth.currentUser;
-            if (user) {
-                const currentUserUID = user.uid;
-                const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
-                const querySnapshot = await getDocs(usersQuery);
-                const userData = querySnapshot.docs.map(doc => doc.data());
-                if (userData.length > 0 && userData[0].username) {
-                    const username = userData[0].username; // Get the username from the user data
-                    const recipesQuery = query(collection(db, 'recipes'), where('username', '==', username));
-                    const recipesSnapshot = await getDocs(recipesQuery);
-                    const userRecipes = recipesSnapshot.docs.map(doc => doc.data());
-                    if (userRecipes.length > 0) {
-                        setRecipes(userRecipes);
-                    } else {
-                        console.log('User recipes not found.');
-                    }
-                } else {
-                    console.log('Username not found in user data.');
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-        }
-    };
-
-    fetchUserData();
-}, []);
-
-  const unSavedImage = require('../assets/buttons/unsavedButton.png');
-  const savedImage = require('../assets/buttons/saveButton.png');
-
-  const handleSavePress = async (recipeId) => {
-    try {
-        const user = auth.currentUser;
-        if (user) {
+          const user = auth.currentUser;
+          if (user) {
             const currentUserUID = user.uid;
             const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
             const querySnapshot = await getDocs(usersQuery);
             const userData = querySnapshot.docs.map(doc => doc.data());
-            
-            if (userData && userData.length > 0) {
-                const userDataObject = userData[0];
-                const savedRecipesArray = userDataObject.savedRecipes || []; // Ensure savedRecipes is an array
-                let updatedSavedRecipeIds = [...savedRecipesArray];
-                
-                if (!updatedSavedRecipeIds.includes(recipeId)) {
-                    updatedSavedRecipeIds.push(recipeId);
-                } else {
-                    updatedSavedRecipeIds = updatedSavedRecipeIds.filter(id => id !== recipeId);
-                }
-
-                console.log("Updating saved recipes with:", updatedSavedRecipeIds);
-                console.log("Document ID:", querySnapshot.docs[0].id);
-
-                await updateDoc(doc(db, 'users', querySnapshot.docs[0].id), {
-                    savedRecipes: updatedSavedRecipeIds
-                });
+            if (userData.length > 0 && userData[0].username) {
+              const username = userData[0].username;
+              const recipesQuery = query(collection(db, 'recipes'), where('username', '==', username));
+              const recipesSnapshot = await getDocs(recipesQuery);
+              const userRecipes = recipesSnapshot.docs.map(doc => doc.data());
+              if (userRecipes.length > 0) {
+                setRecipes(userRecipes);
+              } else {
+                console.log('User recipes not found.');
+              }
             } else {
-                console.log("User data not found");
+              console.log('Username not found in user data.');
             }
-        } else {
-            console.log("User not logged in");
+            // Set saved recipe ids if available
+            if (userData.length > 0 && userData[0].savedRecipes) {
+              setSavedRecipeIds(userData[0].savedRecipes);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
         }
-    } catch (error) {
-        console.error("Error updating saved recipes:", error);
-    }
-};
-
-  function MyRecipes({navigation}){
-    
-    const [recipes, setRecipes] = useState([]);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const user = auth.currentUser;
-                if (user) {
-                    const currentUserUID = user.uid;
-                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
-                    const querySnapshot = await getDocs(usersQuery);
-                    const userData = querySnapshot.docs.map(doc => doc.data());
-                    if (userData.length > 0 && userData[0].username) {
-                        const username = userData[0].username; // Get the username from the user data
-                        const recipesQuery = query(collection(db, 'recipes'), where('username', '==', username));
-                        const recipesSnapshot = await getDocs(recipesQuery);
-                        const userRecipes = recipesSnapshot.docs.map(doc => doc.data());
-                        if (userRecipes.length > 0) {
-                            setRecipes(userRecipes);
-                        } else {
-                            console.log('User recipes not found.');
-                        }
-                    } else {
-                        console.log('Username not found in user data.');
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-    
-        fetchUserData();
+      };
+  
+      fetchUserData();
     }, []);
-    return (
-    <View style={styles.container}>
-            {recipes.map((recipe, index) => (
-        <View key={recipe.id} style={styles.recipeContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
-            <Image
-              source={{ uri: recipe.imageUrl }}
-              style={{ width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
-            />
-            <Text style={styles.titleText}>{recipe.title}</Text>
-            <Text style={styles.userText}>By: {recipe.username}</Text>
-            <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
-                <Image source={require('../assets/icons/timer.png')} style={{width: 18, height: 18, marginTop: 5, marginLeft: 7}} />
-            </View>
-            <View style={[styles.bottomContainer, { marginLeft: 10 }]}>
-              {[...Array(5)].map((_, starIndex) => (
-                <Star key={starIndex} filled={starIndex < recipe.rating} />
-              ))}
+  
+    const handleSavePress = async (recipeId) => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const currentUserUID = user.uid;
+          const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+          const querySnapshot = await getDocs(usersQuery);
+          const userData = querySnapshot.docs.map(doc => doc.data());
+  
+          if (userData && userData.length > 0) {
+            const userDataObject = userData[0];
+            const savedRecipesArray = userDataObject.savedRecipes || []; // Ensure savedRecipes is an array
+            let updatedSavedRecipeIds = [...savedRecipesArray];
+  
+            if (!updatedSavedRecipeIds.includes(recipeId)) {
+              updatedSavedRecipeIds.push(recipeId);
+            } else {
+              updatedSavedRecipeIds = updatedSavedRecipeIds.filter(id => id !== recipeId);
+            }
+            const updatedSavedRecipeIdsFiltered = updatedSavedRecipeIds.filter(id => id !== undefined);
 
-              <TouchableOpacity onPress={() => handleSavePress(recipe.id)} style={styles.saveButton}>
-                <Image source={savedRecipeIds.includes(recipe.id) ? unSavedImage : savedImage} style={styles.savedIcon} />
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        </View>
-      ))}
+            console.log("Updating saved recipes with:", updatedSavedRecipeIdsFiltered);
+            console.log("Document ID:", querySnapshot.docs[0].id);
+            
+            await updateDoc(doc(db, 'users', querySnapshot.docs[0].id), {
+              savedRecipes: updatedSavedRecipeIdsFiltered
+            });
+  
+            // Update the UI state for saved recipe ids
+            setSavedRecipeIds(updatedSavedRecipeIds);
+          } else {
+            console.log("User data not found");
+          }
+        } else {
+          console.log("User not logged in");
+        }
+      } catch (error) {
+        console.error("Error updating saved recipes:", error);
+      }
+    };
+  
+    return (
+      <View style={styles.container}>
+        {recipes.map((recipe, index) => (
+          <View key={recipe.id} style={styles.recipeContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
+              <Image
+                source={{ uri: recipe.imageUrl }}
+                style={{ width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
+              />
+              <Text style={styles.titleText}>{recipe.title}</Text>
+              <Text style={styles.userText}>By: {recipe.username}</Text>
+              <View style={styles.timeContainer}>
+                <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
+                <Image source={require('../assets/icons/timer.png')} style={{ width: 18, height: 18, marginTop: 5, marginLeft: 7 }} />
+              </View>
+              <View style={[styles.bottomContainer, { marginLeft: 10 }]}>
+                {[...Array(5)].map((_, starIndex) => (
+                  <Star key={starIndex} filled={starIndex < recipe.rating} />
+                ))}
+  
+                <TouchableOpacity onPress={() => handleSavePress(recipe.id)} style={styles.saveButton}>
+                  <Image source={savedRecipeIds.includes(recipe.id) ? require('../assets/buttons/saveButton.png') : require('../assets/buttons/unsavedButton.png')} style={styles.savedIcon} />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))}
       </View>
     );
   }
+  
   function MyAchievements({ navigation }) {
     const [achievements, setAchievements] = useState([]);
 
@@ -364,7 +340,7 @@ const Star = ({ filled }) => (
       </Stack.Navigator>
     );
   }
-  
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
