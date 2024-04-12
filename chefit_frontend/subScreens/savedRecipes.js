@@ -37,6 +37,7 @@ export default function SavedRecipesScreen() {
                             .filter(doc => savedRecipeIds.includes(doc.id))
                             .map(doc => ({ id: doc.id, ...doc.data() }));
                         setRecipes(fetchedRecipes);
+                        console.log('Saved Recipe useEffect:', userData)
                         });
                     } else {
                         console.log("User data not found");
@@ -52,39 +53,30 @@ export default function SavedRecipesScreen() {
     const handleRemoveFromSaved = async (recipeId) => {
         try {
             const user = auth.currentUser;
+            if (user) {
+                const currentUserUID = user.uid;
+                const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+                const querySnapshot = await getDocs(usersQuery);
+                const userData = querySnapshot.docs.map(doc => doc.data());
+                
+                if (userData.length > 0 && userData[0].savedRecipes) {
+                    const savedRecipeIds = userData[0].savedRecipes;
+                    
+                    // Remove the recipeId from savedRecipeIds
+                    const updatedSavedRecipes = savedRecipeIds.filter(id => id !== recipeId);
+                    
+                    // Update the user's saved recipes in the database
+                    await updateDoc(doc(db, 'users', querySnapshot.docs[0].id), {
+                        savedRecipes: updatedSavedRecipes
+                    });
     
-            if (!user) {
-                console.error("User not authenticated");
-                return;
-            }
+                    console.log('Recipe removed from saved recipes:', recipeId);
     
-            const currentUserUID = user.uid;
-            const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
-            const querySnapshot = await getDocs(usersQuery);
-            const userData = querySnapshot.docs.map(doc => doc.data());
-    
-            if (userData.length > 0 && userData[0].savedRecipes) {
-                const savedRecipeIds = userData[0].savedRecipes;
-    
-                const updatedSavedRecipes = savedRecipeIds.filter(id => id !== recipeId);
-    
-                const userDocRef = doc(db, "users", currentUserUID);
-                console.log(userDocRef)
-                await updateDoc(userDocRef, {
-                    savedRecipes: updatedSavedRecipes
-                });
-    
-                console.log("Recipe removed from saved recipes");
-    
-                // Now that the document is updated, you can fetch the updated saved recipes
-                const recipesCollectionRef = collection(db, "recipes");
-                const snapshot = await getDocs(recipesCollectionRef);
-                const fetchedRecipes = snapshot.docs
-                    .filter(doc => updatedSavedRecipes.includes(doc.id))
-                    .map(doc => ({ id: doc.id, ...doc.data() }));
-                setRecipes(fetchedRecipes);
+                } else {
+                    console.log("User data not found or saved recipes not available");
+                }
             } else {
-                console.log("User data not found or saved recipes not available");
+                console.log("User data not found");
             }
         } catch (error) {
             console.error("Error removing recipe from saved recipes:", error);
@@ -92,7 +84,7 @@ export default function SavedRecipesScreen() {
     };
     const handleSavePress = async (index, recipeId) => {
         try {
-            // Call handleRemoveFromSaved to remove the recipe from the user's saved recipes
+            // Call handleRemoveFromSaved to remove the recipe from the user's saved recipe
             await handleRemoveFromSaved(recipeId);
     
             // Log the recipeId being removed
