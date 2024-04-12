@@ -46,7 +46,11 @@ const Star = ({ filled }) => (
               const username = userData[0].username;
               const recipesQuery = query(collection(db, 'recipes'), where('username', '==', username));
               const recipesSnapshot = await getDocs(recipesQuery);
-              const userRecipes = recipesSnapshot.docs.map(doc => doc.data());
+              const userRecipes = recipesSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return { id: doc.id, ...data };
+                // Include document ID as 'id' property
+              });
               if (userRecipes.length > 0) {
                 setRecipes(userRecipes);
               } else {
@@ -64,9 +68,10 @@ const Star = ({ filled }) => (
           console.error('Error fetching user data:', error);
         }
       };
-  
+    
       fetchUserData();
     }, []);
+    
   
     const handleSavePress = async (recipeId) => {
       try {
@@ -112,8 +117,8 @@ const Star = ({ filled }) => (
     return (
       <View style={styles.container}>
         {recipes.map((recipe, index) => (
-          <View key={recipe.id} style={styles.recipeContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
+                    <View key={index} style={styles.recipeContainer}>
+                        <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
               <Image
                 source={{ uri: recipe.imageUrl }}
                 style={{ width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
