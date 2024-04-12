@@ -2,9 +2,16 @@ import React from 'react';
 import { Button, View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useFocusEffect } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useState, useEffect } from 'react';
+import { db, auth } from '../config/firebase'; // Import your Firebase Firestore configuration
+import { query, collection, where, onSnapshot } from 'firebase/firestore'; 
+
+
+import * as Updates from 'expo-updates';
 
 import SwitchToggle from '../components/switch';
 
@@ -19,6 +26,60 @@ const Stack = createStackNavigator()
 
 
 function Settings({navigation}){
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [privateStatus, setPrivateStatus] = useState(false);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchUserData = async () => {
+                try {
+                    const user = auth.currentUser;
+                    if (user) {
+                        const currentUserUID = user.uid;
+                        setEmail(user.email);
+    
+                        const unsubscribe = onSnapshot(
+                            query(collection(db, 'users'), where('UID', '==', currentUserUID)),
+                            (querySnapshot) => {
+                                if (!querySnapshot.empty) {
+                                    const userData = querySnapshot.docs[0].data();
+                                    if (userData.username) {
+                                        setUsername(userData.username);
+                                    } else {
+                                        console.log('no username');
+                                    }
+                                    if (userData.private) {
+                                        setPrivateStatus(true);
+                                    }
+                                } else {
+                                    console.log('User data not found.');
+                                }
+                            }
+                        );
+                        return unsubscribe;
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error.message);
+                }
+            };
+    
+            fetchUserData();
+        }, [])
+    );
+
+    const handleLogout = async () => {
+        try {
+            await auth.signOut(); // Sign out the user
+            await Updates.reloadAsync();
+        } catch (error) {
+            console.error('Error signing out:', error.message);
+        }
+    }
+    
+
+
+
     return(
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -29,14 +90,14 @@ function Settings({navigation}){
                 <View style={styles.row}>
                     <Pressable style={styles.rowItem} onPress={() => navigation.navigate('Reset Username')}>
                         <Text style={styles.rowText}>Username</Text>
-                        <Text style={styles.rowValue}>Test User</Text>
+                        <Text style={styles.rowValue}>{username}</Text>
                     </Pressable>
                 </View>
                 
                 <View style={styles.row}>
                     <Pressable style={styles.rowItem} onPress={() => navigation.navigate('Reset Email')}>
                         <Text style={styles.rowText}>Email Address</Text>
-                        <Text style={styles.rowValue}>randomemail@gmail.com</Text>
+                        <Text style={styles.rowValue}>{email}</Text>
                     </Pressable>
                 </View>
 
@@ -62,7 +123,7 @@ function Settings({navigation}){
                 </View>
 
                 <View style={styles.row}>
-                    <Pressable style={styles.rowItem}>
+                    <Pressable style={styles.rowItem} onPress={handleLogout}>
                         <Text style={styles.rowText}>Log Out</Text>
                         <View style={styles.rowValue}>
                             <Image source={require('../assets/actionIcons/logoutButton.png')} style={{width: 20, height: 22.94, resizeMode: 'contain'}} />
@@ -150,21 +211,27 @@ export default function SettingsScreen() {
             shadowOpacity: 0, 
             borderBottomWidth: 0,
           },
-          headerBackImage: () => (
-            <BackButton />
-          ),
+         
         }}
       >
         <Stack.Screen
           name='Settings'
           component={Settings}
+          options={{
+            headerBackImage: () => (
+                <BackButton />
+              ),
+          }}
         />
 
         <Stack.Screen
           name='Reset Username'
           component={ResetUsername}
           options={{
-            headerTitle: ''
+            headerTitle: '',
+            headerBackImage: () => (
+                <BackButton />
+              ),
           }}
         />
 
@@ -172,7 +239,10 @@ export default function SettingsScreen() {
           name='Reset Email'
           component={ResetEmail}
           options={{
-            headerTitle: ''
+            headerTitle: '',
+            headerBackImage: () => (
+                <BackButton />
+              ),
           }}
         />
 
@@ -180,7 +250,10 @@ export default function SettingsScreen() {
           name='Reset Password'
           component={ResetPassword}
           options={{
-            headerTitle: ''
+            headerTitle: '',
+            headerBackImage: () => (
+                <BackButton />
+              ),
           }}
         />
          

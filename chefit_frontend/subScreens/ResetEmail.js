@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { auth } from '../config/firebase'; // Import your Firebase configuration
 
 export default function ResetEmail({ navigation }) {
     const [email, setEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
     const [emailValidation, setEmailValidation] = useState(false);
 
     const validateEmail = (text) => {
@@ -12,6 +14,10 @@ export default function ResetEmail({ navigation }) {
         setEmail(text);
         setEmailValidation(emailRegex.test(text));
     };
+
+    const handleCurrentPassword = (text) => {
+        setCurrentPassword(text)
+    }
 
     const handleConfirmEmailChange = (text) => {
         setConfirmEmail(text);
@@ -38,6 +44,15 @@ export default function ResetEmail({ navigation }) {
                     placeholder="Confirm Email"
                     value={confirmEmail}
                     onChangeText={handleConfirmEmailChange}
+                />
+            </View>
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.textInput}
+                    secureTextEntry
+                    placeholder="Enter Current Password"
+                    value={currentPassword}
+                    onChangeText={handleCurrentPassword}
                 />
             </View>
             <View style={styles.requirementContainer}>

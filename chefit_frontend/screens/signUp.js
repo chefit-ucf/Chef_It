@@ -6,6 +6,7 @@ import { collection, setDoc, doc, getDoc } from 'firebase/firestore'; // Import 
 
 
 
+
 export default function SignUpScreen({ navigation }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -140,6 +141,7 @@ export default function SignUpScreen({ navigation }) {
             savedRecipes:[],
             userAvatar:"https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FCooksonas%2Fpancakes_withbackground.png?alt=media&token=38d2e61e-f2f5-42e5-b061-0e310b3ea17c",
             userIngredients:[],
+            private: false,
         });
             navigation.navigate('Home'); // take back to homescreen
         }    

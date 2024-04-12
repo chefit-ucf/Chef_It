@@ -4,13 +4,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Tab, TabView } from '@rneui/themed';
 import BackButton from '../components/BackButton';
 import AchievementsButton from "../components/selectAchievement";
-import DisplayCooksonas from '../subScreens/DisplayCooksonas';
-import { testuserInfo } from '../API/data';
-import DisplayAchievements from '../subScreens/DisplayAchievements';
-import SettingsScreen from '../subScreens/Settings';
+import DisplayCooksonas from "../SubScreens/DisplayCooksonas"
+import DisplayAchievements from '../SubScreens/DisplayAchievements';
+import SettingsScreen from '../SubScreens/Settings';
 import { db, auth } from '../config/firebase'; // Import your Firebase Firestore configuration
-import { collection, getDocs, query, where  } from 'firebase/firestore'; // Import Firestore functions for querying
+import { collection, getDocs, query, where, onSnapshot  } from 'firebase/firestore'; // Import Firestore functions for querying
 import { useEffect } from 'react';
+import editCooksona from '../assets/actionIcons/editCooksonaIcon.png'
 
 const Stack = createStackNavigator();
 
@@ -173,24 +173,27 @@ function Profile({ navigation }) {
   
     useEffect(() => {
       const fetchUserData = async () => {
-        try {
-                const user = auth.currentUser;
-                if (user) {
-                    const currentUserUID = user.uid;
-                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
-                    const querySnapshot = await getDocs(usersQuery);
-                    querySnapshot.forEach((doc) => {
-                        const userData = doc.data();
-                        setUsername(userData.username);
-                        setAvatar(userData.userAvatar);
-                    });
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            } }
-  
+          try {
+              const user = auth.currentUser;
+              if (user) {
+                  const currentUserUID = user.uid;
+                  const usersRef = collection(db, 'users');
+                  const unsubscribe = onSnapshot(query(usersRef, where('UID', '==', currentUserUID)), (querySnapshot) => {
+                      querySnapshot.forEach((doc) => {
+                          const userData = doc.data();
+                          setUsername(userData.username);
+                          setAvatar(userData.userAvatar);
+                      });
+                  });
+                  return unsubscribe;
+              }
+          } catch (error) {
+              console.error('Error fetching user data:', error);
+          }
+      };
+
       fetchUserData();
-    }, []);
+  }, []);
   
     return (
       <SafeAreaView style={styles.container}>
@@ -201,9 +204,15 @@ function Profile({ navigation }) {
                  source={{ uri: avatar }}
                 style={styles.profileImage}
               />
+              <Pressable onPress={() => navigation.navigate('Select your Cooksona')} style={styles.editButton}>
+              <Image
+                 source={editCooksona }
+                style={styles.editIcon}
+              />
+              </Pressable>
             </View>
           </View>
-          <Text style={styles.username}>{username}</Text> {/* Display the fetched username */}
+          <View><Text style={styles.username}>{username}</Text></View>
           <View style={styles.tabContainer}>
             <TabComponent navigation={navigation} />
           </View>
@@ -218,9 +227,7 @@ export default function ProfileScreen() {
     <Stack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
-        headerBackImage: () => (
-          <BackButton />
-        ),
+        
         headerTitleAlign: 'center',
         headerTintColor: '#000',
         headerTitleStyle: {
@@ -239,7 +246,7 @@ export default function ProfileScreen() {
   component={Profile}
   options={({ navigation }) => ({
     headerTitleAlign: 'left',
-    
+    headerLeft: null,
     headerRight: () => (
       <View>
         <Pressable
@@ -265,7 +272,10 @@ export default function ProfileScreen() {
             shadowOpacity: 0, 
             borderBottomWidth: 0,
           },
-          headerShown: false
+          headerShown: false,
+          headerBackImage: () => (
+            <BackButton />
+          ),
           
         }}
       />
@@ -275,6 +285,9 @@ export default function ProfileScreen() {
         options={{
           headerTitleAlign: 'left',
           headerTitle: '',
+          headerBackImage: () => (
+            <BackButton />
+          ),
         }}
       />
        <Stack.Screen
@@ -282,6 +295,9 @@ export default function ProfileScreen() {
         component={DisplayAchievements}
         options={{
           headerTitle: '',
+          headerBackImage: () => (
+            <BackButton />
+          ),
         }}
       />
     </Stack.Navigator>
@@ -312,14 +328,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 200,
     height: 200,
-    backgroundColor: '#F9B59E',
+    
     borderRadius: 10,
     marginBottom: 20,
   },
   editButton: {
     position: 'absolute',
-    bottom: 5,
-    right: 8,
+    top: 160,
+    left: 160,
   },
   editIcon: {
     width: 22,
@@ -330,8 +346,8 @@ const styles = StyleSheet.create({
     top: 20,
   },
   profileImage: {
-    width: 160,
-    height: 154,
+    width: 200,
+    height: 200,
   },
   username: {
     textAlign: "center",

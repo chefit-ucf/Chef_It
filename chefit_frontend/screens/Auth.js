@@ -102,7 +102,7 @@ function HomeScreen() {
                   style={{width: 30, height: 30, tintColor: focused ? "#47A695" : "#A6A6A6"}}/>
                   <Text style={{color: focused ? "#47A695" : "#A6A6A6", fontSize: 14, top: 5}}>Profile</Text>
                 </View>
-              )
+              ),  
             }}/>
         </Tab.Navigator>
     );
@@ -115,7 +115,7 @@ export default function Auth(props) {
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
