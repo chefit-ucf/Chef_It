@@ -1,20 +1,151 @@
-import React, { useState } from 'react';
-import { View, Text, Image, Pressable, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, ScrollView, SafeAreaView, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Tab, TabView } from '@rneui/themed';
 import BackButton from '../components/BackButton';
 import AchievementsButton from "../components/selectAchievement";
-import DisplayCooksonas from "../subScreens/DisplayCooksonas"
+import DisplayCooksonas from '../subScreens/DisplayCooksonas';
+import { testuserInfo } from '../API/data';
 import DisplayAchievements from '../subScreens/DisplayAchievements';
 import SettingsScreen from '../subScreens/Settings';
-import { db, auth } from '../config/firebase'; // Import your Firebase Firestore configuration
-import { collection, getDocs, query, where, onSnapshot  } from 'firebase/firestore'; // Import Firestore functions for querying
-import { useEffect } from 'react';
-import editCooksona from '../assets/actionIcons/editCooksonaIcon.png'
+import { useFonts, Montserrat_300Light, Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import { Coiny_400Regular } from '@expo-google-fonts/coiny';
+import { db, auth } from "../API/firebase.config.js";
+import { doc, collection, getDoc, onSnapshot, updateDoc, query, where, getDocs } from 'firebase/firestore';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const Stack = createStackNavigator();
+const windowWidth = Dimensions.get('window').width;
 
-function MyAchievements({ navigation }) {
+const TabComponent = ({navigation}) => {
+  const [recipes, setRecipes] = useState([]);
+  const [savedRecipeIds, setSavedRecipeIds] = useState([]);
+  const [index, setIndex] = useState(0);
+
+const Star = ({ filled }) => (
+    <View style={{ display: filled ? 'flex' : 'none', marginRight: 2 }}>
+      <Ionicons name="ios-star" size={15} color="#ffc107" />
+    </View>
+  );
+
+  function MyRecipes({ navigation }) {
+    const [recipes, setRecipes] = useState([]);
+    const [savedRecipeIds, setSavedRecipeIds] = useState([]);
+  
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const user = auth.currentUser;
+          if (user) {
+            const currentUserUID = user.uid;
+            const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+            const querySnapshot = await getDocs(usersQuery);
+            const userData = querySnapshot.docs.map(doc => doc.data());
+            if (userData.length > 0 && userData[0].username) {
+              const username = userData[0].username;
+              const recipesQuery = query(collection(db, 'recipes'), where('username', '==', username));
+              const recipesSnapshot = await getDocs(recipesQuery);
+              const userRecipes = recipesSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return { id: doc.id, ...data };
+                // Include document ID as 'id' property
+              });
+              if (userRecipes.length > 0) {
+                setRecipes(userRecipes);
+              } else {
+                console.log('User recipes not found.');
+              }
+            } else {
+              console.log('Username not found in user data.');
+            }
+            // Set saved recipe ids if available
+            if (userData.length > 0 && userData[0].savedRecipes) {
+              setSavedRecipeIds(userData[0].savedRecipes);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+    
+      fetchUserData();
+    }, []);
+    
+  
+    const handleSavePress = async (recipeId) => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const currentUserUID = user.uid;
+          const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+          const querySnapshot = await getDocs(usersQuery);
+          const userData = querySnapshot.docs.map(doc => doc.data());
+  
+          if (userData && userData.length > 0) {
+            const userDataObject = userData[0];
+            const savedRecipesArray = userDataObject.savedRecipes || []; // Ensure savedRecipes is an array
+            let updatedSavedRecipeIds = [...savedRecipesArray];
+  
+            if (!updatedSavedRecipeIds.includes(recipeId)) {
+              updatedSavedRecipeIds.push(recipeId);
+            } else {
+              updatedSavedRecipeIds = updatedSavedRecipeIds.filter(id => id !== recipeId);
+            }
+            const updatedSavedRecipeIdsFiltered = updatedSavedRecipeIds.filter(id => id !== undefined);
+
+            console.log("Updating saved recipes with:", updatedSavedRecipeIdsFiltered);
+            console.log("Document ID:", querySnapshot.docs[0].id);
+            
+            await updateDoc(doc(db, 'users', querySnapshot.docs[0].id), {
+              savedRecipes: updatedSavedRecipeIdsFiltered
+            });
+  
+            // Update the UI state for saved recipe ids
+            setSavedRecipeIds(updatedSavedRecipeIds);
+          } else {
+            console.log("User data not found");
+          }
+        } else {
+          console.log("User not logged in");
+        }
+      } catch (error) {
+        console.error("Error updating saved recipes:", error);
+      }
+    };
+  
+    return (
+      <View style={styles.container}>
+        {recipes.map((recipe, index) => (
+                    <View key={index} style={styles.recipeContainer}>
+                        <TouchableOpacity onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.id })}>
+              <Image
+                source={{ uri: recipe.imageUrl }}
+                style={{ width: (windowWidth / 2.3), height: (windowWidth / 3.25), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
+              />
+              <Text style={styles.titleText}>{recipe.title}</Text>
+              <Text style={styles.userText}>By: {recipe.username}</Text>
+              <View style={styles.timeContainer}>
+                <Text style={styles.timeText}>{recipe.timer.duration} {recipe.timer.unit}</Text>
+                <Image source={require('../assets/icons/timer.png')} style={{ width: 18, height: 18, marginTop: 5, marginLeft: 7 }} />
+              </View>
+              <View style={[styles.bottomContainer, { marginLeft: 10 }]}>
+                {[...Array(5)].map((_, starIndex) => (
+                  <Star key={starIndex} filled={starIndex < recipe.rating} />
+                ))}
+  
+                <TouchableOpacity onPress={() => handleSavePress(recipe.id)} style={styles.saveButton}>
+                  <Image source={savedRecipeIds.includes(recipe.id) ? require('../assets/buttons/saveButton.png') : require('../assets/buttons/unsavedButton.png')} style={styles.savedIcon} />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+    );
+  }
+  
+  function MyAchievements({ navigation }) {
     const [achievements, setAchievements] = useState([]);
 
     useEffect(() => {
@@ -59,141 +190,63 @@ function MyAchievements({ navigation }) {
     );
 }
 
-function MyRecipes({navigation}){
-    
-    const [recipes, setRecipes] = useState([]);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const user = auth.currentUser;
-                if (user) {
-                    const currentUserUID = user.uid;
-                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
-                    const querySnapshot = await getDocs(usersQuery);
-                    const userData = querySnapshot.docs.map(doc => doc.data());
-                    if (userData.length > 0 && userData[0].username) {
-                        const username = userData[0].username; // Get the username from the user data
-                        const recipesQuery = query(collection(db, 'recipes'), where('username', '==', username));
-                        const recipesSnapshot = await getDocs(recipesQuery);
-                        const userRecipes = recipesSnapshot.docs.map(doc => doc.data());
-                        if (userRecipes.length > 0) {
-                            setRecipes(userRecipes);
-                        } else {
-                            console.log('User recipes not found.');
-                        }
-                    } else {
-                        console.log('Username not found in user data.');
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-    
-        fetchUserData();
-    }, []);
-    
-    
     return (
-        <View style={styles.recipeContainer}>
-            {recipes.map((recipe, index) => (
-                <TouchableOpacity key={index} onPress={() => navigation.navigate("RecipeScreen", { currentRecipe: recipe.recipeId })}>
-                    <View style={styles.recipeCard}>
-                        <Image
-                            source={{ uri: recipe.imageUrl }}
-                            style={{ width: 184, height: 140, resizeMode: 'cover', borderTopRightRadius: 20, borderTopLeftRadius: 20, marginBottom: 10 }}
-                        />
-                        <View>
-                            <Text style={{ fontWeight: "bold", marginLeft: 10 }}>{recipe.title}</Text>
-                        </View>
-                        <View>
-                            <Text style={{ color: 'grey', fontSize: 10, marginLeft: 10, paddingTop: 5 }}>By: {recipe.username}</Text>
-                        </View>
-                        <View style={styles.timeContainer}>
-                            <Text style={{ color: '#47A695', fontWeight: 'bold', fontSize: 12, marginLeft: 10, paddingTop: 5 }}>{recipe.timer.duration} {recipe.timer.unit}</Text>
-                            <Image
-                                source={require('../assets/icons/timer.png')}
-                                style={{ width: 13, height: 13, resizeMode: 'contain', margin: 3 }}
-                            />
-                        </View>
-                        <View style={{ flex: 1, flexDirection: 'row', gap: 85, padding: 3, alignItems: 'center', paddingBottom: 10 }}>
-                            <Text style={styles.rating}>{recipe.rating}</Text>
-                            <Image
-                                source={require('../assets/actionIcons/saveButton.png')}
-                                style={{ width: 15, height: 15, resizeMode: 'contain' }}
-                            />
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            ))}
-        </View>
-    );
-}
-
-const TabComponent = ({navigation}) => {
-  const [index, setIndex] = useState(0);
-
-  return (
-    <View>
-      <Tab
-        value={index}
-        onChange={(e) => setIndex(e)}
-        indicatorStyle={{
-          backgroundColor: 'white',
-          height: 3,
-          elevation: 5,
-          shadowColor: 'rgba(0, 0, 0, 0.25)',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 1,
-          shadowRadius: 4,
-        }}
-        buttonStyle={{ borderColor: 'transparent'}}
-        variant='default' disableIndicator={false}>
-        <Tab.Item title="MyRecipes" titleStyle={(active) => ({ height: 50, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined, textDecorationLine: active ? 'underline' : 'none', textDecorationColor: active ? "#42A797" : "grey",})}
-          buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
-        <Tab.Item title="MyAchievements" titleStyle={(active) => ({ height: 50, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined, textDecorationLine: active ? 'underline' : 'none', textDecorationColor: active ? "#42A797" : "grey", })}
-          buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
-      </Tab>
-      <TabView value={index} onChange={setIndex} animationType="timing" disableSwipe={true} tabItemContainerStyle={{flex: 1,}}>
-        <TabView.Item>
-          <MyRecipes />
-        </TabView.Item>
-        <TabView.Item>
+        <View>
+          <Tab
+            value={index}
+            onChange={(e) => setIndex(e)}
+            indicatorStyle={{
+              backgroundColor: 'white',
+              height: 3,
+              elevation: 5,
+              shadowColor: 'rgba(0, 0, 0, 0.25)',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 1,
+              shadowRadius: 4,
+            }}
+            buttonStyle={{ borderColor: 'transparent'}}
+            variant='default' disableIndicator='false'>
+            <Tab.Item title="My Recipes" titleStyle={(active) => ({ height: 40, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}
+              buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
+            <Tab.Item title="Achievements" titleStyle={(active) => ({ height: 40, width: 170, fontSize: 18, color: active ? "#42A797" : "grey", fontWeight: active ? "bold" : undefined})}
+              buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
+          </Tab>
+          <TabView value={index} onChange={setIndex} animationType="timing" disableSwipe={true} tabItemContainerStyle={{flex: 1,}}>
+            <TabView.Item>
+              <MyRecipes navigation={navigation} />
+            </TabView.Item>
+            <TabView.Item>
           <MyAchievements navigation={navigation}/>
         </TabView.Item>
-      </TabView>
-    </View>
-  );
-}
-
-function Profile({ navigation }) {
+          </TabView>
+        </View>
+    );
+  };
+  function Profile({ navigation }) {
     const [username, setUsername] = useState('');
     const [avatar, setAvatar] = useState('');
   
     useEffect(() => {
       const fetchUserData = async () => {
-          try {
-              const user = auth.currentUser;
-              if (user) {
-                  const currentUserUID = user.uid;
-                  const usersRef = collection(db, 'users');
-                  const unsubscribe = onSnapshot(query(usersRef, where('UID', '==', currentUserUID)), (querySnapshot) => {
-                      querySnapshot.forEach((doc) => {
-                          const userData = doc.data();
-                          setUsername(userData.username);
-                          setAvatar(userData.userAvatar);
-                      });
-                  });
-                  return unsubscribe;
-              }
-          } catch (error) {
-              console.error('Error fetching user data:', error);
-          }
-      };
-
+        try {
+                const user = auth.currentUser;
+                if (user) {
+                    const currentUserUID = user.uid;
+                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
+                    const querySnapshot = await getDocs(usersQuery);
+                    querySnapshot.forEach((doc) => {
+                        const userData = doc.data();
+                        setUsername(userData.username);
+                        setAvatar(userData.userAvatar);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            } }
+  
       fetchUserData();
-  }, []);
+    }, []);
   
     return (
       <SafeAreaView style={styles.container}>
@@ -204,15 +257,9 @@ function Profile({ navigation }) {
                  source={{ uri: avatar }}
                 style={styles.profileImage}
               />
-              <Pressable onPress={() => navigation.navigate('Select your Cooksona')} style={styles.editButton}>
-              <Image
-                 source={editCooksona }
-                style={styles.editIcon}
-              />
-              </Pressable>
             </View>
           </View>
-          <View><Text style={styles.username}>{username}</Text></View>
+          <Text style={styles.username}>{username}</Text>
           <View style={styles.tabContainer}>
             <TabComponent navigation={navigation} />
           </View>
@@ -222,101 +269,145 @@ function Profile({ navigation }) {
   }
 
 
-export default function ProfileScreen() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerBackTitleVisible: false,
-        
-        headerTitleAlign: 'center',
-        headerTintColor: '#000',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-        headerStyle: {
-          elevation: 0, 
-          shadowOpacity: 0, 
-          borderBottomWidth: 0,
-        }
-      }}
-    >
-  
-  <Stack.Screen
-  name='My Profile'
-  component={Profile}
-  options={({ navigation }) => ({
-    headerTitleAlign: 'left',
-    headerLeft: null,
-    headerRight: () => (
-      <View>
-        <Pressable
-          onPress={() => navigation.navigate('Settings Screen')}>
-          <Image
-            source={require('../assets/actionIcons/settingsButton.png')}
-            style={{ width: 32, height: 32, resizeMode: 'cover', margin: 30 }}
-          />
-        </Pressable>
-      </View>
-    ),
-  })}
 
-/>
 
-      <Stack.Screen
-        name='Settings Screen'
-        component={SettingsScreen}
-        options={{
-          headerTitle: 'Settings',
+  export default function ProfileScreen() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerBackTitleVisible: false,
+          headerBackImage: () => (
+            <BackButton />
+          ),
+          headerTitleAlign: 'center',
+          headerTintColor: '#000',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
           headerStyle: {
             elevation: 0, 
             shadowOpacity: 0, 
             borderBottomWidth: 0,
-          },
-          headerShown: false,
-          headerBackImage: () => (
-            <BackButton />
-          ),
-          
+          }
         }}
-      />
-       <Stack.Screen
-        name='Select your Cooksona'
-        component={DisplayCooksonas}
-        options={{
-          headerTitleAlign: 'left',
-          headerTitle: '',
-          headerBackImage: () => (
-            <BackButton />
-          ),
-        }}
-      />
-       <Stack.Screen
-        name='Display Achievements'
-        component={DisplayAchievements}
-        options={{
-          headerTitle: '',
-          headerBackImage: () => (
-            <BackButton />
-          ),
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
+      >
+    
+    <Stack.Screen
+    name='My Profile'
+    component={Profile}
+    options={({ navigation }) => ({
+      headerTitleAlign: 'left',
+      
+      headerRight: () => (
+        <View>
+          <Pressable
+            onPress={() => navigation.navigate('Settings Screen')}>
+            <Image
+              source={require('../assets/actionIcons/settingsButton.png')}
+              style={{ width: 32, height: 32, resizeMode: 'cover', margin: 30 }}
+            />
+          </Pressable>
+        </View>
+      ),
+    })}
+  
+  />
+  
+        <Stack.Screen
+          name='Settings Screen'
+          component={SettingsScreen}
+          options={{
+            headerTitle: 'Settings',
+            headerStyle: {
+              elevation: 0, 
+              shadowOpacity: 0, 
+              borderBottomWidth: 0,
+            },
+            headerShown: false
+            
+          }}
+        />
+         <Stack.Screen
+          name='Select your Cooksona'
+          component={DisplayCooksonas}
+          options={{
+            headerTitleAlign: 'left',
+            headerTitle: '',
+          }}
+        />
+         <Stack.Screen
+          name='Display Achievements'
+          component={DisplayAchievements}
+          options={{
+            headerTitle: '',
+          }}
+        />
+      </Stack.Navigator>
+    );
+  }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    
-  },
-  recipeContainer:{
-        flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        padding: 10,
-  },
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: 7,
+    paddingTop: 10,
+    gap: 20
+},
+recipeContainer: {
+    backgroundColor: "white",
+    width: (windowWidth / 2.3),
+    height: (windowWidth / 1.7),
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOffset: {
+        width: 0,
+        height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+},
+titleText: {
+    fontSize: windowWidth / 31.5,
+    fontWeight: 'bold',
+    margin: 10
+},
+userText: {
+    fontSize: windowWidth / 35,
+    color: "grey",
+    marginLeft: 10
+},
+timeText: {
+    fontSize: windowWidth / 32,
+    fontWeight: 'bold',
+    color: '#42A797',
+    marginLeft: 10,
+    marginTop: 5
+},
+rating: {
+    marginLeft: 8,
+    marginTop: 10,
+    fontSize: windowWidth / 25,
+    color: '#F7D47C'
+},
+timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+},
+bottomContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+},
+saveButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 10
+},
+savedIcon: {
+    width: windowWidth / 20,
+    height: windowWidth / 20
+},
   Achievementcontainer: {
     margin: 10
   },
@@ -328,14 +419,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 200,
     height: 200,
-    
+    backgroundColor: '#F9B59E',
     borderRadius: 10,
     marginBottom: 20,
   },
   editButton: {
     position: 'absolute',
-    top: 160,
-    left: 160,
+    bottom: 5,
+    right: 8,
   },
   editIcon: {
     width: 22,
@@ -346,8 +437,8 @@ const styles = StyleSheet.create({
     top: 20,
   },
   profileImage: {
-    width: 200,
-    height: 200,
+    width: 160,
+    height: 154,
   },
   username: {
     textAlign: "center",
@@ -360,21 +451,21 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   recipeCard:{
-    margin: 30,
-    width: 185,
-    height: 245,
-    borderRadius: 20,
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    borderColor: '#E1E1E1',
-    elevation: 5,
-    
-},
-  timeContainer:{
-    flex: 1,
-    flexDirection: 'row',
-    width: 61,
-    height: 16,
-    
+      backgroundColor: "white",
+      width: (windowWidth / 2.3),
+      height: (windowWidth / 1.7),
+      borderRadius: 10,
+      shadowColor: 'black',
+      shadowOffset: {
+          width: 0,
+          height: 4,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+  },
+  rating: {
+    marginLeft: 5,
+    fontSize: 14,
+    color: '#F7D47C'
   }
 });
