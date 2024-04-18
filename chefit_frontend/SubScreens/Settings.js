@@ -204,12 +204,11 @@ export default function SettingsScreen() {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontWeight: 'bold',
+            fontFamily: 'Coiny_400Regular',
+            fontSize: 28
           },
           headerStyle: {
             backgroundColor: 'transparent',
-            elevation: 0, 
-            shadowOpacity: 0, 
-            borderBottomWidth: 0,
           },
          
         }}
@@ -266,8 +265,8 @@ export default function SettingsScreen() {
   const styles = StyleSheet.create({
     container: {
         flex: 1,
-      alignItems: 'stretch',
-      paddingBottom: 145,
+        alignItems: 'stretch',
+        paddingBottom: 145,
       
     }, 
     heading:{
