@@ -23,6 +23,7 @@ export default function ExploreScreen({navigation}) {
 return  (
   <Stack.Navigator
   screenOptions={{
+    headerShown: false,
     headerBackTitleVisible: false,
     headerTitleAlign: 'center',
     headerTitleStyle: {
@@ -30,7 +31,7 @@ return  (
     },
     headerStyle: {
       backgroundColor: 'transparent',
-      elevation: 0, 
+      elevation: 0,
       shadowOpacity: 0, 
       borderBottomWidth: 0,
     },
@@ -160,14 +161,6 @@ useEffect(() => {
   key={"trending"}
   title={"Trending Recipes"}
   items={sliderCategoriesData}
-  width={width /1.1}
-  height={height}
-/>
-
-<DetailedSlider
-  key={"for_you"} 
-  title={"For You Recipes"}
-  items={sliderData}
   width={width /1.1}
   height={height}
 />
