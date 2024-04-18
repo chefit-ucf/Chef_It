@@ -13,6 +13,7 @@ import { Coiny_400Regular } from '@expo-google-fonts/coiny';
 import { db, auth } from "../API/firebase.config.js";
 import { doc, collection, getDoc, onSnapshot, updateDoc, query, where, getDocs } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
+import editCooksona from '../assets/actionIcons/editCooksonaIcon.png'
 
 
 const Stack = createStackNavigator();
@@ -213,6 +214,7 @@ const Star = ({ filled }) => (
               buttonStyle={(active) => ({ borderColor: active ? "#42A797" : "grey", borderBottomWidth: active ? 3 : 0.5 })} />
           </Tab>
           <TabView value={index} onChange={setIndex} animationType="timing" disableSwipe={true} tabItemContainerStyle={{flex: 1,}}>
+      
             <TabView.Item>
               <MyRecipes navigation={navigation} />
             </TabView.Item>
@@ -229,27 +231,30 @@ const Star = ({ filled }) => (
   
     useEffect(() => {
       const fetchUserData = async () => {
-        try {
-                const user = auth.currentUser;
-                if (user) {
-                    const currentUserUID = user.uid;
-                    const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
-                    const querySnapshot = await getDocs(usersQuery);
-                    querySnapshot.forEach((doc) => {
-                        const userData = doc.data();
-                        setUsername(userData.username);
-                        setAvatar(userData.userAvatar);
-                    });
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            } }
-  
+          try {
+              const user = auth.currentUser;
+              if (user) {
+                  const currentUserUID = user.uid;
+                  const usersRef = collection(db, 'users');
+                  const unsubscribe = onSnapshot(query(usersRef, where('UID', '==', currentUserUID)), (querySnapshot) => {
+                      querySnapshot.forEach((doc) => {
+                          const userData = doc.data();
+                          setUsername(userData.username);
+                          setAvatar(userData.userAvatar);
+                      });
+                  });
+                  return unsubscribe;
+              }
+          } catch (error) {
+              console.error('Error fetching user data:', error);
+          }
+      };
+
       fetchUserData();
-    }, []);
+  }, []);
   
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.content}>
           <View style={styles.header}>
             <View style={styles.profileImageContainer}>
@@ -257,14 +262,20 @@ const Star = ({ filled }) => (
                  source={{ uri: avatar }}
                 style={styles.profileImage}
               />
+              <Pressable onPress={() => navigation.navigate('Select your Cooksona')} style={styles.editButton}>
+              <Image
+                 source={editCooksona }
+                style={styles.editIcon}
+              />
+              </Pressable>
             </View>
           </View>
-          <Text style={styles.username}>{username}</Text>
+          <View><Text style={styles.username}>{username}</Text></View>
           <View style={styles.tabContainer}>
             <TabComponent navigation={navigation} />
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -283,6 +294,8 @@ const Star = ({ filled }) => (
           headerTintColor: '#000',
           headerTitleStyle: {
             fontWeight: 'bold',
+            fontFamily: 'Coiny_400Regular',
+            fontSize: 28
           },
           headerStyle: {
             elevation: 0, 
@@ -297,7 +310,7 @@ const Star = ({ filled }) => (
     component={Profile}
     options={({ navigation }) => ({
       headerTitleAlign: 'left',
-      
+      headerLeft: null,
       headerRight: () => (
         <View>
           <Pressable
@@ -309,6 +322,9 @@ const Star = ({ filled }) => (
           </Pressable>
         </View>
       ),
+      headerStyle: {
+        backgroundColor: 'transparent',
+      }
     })}
   
   />
@@ -351,9 +367,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: 7,
+    paddingHorizontal: 10,
     paddingTop: 10,
-    gap: 20
+    gap: 15
 },
 recipeContainer: {
     backgroundColor: "white",
@@ -396,6 +412,7 @@ timeContainer: {
     alignItems: 'center'
 },
 bottomContainer: {
+  marginTop: 15,
     flexDirection: 'row',
     alignItems: 'center'
 },
@@ -417,9 +434,8 @@ savedIcon: {
   },
   header: {
     alignItems: "center",
-    width: 200,
-    height: 200,
-    backgroundColor: '#F9B59E',
+    width: 220,
+    height: 220,
     borderRadius: 10,
     marginBottom: 20,
   },
@@ -431,23 +447,25 @@ savedIcon: {
   editIcon: {
     width: 22,
     height: 22,
+    bottom: 25,
+    right: 20
   },
   profileImageContainer: {
     position: 'absolute',
-    top: 20,
   },
   profileImage: {
-    width: 160,
-    height: 154,
+    width: 250,
+    height: 250,
   },
   username: {
+    marginTop: 10,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 5,
     fontWeight: 'bold',
     fontSize: 24,
   },
   tabContainer: { 
-    marginTop: 16,
+    marginTop: 10,
     width: "100%",
   },
   recipeCard:{
