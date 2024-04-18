@@ -14,6 +14,7 @@ export default function DisplayCooksonas() {
   const [oldAvatar, setOldAvatar] = useState('')
   const [selectedCooksona, setSelectedCooksona] = useState(null); // Step 1
   const [successMessage, setSuccessMessage] = useState('');
+  const [avatar, setAvatar] = useState('');
 
   const handleCooksonaSelect = (item) => { // Step 3
     setSelectedCooksona(item);
@@ -75,7 +76,7 @@ export default function DisplayCooksonas() {
     {
       cooksona: 'https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FCooksonas%2Fpizza.png?alt=media&token=032f0a23-c4f7-49f2-9c1c-0d621e5e2777',
       backgroundColor: '#BADAD4',
-      cooksonaBackground: 'https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FCooksonas%2Fburger_withBackground.png?alt=media&token=47d055cf-b971-40a1-9e40-92ee4c5505bb',
+      cooksonaBackground: 'https://firebasestorage.googleapis.com/v0/b/chef-it-fdbea.appspot.com/o/images%2FCooksonas%2Fpizza_withBackground.png?alt=media&token=fd69a35e-610a-42d4-b14d-028a381f2ddc',
       selectImage: require('../assets/Cooksonas/pizza_withBackground.png'),
     },
     {
@@ -113,6 +114,7 @@ export default function DisplayCooksonas() {
 
         const userData = querySnapshot.docs[0].data();
         setOldAvatar(userData.userAvatar);
+        setAvatar(userData.userAvatar);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -123,12 +125,6 @@ export default function DisplayCooksonas() {
 
   const handleCooksonaChange = async () => {
     try {
-      if (oldAvatar === selectedCooksona.cooksonaBackground) {
-        console.log(oldAvatar)
-        console.log(selectedCooksona.cooksonaBackground)
-        setSuccessMessage("Change failed: Selected cooksona background does match the current avatar.");
-        return;
-      }
 
       const user = auth.currentUser;
       if (!user) {
@@ -136,12 +132,14 @@ export default function DisplayCooksonas() {
         return;
       }
 
+
       const currentUserUID = user.uid;
       const usersQuery = query(collection(db, 'users'), where('UID', '==', currentUserUID));
       const usersCollection = collection(db, 'users');
       const querySnapshot = await getDocs(usersQuery);
       const userData = querySnapshot.docs[0].data();
       const username = userData.username;
+      
 
       if (!username) {
         console.log('Username not found for the user');
@@ -154,21 +152,22 @@ export default function DisplayCooksonas() {
       console.log('User username:', username);
       console.log(selectedCooksona.cooksonaBackground)
 
-      setSuccessMessage('Avatar change successful');
+      setSuccessMessage('Avatar Change Successful!');
     } catch (error) {
       console.error('Error changing avatar:', error);
-      setSuccessMessage('Avatar change failed');
+      setSuccessMessage('Avatar Change Failed');
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <View style={styles.profileImageContainer}>
-          <Image
-            source={selectedCooksona ? { uri: selectedCooksona.cooksona } : require('../assets/Cooksonas/pancakes.png')} 
+      <View style={styles.profileImageContainer}>
+        <Image
+            source={selectedCooksona ? { uri: selectedCooksona.cooksonaBackground } : {uri: avatar}} 
             style={styles.profileImage}
           />
+      
         </View>
         <Text style={styles.headingText}>Select Your Cooksona</Text>
         <FlatList
@@ -185,7 +184,7 @@ export default function DisplayCooksonas() {
           </Pressable>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 
 }
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 575
+    height: 700
   },
   gridContainer: {
     flexDirection: 'row',
@@ -228,7 +227,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     borderRadius: 20,
-    marginTop: 30,
+    marginTop: 20,
   },
   buttonText: {
     fontSize: 16,
@@ -239,18 +238,21 @@ const styles = StyleSheet.create({
   headingText: {
     fontWeight: 'bold',
     fontSize: 24,
-    marginBottom: 15
+    marginBottom: 15,
+    marginTop: 10
   },
   profileImageContainer: {
-    backgroundColor: '#F9B59E',
     padding: 12,
     borderRadius: 20,
-    width: 200,
-    height: 200,
+    width: 225,
+    height: 225,
   },
   profileImage: {
     alignSelf: 'center',
-    width: 180,
-    height: 180,
+    width: 225,
+    height: 225,
+  },
+  successMessage: {
+    fontSize: 18,
   }
 });
