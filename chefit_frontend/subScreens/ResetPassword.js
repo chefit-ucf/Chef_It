@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Image, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { auth } from '../config/firebase'; // Import your Firebase configuration
 
 export default function ResetPassword({ navigation }) {
     const [password, setPassword] = useState('');
@@ -12,6 +13,8 @@ export default function ResetPassword({ navigation }) {
         checkNonAlphaNum: false,
         checkLength: false,
     });
+
+    const [successMessage, setSuccessMessage] = useState('');
 
     // State variables for toggling password visibility
     const [showPassword, setShowPassword] = useState(false);
@@ -47,8 +50,22 @@ export default function ResetPassword({ navigation }) {
     };
 
     const handleResetPassword = () => {
-        // handle backend stuff 
+        if (password !== confirmPassword) {
+            setSuccessMessage('Passwords do not match!');
+            return;
+        }
+        if (!passwordValidation.checkUpper || !passwordValidation.checkLower || !passwordValidation.checkNum || !passwordValidation.checkNonAlphaNum || !passwordValidation.checkLength) {
+            setSuccessMessage('Password does not meet the requirements!');
+            return;
+        }
+        const user = auth.currentUser;
+        user.updatePassword(password).then(() => {
+            setSuccessMessage('Password updated successfully!');
+        }).catch((error) => {
+            setSuccessMessage(error.message);
+        });
     };
+    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -128,6 +145,8 @@ export default function ResetPassword({ navigation }) {
             </View>
         </View>
 
+
+            {successMessage ? <Text style={styles.successMessage}>{successMessage}</Text> : null}
             <Pressable onPress={handleResetPassword} style={styles.button}>
                 <Text style={styles.buttonText}>Save</Text>
             </Pressable>

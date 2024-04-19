@@ -23,9 +23,34 @@ export default function ResetEmail({ navigation }) {
         setConfirmEmail(text);
     };
 
-    const handleResetEmail = () => {
-        // handle backend stuff 
-    };
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const handleResetEmail = () =>{
+    
+            if (email !== confirmEmail) {
+                setSuccessMessage('Emails do not match!');
+                return;
+            }
+            if (!emailValidation) {
+                setSuccessMessage('Email is not valid!');
+                return;
+            }
+            const user = auth.currentUser;
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                user.email, 
+                currentPassword
+            );
+            user.reauthenticateWithCredential(credential).then(() => {
+                user.updateEmail(email).then(() => {
+                    setSuccessMessage('Email updated successfully!');
+                }).catch((error) => {
+                    setSuccessMessage(error.message);
+                });
+            }).catch((error) => {
+                setSuccessMessage(error.message);
+            });
+        };
+    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -74,6 +99,9 @@ export default function ResetEmail({ navigation }) {
                     <Text style={styles.text}>Contains '@' Symbol</Text>
                 </View>
             </View>
+            
+            {successMessage ? <Text style={styles.successMessage}>{successMessage}</Text> : null}
+
             <Pressable onPress={handleResetEmail} style={styles.button}>
                 <Text style={styles.buttonText}>Save</Text>
             </Pressable>
