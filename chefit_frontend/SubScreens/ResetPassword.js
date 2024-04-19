@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Image, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { auth } from '../config/firebase'; // Import your Firebase configuration
 
 export default function ResetPassword({ navigation }) {
     const [password, setPassword] = useState('');
@@ -12,6 +13,8 @@ export default function ResetPassword({ navigation }) {
         checkNonAlphaNum: false,
         checkLength: false,
     });
+
+    const [successMessage, setSuccessMessage] = useState('');
 
     // State variables for toggling password visibility
     const [showPassword, setShowPassword] = useState(false);
@@ -47,8 +50,22 @@ export default function ResetPassword({ navigation }) {
     };
 
     const handleResetPassword = () => {
-        // handle backend stuff 
+        if (password !== confirmPassword) {
+            setSuccessMessage('Passwords do not match!');
+            return;
+        }
+        if (!passwordValidation.checkUpper || !passwordValidation.checkLower || !passwordValidation.checkNum || !passwordValidation.checkNonAlphaNum || !passwordValidation.checkLength) {
+            setSuccessMessage('Password does not meet the requirements!');
+            return;
+        }
+        const user = auth.currentUser;
+        user.updatePassword(password).then(() => {
+            setSuccessMessage('Password updated successfully!');
+        }).catch((error) => {
+            setSuccessMessage(error.message);
+        });
     };
+    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -63,7 +80,7 @@ export default function ResetPassword({ navigation }) {
                     />
                     <Pressable onPress={handleTogglePasswordVisibility} style={styles.toggleButton}>
                         <Image
-                            source={showPassword ? require('../assets/buttons/showPassword_toggle.png') : require('../assets/buttons/hidePassword_toggle.png')}
+                            source={showPassword ? require('../assets/actionIcons/showPassword_toggle.png') : require('../assets/actionIcons/hidePassword_toggle.png')}
                             style={styles.toggleImage}
                         />
                     </Pressable>
@@ -78,7 +95,7 @@ export default function ResetPassword({ navigation }) {
                     />
                     <Pressable onPress={handleToggleConfirmPasswordVisibility} style={styles.toggleButton}>
                         <Image
-                            source={showConfirmPassword ? require('../assets/buttons/showPassword_toggle.png') : require('../assets/buttons/hidePassword_toggle.png')}
+                            source={showConfirmPassword ? require('../assets/actionIcons/showPassword_toggle.png') : require('../assets/actionIcons/hidePassword_toggle.png')}
                             style={styles.toggleImage}
                         />
                     </Pressable>
@@ -88,46 +105,48 @@ export default function ResetPassword({ navigation }) {
         <Text style={styles.requirementHeading}>New Password Must Contain:</Text>
         <View style={styles.requirementItem}>
         {passwordValidation.checkUpper ? (
-            <Image source={require('../assets/buttons/item_checked.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/item_checked.png')} style={styles.checkImage} />
         ) : (
-            <Image source={require('../assets/buttons/unchecked_button.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/unchecked_button.png')} style={styles.checkImage} />
         )}
         <Text style={styles.text}>Uppercase Letter</Text>
         </View>
         <View style={styles.requirementItem}>
         {passwordValidation.checkLower ? (
-            <Image source={require('../assets/buttons/item_checked.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/item_checked.png')} style={styles.checkImage} />
         ) : (
-            <Image source={require('../assets/buttons/unchecked_button.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/unchecked_button.png')} style={styles.checkImage} />
         )}
         <Text style={styles.text}>Lowercase Letter</Text>
         </View>
         <View style={styles.requirementItem}>
         {passwordValidation.checkNonAlphaNum ? (
-            <Image source={require('../assets/buttons/item_checked.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/item_checked.png')} style={styles.checkImage} />
         ) : (
-            <Image source={require('../assets/buttons/unchecked_button.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/unchecked_button.png')} style={styles.checkImage} />
         )}
         <Text style={styles.text}>Special Character</Text>
         </View>
         <View style={styles.requirementItem}>
         {passwordValidation.checkNum ? (
-            <Image source={require('../assets/buttons/item_checked.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/item_checked.png')} style={styles.checkImage} />
         ) : (
-            <Image source={require('../assets/buttons/unchecked_button.png')} style={styles.checkImage} />
+            <Image source={require('../assets/actionIcons/unchecked_button.png')} style={styles.checkImage} />
         )}
         <Text style={styles.text}>A Number</Text>
         </View>
             <View style={styles.requirementItem}>
             {passwordValidation.checkLength ? (
-                <Image source={require('../assets/buttons/item_checked.png')} style={styles.checkImage} />
+                <Image source={require('../assets/actionIcons/item_checked.png')} style={styles.checkImage} />
             ) : (
-                <Image source={require('../assets/buttons/unchecked_button.png')} style={styles.checkImage} />
+                <Image source={require('../assets/actionIcons/unchecked_button.png')} style={styles.checkImage} />
             )}
                 <Text style={styles.text}>Min 8 Characters</Text>
             </View>
         </View>
 
+
+            {successMessage ? <Text style={styles.successMessage}>{successMessage}</Text> : null}
             <Pressable onPress={handleResetPassword} style={styles.button}>
                 <Text style={styles.buttonText}>Save</Text>
             </Pressable>
