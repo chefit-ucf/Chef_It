@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { auth } from '../config/firebase'; // Import your Firebase configuration
 
 export default function ResetEmail({ navigation }) {
     const [email, setEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
     const [emailValidation, setEmailValidation] = useState(false);
 
     const validateEmail = (text) => {
@@ -13,13 +15,42 @@ export default function ResetEmail({ navigation }) {
         setEmailValidation(emailRegex.test(text));
     };
 
+    const handleCurrentPassword = (text) => {
+        setCurrentPassword(text)
+    }
+
     const handleConfirmEmailChange = (text) => {
         setConfirmEmail(text);
     };
 
-    const handleResetEmail = () => {
-        // handle backend stuff 
-    };
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const handleResetEmail = () =>{
+    
+            if (email !== confirmEmail) {
+                setSuccessMessage('Emails do not match!');
+                return;
+            }
+            if (!emailValidation) {
+                setSuccessMessage('Email is not valid!');
+                return;
+            }
+            const user = auth.currentUser;
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                user.email, 
+                currentPassword
+            );
+            user.reauthenticateWithCredential(credential).then(() => {
+                user.updateEmail(email).then(() => {
+                    setSuccessMessage('Email updated successfully!');
+                }).catch((error) => {
+                    setSuccessMessage(error.message);
+                });
+            }).catch((error) => {
+                setSuccessMessage(error.message);
+            });
+        };
+    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -40,25 +71,37 @@ export default function ResetEmail({ navigation }) {
                     onChangeText={handleConfirmEmailChange}
                 />
             </View>
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.textInput}
+                    secureTextEntry
+                    placeholder="Enter Current Password"
+                    value={currentPassword}
+                    onChangeText={handleCurrentPassword}
+                />
+            </View>
             <View style={styles.requirementContainer}>
                 <Text style={styles.requirementHeading}>New Email Must Contain:</Text>
                 <View style={styles.requirementItem}>
                     {emailValidation ? (
-                        <Image source={require('../assets/buttons/item_checked.png')} style={{ width: 25, height: 25 }} />
+                        <Image source={require('../assets/actionIcons/item_checked.png')} style={{ width: 25, height: 25 }} />
                     ) : (
-                        <Image source={require('../assets/buttons/unchecked_button.png')} style={{ width: 25, height: 25 }} />
+                        <Image source={require('../assets/actionIcons/unchecked_button.png')} style={{ width: 25, height: 25 }} />
                     )}
                     <Text style={styles.text}>Valid Domain Name (e.g: .com, .org, .edu)</Text>
                 </View>
                 <View style={styles.requirementItem}>
                     {email.includes('@') ? (
-                        <Image source={require('../assets/buttons/item_checked.png')} style={{ width: 25, height: 25 }} />
+                        <Image source={require('../assets/actionIcons/item_checked.png')} style={{ width: 25, height: 25 }} />
                     ) : (
-                        <Image source={require('../assets/buttons/unchecked_button.png')} style={{ width: 25, height: 25 }} />
+                        <Image source={require('../assets/actionIcons/unchecked_button.png')} style={{ width: 25, height: 25 }} />
                     )}
                     <Text style={styles.text}>Contains '@' Symbol</Text>
                 </View>
             </View>
+            
+            {successMessage ? <Text style={styles.successMessage}>{successMessage}</Text> : null}
+
             <Pressable onPress={handleResetEmail} style={styles.button}>
                 <Text style={styles.buttonText}>Save</Text>
             </Pressable>
